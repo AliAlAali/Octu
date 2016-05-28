@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gieco;
+package octu;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -136,7 +136,7 @@ public class Main extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         jList3 = new javax.swing.JList();
         jPanel3 = new javax.swing.JPanel();
-        graph1 = new gieco.graphics.Graph();
+        graph1 = new octu.graphics.Graph();
         active = new javax.swing.JCheckBox();
         submit = new javax.swing.JButton();
         jButton10 = new javax.swing.JButton();
@@ -569,7 +569,7 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDialog EventSelector;
     private javax.swing.JCheckBox active;
-    private gieco.graphics.Graph graph1;
+    private octu.graphics.Graph graph1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package gieco.core;
+package octu.core;
 
 import java.util.ArrayList;
 

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package gieco;
+package octu;
 
 import java.awt.Dimension;
 import java.awt.Graphics;

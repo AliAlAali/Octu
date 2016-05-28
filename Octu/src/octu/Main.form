@@ -541,7 +541,7 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Container class="gieco.graphics.Graph" name="graph1">
+                <Container class="octu.graphics.Graph" name="graph1">
 
                   <Layout>
                     <DimensionLayout dim="0">

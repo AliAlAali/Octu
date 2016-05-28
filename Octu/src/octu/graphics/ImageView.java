@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package gieco.graphics;
+package octu.graphics;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
