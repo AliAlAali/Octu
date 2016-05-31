@@ -37,4 +37,10 @@ public class FilerHandler {
         
         return filter;
     }
+    
+    public void makeTextFile(){
+        /*
+            implement later
+        */
+    }
 }

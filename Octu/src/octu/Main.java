@@ -126,6 +126,17 @@ public class Main extends javax.swing.JFrame {
         saveChooser = new javax.swing.JFileChooser();
         openDialog = new javax.swing.JDialog();
         openChooser = new javax.swing.JFileChooser();
+        newActionDialog = new javax.swing.JDialog();
+        jButton12 = new javax.swing.JButton();
+        jButton13 = new javax.swing.JButton();
+        jButton14 = new javax.swing.JButton();
+        actionFile = new javax.swing.JButton();
+        jButton16 = new javax.swing.JButton();
+        jButton17 = new javax.swing.JButton();
+        FileMenu = new javax.swing.JPopupMenu();
+        moveFile = new javax.swing.JMenuItem();
+        deleteFile = new javax.swing.JMenuItem();
+        renameFile = new javax.swing.JMenuItem();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -252,6 +263,77 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        newActionDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        newActionDialog.setTitle("Action");
+        newActionDialog.setIconImages(icons);
+
+        jButton12.setText("Mouse");
+
+        jButton13.setText("Keystroke");
+
+        jButton14.setText("Lunch App");
+
+        actionFile.setText("File");
+        actionFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                actionFileActionPerformed(evt);
+            }
+        });
+
+        jButton16.setText("Shutdown");
+
+        jButton17.setText("Set");
+
+        javax.swing.GroupLayout newActionDialogLayout = new javax.swing.GroupLayout(newActionDialog.getContentPane());
+        newActionDialog.getContentPane().setLayout(newActionDialogLayout);
+        newActionDialogLayout.setHorizontalGroup(
+            newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(newActionDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton14, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                    .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jButton12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton13, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton16, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
+                    .addComponent(actionFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        newActionDialogLayout.setVerticalGroup(
+            newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(newActionDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton12)
+                    .addComponent(actionFile))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton13)
+                    .addComponent(jButton16))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton14)
+                    .addComponent(jButton17))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        moveFile.setText("Move File");
+        moveFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                moveFileActionPerformed(evt);
+            }
+        });
+        FileMenu.add(moveFile);
+
+        deleteFile.setText("Delete File");
+        FileMenu.add(deleteFile);
+
+        renameFile.setText("Rename File");
+        FileMenu.add(renameFile);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Octo");
         setIconImages(icons);
@@ -286,6 +368,11 @@ public class Main extends javax.swing.JFrame {
         jButton2.setText("Delete Event");
 
         jButton3.setText("New Action");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Delete Action");
 
@@ -523,6 +610,20 @@ public class Main extends javax.swing.JFrame {
         graph1.peak(active.isSelected());
     }//GEN-LAST:event_submitActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        newActionDialog.pack();
+        centerDialog(newActionDialog);
+        newActionDialog.setVisible(true);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void actionFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actionFileActionPerformed
+        FileMenu.show(actionFile, actionFile.getX()/2, 0);
+    }//GEN-LAST:event_actionFileActionPerformed
+
+    private void moveFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveFileActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_moveFileActionPerformed
+
     public void centerDialog(JDialog dialog){
         dialog.setBounds(getMiddleX(dialog), getMiddleY(dialog), dialog.getWidth(), dialog.getHeight());
     }
@@ -573,11 +674,19 @@ public class Main extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDialog EventSelector;
+    private javax.swing.JPopupMenu FileMenu;
+    private javax.swing.JButton actionFile;
     private javax.swing.JCheckBox active;
+    private javax.swing.JMenuItem deleteFile;
     private octu.graphics.Graph graph1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
+    private javax.swing.JButton jButton12;
+    private javax.swing.JButton jButton13;
+    private javax.swing.JButton jButton14;
+    private javax.swing.JButton jButton16;
+    private javax.swing.JButton jButton17;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -608,8 +717,11 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JMenuItem moveFile;
+    private javax.swing.JDialog newActionDialog;
     private javax.swing.JFileChooser openChooser;
     private javax.swing.JDialog openDialog;
+    private javax.swing.JMenuItem renameFile;
     private javax.swing.JFileChooser saveChooser;
     private javax.swing.JDialog saveDialog;
     private javax.swing.JButton submit;
