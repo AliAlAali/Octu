@@ -31,6 +31,8 @@ public class MouseAction extends javax.swing.JFrame {
         initComponents();
         add(new ImageView());
         pack();
+        imageView1.setImageFromLocal("MouseDrawing - Copy", "png");
+        imageView1.repaint();
     }
 
     /**
@@ -47,6 +49,7 @@ public class MouseAction extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        imageView1 = new octu.graphics.ImageView();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -63,21 +66,37 @@ public class MouseAction extends javax.swing.JFrame {
             }
         });
 
+        javax.swing.GroupLayout imageView1Layout = new javax.swing.GroupLayout(imageView1);
+        imageView1.setLayout(imageView1Layout);
+        imageView1Layout.setHorizontalGroup(
+            imageView1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 337, Short.MAX_VALUE)
+        );
+        imageView1Layout.setVerticalGroup(
+            imageView1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 427, Short.MAX_VALUE)
+        );
+
+        jLayeredPane1.setLayer(jLabel4, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(imageView1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
         jLayeredPane1Layout.setHorizontalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(imageView1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                        .addGap(125, 125, 125)
                         .addComponent(jLabel2)
                         .addGap(70, 70, 70)
                         .addComponent(jLabel3))
-                    .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                        .addGap(156, 156, 156)
-                        .addComponent(jLabel4)))
-                .addContainerGap(131, Short.MAX_VALUE))
+                    .addComponent(jLabel4))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jLayeredPane1Layout.setVerticalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -89,10 +108,10 @@ public class MouseAction extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(jLabel3))
                 .addContainerGap(426, Short.MAX_VALUE))
+            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addComponent(imageView1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
-        jLayeredPane1.setLayer(jLabel4, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -103,7 +122,7 @@ public class MouseAction extends javax.swing.JFrame {
                 .addGroup(layout.createSequentialGroup()
                     .addGap(25, 25, 25)
                     .addComponent(jLabel1)
-                    .addContainerGap(18, Short.MAX_VALUE)))
+                    .addContainerGap(154, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -114,7 +133,7 @@ public class MouseAction extends javax.swing.JFrame {
                 .addGroup(layout.createSequentialGroup()
                     .addGap(48, 48, 48)
                     .addComponent(jLabel1)
-                    .addContainerGap(49, Short.MAX_VALUE)))
+                    .addContainerGap(66, Short.MAX_VALUE)))
         );
 
         pack();
@@ -173,7 +192,7 @@ public class MouseAction extends javax.swing.JFrame {
             super.paintComponent(g); 
             
             try {
-                 image = ImageIO.read(new File("C:/Users/Ali/Pictures/MouseDrawing.png"));
+                 image = ImageIO.read(new File("C:/Users/Ali/Pictures/MouseDrawing - Copy.png"));
                  g.drawImage(image, 0, 0,250, 500, null);
             } catch (IOException ex) {
                 Logger.getLogger(MouseAction.class.getName()).log(Level.SEVERE, null, ex);
@@ -185,6 +204,7 @@ public class MouseAction extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private octu.graphics.ImageView imageView1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

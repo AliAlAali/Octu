@@ -176,7 +176,7 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="jButton14" pref="148" max="32767" attributes="0"/>
+                      <Component id="lunchAppButton" pref="148" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="jButton12" max="32767" attributes="0"/>
                           <Component id="jButton13" pref="148" max="32767" attributes="0"/>
@@ -184,7 +184,7 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jButton16" pref="132" max="32767" attributes="0"/>
+                      <Component id="shutdownButton" pref="132" max="32767" attributes="0"/>
                       <Component id="actionFile" max="32767" attributes="0"/>
                       <Component id="jButton17" max="32767" attributes="0"/>
                   </Group>
@@ -203,11 +203,11 @@
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jButton13" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jButton16" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="shutdownButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jButton14" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lunchAppButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jButton17" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
@@ -226,7 +226,7 @@
             <Property name="text" type="java.lang.String" value="Keystroke"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton14">
+        <Component class="javax.swing.JButton" name="lunchAppButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Lunch App"/>
           </Properties>
@@ -239,10 +239,13 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="actionFileActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton16">
+        <Component class="javax.swing.JButton" name="shutdownButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Shutdown"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="shutdownButtonActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButton17">
           <Properties>
@@ -273,6 +276,44 @@
         <MenuItem class="javax.swing.JMenuItem" name="renameFile">
           <Properties>
             <Property name="text" type="java.lang.String" value="Rename File"/>
+          </Properties>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="copyFile">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Copy File"/>
+          </Properties>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="makeDir">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Make Directory"/>
+          </Properties>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="changeAttrib">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Hide/Unhide File"/>
+          </Properties>
+        </MenuItem>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPopupMenu" name="ShutDownMenu">
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
+        <Property name="useNullLayout" type="boolean" value="true"/>
+      </Layout>
+      <SubComponents>
+        <MenuItem class="javax.swing.JMenuItem" name="logOff">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Log Off"/>
+          </Properties>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="restartCom">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Restart"/>
+          </Properties>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="shutCom">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Shutdown"/>
           </Properties>
         </MenuItem>
       </SubComponents>

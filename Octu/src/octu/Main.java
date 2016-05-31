@@ -129,14 +129,21 @@ public class Main extends javax.swing.JFrame {
         newActionDialog = new javax.swing.JDialog();
         jButton12 = new javax.swing.JButton();
         jButton13 = new javax.swing.JButton();
-        jButton14 = new javax.swing.JButton();
+        lunchAppButton = new javax.swing.JButton();
         actionFile = new javax.swing.JButton();
-        jButton16 = new javax.swing.JButton();
+        shutdownButton = new javax.swing.JButton();
         jButton17 = new javax.swing.JButton();
         FileMenu = new javax.swing.JPopupMenu();
         moveFile = new javax.swing.JMenuItem();
         deleteFile = new javax.swing.JMenuItem();
         renameFile = new javax.swing.JMenuItem();
+        copyFile = new javax.swing.JMenuItem();
+        makeDir = new javax.swing.JMenuItem();
+        changeAttrib = new javax.swing.JMenuItem();
+        ShutDownMenu = new javax.swing.JPopupMenu();
+        logOff = new javax.swing.JMenuItem();
+        restartCom = new javax.swing.JMenuItem();
+        shutCom = new javax.swing.JMenuItem();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -271,7 +278,7 @@ public class Main extends javax.swing.JFrame {
 
         jButton13.setText("Keystroke");
 
-        jButton14.setText("Lunch App");
+        lunchAppButton.setText("Lunch App");
 
         actionFile.setText("File");
         actionFile.addActionListener(new java.awt.event.ActionListener() {
@@ -280,7 +287,12 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jButton16.setText("Shutdown");
+        shutdownButton.setText("Shutdown");
+        shutdownButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shutdownButtonActionPerformed(evt);
+            }
+        });
 
         jButton17.setText("Set");
 
@@ -291,13 +303,13 @@ public class Main extends javax.swing.JFrame {
             .addGroup(newActionDialogLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton14, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                    .addComponent(lunchAppButton, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
                     .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jButton12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton13, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton16, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
+                    .addComponent(shutdownButton, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
                     .addComponent(actionFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -312,10 +324,10 @@ public class Main extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton13)
-                    .addComponent(jButton16))
+                    .addComponent(shutdownButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton14)
+                    .addComponent(lunchAppButton)
                     .addComponent(jButton17))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -333,6 +345,24 @@ public class Main extends javax.swing.JFrame {
 
         renameFile.setText("Rename File");
         FileMenu.add(renameFile);
+
+        copyFile.setText("Copy File");
+        FileMenu.add(copyFile);
+
+        makeDir.setText("Make Directory");
+        FileMenu.add(makeDir);
+
+        changeAttrib.setText("Hide/Unhide File");
+        FileMenu.add(changeAttrib);
+
+        logOff.setText("Log Off");
+        ShutDownMenu.add(logOff);
+
+        restartCom.setText("Restart");
+        ShutDownMenu.add(restartCom);
+
+        shutCom.setText("Shutdown");
+        ShutDownMenu.add(shutCom);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Octo");
@@ -624,6 +654,10 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_moveFileActionPerformed
 
+    private void shutdownButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shutdownButtonActionPerformed
+        ShutDownMenu.show(shutdownButton, shutdownButton.getX()/2, 0);
+    }//GEN-LAST:event_shutdownButtonActionPerformed
+
     public void centerDialog(JDialog dialog){
         dialog.setBounds(getMiddleX(dialog), getMiddleY(dialog), dialog.getWidth(), dialog.getHeight());
     }
@@ -675,8 +709,11 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDialog EventSelector;
     private javax.swing.JPopupMenu FileMenu;
+    private javax.swing.JPopupMenu ShutDownMenu;
     private javax.swing.JButton actionFile;
     private javax.swing.JCheckBox active;
+    private javax.swing.JMenuItem changeAttrib;
+    private javax.swing.JMenuItem copyFile;
     private javax.swing.JMenuItem deleteFile;
     private octu.graphics.Graph graph1;
     private javax.swing.JButton jButton1;
@@ -684,8 +721,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton14;
-    private javax.swing.JButton jButton16;
     private javax.swing.JButton jButton17;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -717,13 +752,19 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JMenuItem logOff;
+    private javax.swing.JButton lunchAppButton;
+    private javax.swing.JMenuItem makeDir;
     private javax.swing.JMenuItem moveFile;
     private javax.swing.JDialog newActionDialog;
     private javax.swing.JFileChooser openChooser;
     private javax.swing.JDialog openDialog;
     private javax.swing.JMenuItem renameFile;
+    private javax.swing.JMenuItem restartCom;
     private javax.swing.JFileChooser saveChooser;
     private javax.swing.JDialog saveDialog;
+    private javax.swing.JMenuItem shutCom;
+    private javax.swing.JButton shutdownButton;
     private javax.swing.JButton submit;
     private javax.swing.JLabel systemTime;
     // End of variables declaration//GEN-END:variables
