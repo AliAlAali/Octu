@@ -29,9 +29,7 @@ public class MouseAction extends javax.swing.JFrame {
      */
     public MouseAction() {
         initComponents();
-        add(new ImageView());
-        pack();
-        imageView1.setImageFromLocal("MouseDrawing - Copy", "png");
+        imageView1.setImageFromLocal("ImprovedMouse", "png");
         imageView1.repaint();
     }
 
@@ -44,20 +42,13 @@ public class MouseAction extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
         jLayeredPane1 = new javax.swing.JLayeredPane();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         imageView1 = new octu.graphics.ImageView();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/MouseDrawing.png"))); // NOI18N
-
-        jLabel4.setText("Middle Click");
-
-        jLabel3.setText("Right");
 
         jLabel2.setText("Left");
         jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -66,21 +57,35 @@ public class MouseAction extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setText("Right");
+
+        jLabel4.setText("Middle Click");
+
         javax.swing.GroupLayout imageView1Layout = new javax.swing.GroupLayout(imageView1);
         imageView1.setLayout(imageView1Layout);
         imageView1Layout.setHorizontalGroup(
             imageView1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 337, Short.MAX_VALUE)
+            .addGroup(imageView1Layout.createSequentialGroup()
+                .addGap(50, 50, 50)
+                .addComponent(jLabel2)
+                .addGap(44, 44, 44)
+                .addComponent(jLabel3)
+                .addContainerGap(37, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, imageView1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel4)
+                .addGap(57, 57, 57))
         );
         imageView1Layout.setVerticalGroup(
             imageView1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 427, Short.MAX_VALUE)
+            .addGroup(imageView1Layout.createSequentialGroup()
+                .addComponent(jLabel4)
+                .addGap(71, 71, 71)
+                .addGroup(imageView1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3))
+                .addContainerGap(125, Short.MAX_VALUE))
         );
-
-        jLayeredPane1.setLayer(jLabel4, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(imageView1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
@@ -89,51 +94,26 @@ public class MouseAction extends javax.swing.JFrame {
             .addGroup(jLayeredPane1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(imageView1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(70, 70, 70)
-                        .addComponent(jLabel3))
-                    .addComponent(jLabel4))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
         jLayeredPane1Layout.setVerticalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                .addGap(64, 64, 64)
-                .addComponent(jLabel4)
-                .addGap(51, 51, 51)
-                .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
-                .addContainerGap(426, Short.MAX_VALUE))
-            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addGap(29, 29, 29)
                 .addComponent(imageView1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+        jLayeredPane1.setLayer(imageView1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLayeredPane1)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(25, 25, 25)
-                    .addComponent(jLabel1)
-                    .addContainerGap(154, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(48, 48, 48)
-                    .addComponent(jLabel1)
-                    .addContainerGap(66, Short.MAX_VALUE)))
+            .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -180,32 +160,10 @@ public class MouseAction extends javax.swing.JFrame {
         });
     }
 
-    public static class ImageView extends JPanel{
-
-      private BufferedImage image;
-        
-      public ImageView(){
-          setPreferredSize(new Dimension(100, 100));
-      }
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g); 
-            
-            try {
-                 image = ImageIO.read(new File("C:/Users/Ali/Pictures/MouseDrawing - Copy.png"));
-                 g.drawImage(image, 0, 0,250, 500, null);
-            } catch (IOException ex) {
-                Logger.getLogger(MouseAction.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            g.drawRect(0, 0, 100, 100);
-        }
-        
-    }
+    
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private octu.graphics.ImageView imageView1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
