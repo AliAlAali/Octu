@@ -20,9 +20,30 @@ public class Event implements Listable{
     public static final int POR_TRIGGER = 3;
     
     private ArrayList<Action> actions;
+    private String name;
 
     @Override
     public String getDescription() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public ArrayList<Action> getActions() {
+        return actions;
+    }
+
+    public void setActions(ArrayList<Action> actions) {
+        this.actions = actions;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public void addAction(Action act){
+        //to be implemented
     }
 }

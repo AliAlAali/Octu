@@ -18,7 +18,12 @@ public class Variable {
     private long number;
     private String text;
     private String type;
+    private String name;
     private boolean value;
+
+    public Variable(String name) {
+        this.name = name;
+    }
 
     public Object getValue() {
         switch (type) {
@@ -30,6 +35,21 @@ public class Variable {
                 return value;
         }
         return null;
+    }
+
+    public void assignValue(Object value) {
+        switch (type) {
+            case TYPE_BOOLEAN:
+                this.value = (boolean) value;
+                break;
+            case TYPE_TEXT:
+                text = (String) value;
+                break;
+            case TYPE_NUMBER:
+                 number = (long) value;
+                break;
+
+        }
     }
 
     public boolean compareTo(Variable v, String operator) {
@@ -84,7 +104,7 @@ public class Variable {
                 }
                 break;
             case Condition.OPERATOR_EQUAL_SMALLER:
-                 if (type.equals(TYPE_NUMBER)) {
+                if (type.equals(TYPE_NUMBER)) {
                     return number <= v.getNumber();
                 } else if (type.equals(TYPE_TEXT)) {
                     return text.compareTo(v.getText()) <= 0;
@@ -129,10 +149,19 @@ public class Variable {
         this.value = value;
     }
 
-    @Override
-    public String toString() {
-       return String.valueOf(getValue());
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     
+    
+    @Override
+    public String toString() {
+        return String.valueOf(getValue());
+    }
+
 }
