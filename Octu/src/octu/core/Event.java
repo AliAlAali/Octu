@@ -22,6 +22,9 @@ public class Event implements Listable{
     private ArrayList<Action> actions;
     private String name;
 
+    public Event(){
+        actions = new ArrayList<Action>();
+    }
     @Override
     public String getDescription() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -45,5 +48,8 @@ public class Event implements Listable{
     
     public void addAction(Action act){
         //to be implemented
+        
+        //basic implementation for testing propuses
+        actions.add(act);
     }
 }

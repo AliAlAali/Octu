@@ -23,10 +23,14 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
+import octu.core.Event;
 import octu.core.FilerHandler;
+import octu.core.Handler;
+import octu.core.MouseAction;
 
 /**
  *
@@ -38,10 +42,16 @@ public class Main extends javax.swing.JFrame {
     private Timer timer;
     private Calendar c;
     private List<BufferedImage> icons;
+    private Handler handler;
+    private Event testEvent;
     /**
      * Creates new form Main
      */
     public Main() {
+        //initializing the handler for events and actions
+        handler = new Handler();
+        testEvent = new Event();
+        testEvent.setName("onStart");
          //adding images to the icons for the JVM to select from
         icons = new ArrayList<BufferedImage>();
         icons.add(getImage("Octo_16.png"));
@@ -154,12 +164,19 @@ public class Main extends javax.swing.JFrame {
         mouseActionLeft = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        CoordinateInputDialog = new javax.swing.JDialog();
+        cordOk = new javax.swing.JButton();
+        cordCancel = new javax.swing.JButton();
+        cordX = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        cordY = new javax.swing.JTextField();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList();
+        actionList = new javax.swing.JList();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
@@ -403,6 +420,11 @@ public class Main extends javax.swing.JFrame {
         MouseActionMenu.add(scrollMouse);
 
         moveMouse.setText("Move");
+        moveMouse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                moveMouseActionPerformed(evt);
+            }
+        });
         MouseActionMenu.add(moveMouse);
 
         MouseActionDialog.setTitle("Select Mouse Button");
@@ -469,6 +491,64 @@ public class Main extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
+        cordOk.setText("Ok");
+        cordOk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cordOkActionPerformed(evt);
+            }
+        });
+
+        cordCancel.setText("Cancel");
+        cordCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cordCancelActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("X");
+
+        jLabel6.setText("Y");
+
+        javax.swing.GroupLayout CoordinateInputDialogLayout = new javax.swing.GroupLayout(CoordinateInputDialog.getContentPane());
+        CoordinateInputDialog.getContentPane().setLayout(CoordinateInputDialogLayout);
+        CoordinateInputDialogLayout.setHorizontalGroup(
+            CoordinateInputDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CoordinateInputDialogLayout.createSequentialGroup()
+                .addGroup(CoordinateInputDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(CoordinateInputDialogLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cordX, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cordY))
+                    .addGroup(CoordinateInputDialogLayout.createSequentialGroup()
+                        .addGap(72, 72, 72)
+                        .addComponent(cordCancel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cordOk, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        CoordinateInputDialogLayout.setVerticalGroup(
+            CoordinateInputDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CoordinateInputDialogLayout.createSequentialGroup()
+                .addContainerGap(17, Short.MAX_VALUE)
+                .addGroup(CoordinateInputDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(cordX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6)
+                    .addComponent(cordY, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(CoordinateInputDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cordOk)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, CoordinateInputDialogLayout.createSequentialGroup()
+                        .addComponent(cordCancel)
+                        .addContainerGap())))
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Octo");
         setIconImages(icons);
@@ -482,12 +562,8 @@ public class Main extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jList1);
 
-        jList2.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane2.setViewportView(jList2);
+        actionList.setModel(new DefaultListModel<String>());
+        jScrollPane2.setViewportView(actionList);
 
         jLabel1.setText("Events");
 
@@ -629,6 +705,11 @@ public class Main extends javax.swing.JFrame {
         );
 
         jButton10.setText("Run");
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
 
         jButton11.setText("Stop");
 
@@ -793,6 +874,31 @@ public class Main extends javax.swing.JFrame {
         newActionDialog.dispose();
     }//GEN-LAST:event_releaseActionActionPerformed
 
+    private void moveMouseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveMouseActionPerformed
+        CoordinateInputDialog.pack();
+        centerDialog(CoordinateInputDialog);
+        CoordinateInputDialog.setVisible(true);
+        newActionDialog.dispose();
+    }//GEN-LAST:event_moveMouseActionPerformed
+
+    private void cordOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cordOkActionPerformed
+        MouseAction action = new MouseAction(octu.core.Event.POR_START, MouseAction.ACTION_MOVE, null);
+        action.setX(Integer.parseInt(cordX.getText()));
+        action.setY(Integer.parseInt(cordY.getText()));
+        DefaultListModel<String> model = (DefaultListModel<String>) actionList.getModel();
+        model.addElement(action.getDescription());
+        testEvent.addAction(action);
+        handler.addEvent(testEvent);
+    }//GEN-LAST:event_cordOkActionPerformed
+
+    private void cordCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cordCancelActionPerformed
+       CoordinateInputDialog.dispose();
+    }//GEN-LAST:event_cordCancelActionPerformed
+
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        handler.start();
+    }//GEN-LAST:event_jButton10ActionPerformed
+
     public void centerDialog(JDialog dialog){
         dialog.setBounds(getMiddleX(dialog), getMiddleY(dialog), dialog.getWidth(), dialog.getHeight());
     }
@@ -842,16 +948,22 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JDialog CoordinateInputDialog;
     private javax.swing.JDialog EventSelector;
     private javax.swing.JPopupMenu FileMenu;
     private javax.swing.JDialog MouseActionDialog;
     private javax.swing.JPopupMenu MouseActionMenu;
     private javax.swing.JPopupMenu ShutDownMenu;
     private javax.swing.JButton actionFile;
+    private javax.swing.JList actionList;
     private javax.swing.JCheckBox active;
     private javax.swing.JMenuItem changeAttrib;
     private javax.swing.JMenuItem clickMouse;
     private javax.swing.JMenuItem copyFile;
+    private javax.swing.JButton cordCancel;
+    private javax.swing.JButton cordOk;
+    private javax.swing.JTextField cordX;
+    private javax.swing.JTextField cordY;
     private javax.swing.JMenuItem deleteFile;
     private octu.graphics.Graph graph1;
     private octu.graphics.ImageView imageView1;
@@ -873,9 +985,10 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JList jList1;
-    private javax.swing.JList jList2;
     private javax.swing.JList jList3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;

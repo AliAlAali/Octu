@@ -22,12 +22,12 @@ import javax.swing.JPanel;
  *
  * @author Ali
  */
-public class MouseAction extends javax.swing.JFrame {
+public class MouseSelection extends javax.swing.JFrame {
 
     /**
      * Creates new form MouseAction
      */
-    public MouseAction() {
+    public MouseSelection() {
         initComponents();
         imageView1.setImageFromLocal("ImprovedMouse", "png");
         imageView1.repaint();
@@ -140,20 +140,20 @@ public class MouseAction extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MouseAction.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MouseSelection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MouseAction.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MouseSelection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MouseAction.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MouseSelection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MouseAction.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MouseSelection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                MouseAction a = new MouseAction();
+                MouseSelection a = new MouseSelection();
                 a.setVisible(true);
                 
             }

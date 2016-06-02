@@ -23,6 +23,7 @@ public class Handler {
     private Timer timer;
     
     private boolean hasStarted;
+    private int index;
     
     public Handler() {
         events = new ArrayList<Event>();
@@ -33,6 +34,12 @@ public class Handler {
     private void arrangeActionsFromEvents(ArrayList<Event> from, 
             ArrayList<Action> to){
         //to be implemented later
+        
+        //basic implementation for testing purposes
+        for (int i = 0; i < events.size(); i++) {
+            Event event = events.get(i);
+            actions = event.getActions();
+        }
     }
     
     /*
@@ -82,6 +89,7 @@ public class Handler {
        }
        
        events.add(evt);
+       arrangeActionsFromEvents(events, loop);
        return true;
    }
     
@@ -91,6 +99,15 @@ public class Handler {
         @Override
         public void run() {
             //implement the actions here
+            
+            //basic implementation for testing only
+            if(index < actions.size()){
+                Action action = actions.get(index);
+                while(!action.isFinished()){
+                    action.occur();
+                }
+                index++;
+            }
         }
         
     }
