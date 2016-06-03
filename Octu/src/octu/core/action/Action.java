@@ -4,7 +4,11 @@
  * and open the template in the editor.
  */
 
-package octu.core;
+package octu.core.action;
+
+import octu.core.Condition;
+import octu.core.Listable;
+import octu.core.Variable;
 
 /**
  *

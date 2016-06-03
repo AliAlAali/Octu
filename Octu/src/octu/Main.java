@@ -30,20 +30,24 @@ import javax.swing.filechooser.FileFilter;
 import octu.core.Event;
 import octu.core.FilerHandler;
 import octu.core.Handler;
-import octu.core.MouseAction;
+import octu.core.action.DelayAction;
+import octu.core.action.MouseAction;
 
 /**
  *
  * @author Ali
  */
 public class Main extends javax.swing.JFrame {
-
+    
     private Dimension screen;
     private Timer timer;
     private Calendar c;
     private List<BufferedImage> icons;
     private Handler handler;
     private Event testEvent;
+    
+    private int oneInputID; //for managing variety of actions using one dialog
+
     /**
      * Creates new form Main
      */
@@ -52,7 +56,7 @@ public class Main extends javax.swing.JFrame {
         handler = new Handler();
         testEvent = new Event();
         testEvent.setName("onStart");
-         //adding images to the icons for the JVM to select from
+        //adding images to the icons for the JVM to select from
         icons = new ArrayList<BufferedImage>();
         icons.add(getImage("Octo_16.png"));
         icons.add(getImage("Octo_32.png"));
@@ -61,21 +65,21 @@ public class Main extends javax.swing.JFrame {
         initComponents();
         //to show in the middle of the screen
         screen = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((int)screen.getWidth()/2 - getWidth()/2, (int)screen.getHeight()/2 - getHeight()/2, getWidth(), getHeight());
+        setBounds((int) screen.getWidth() / 2 - getWidth() / 2, (int) screen.getHeight() / 2 - getHeight() / 2, getWidth(), getHeight());
         //preventing accedintal closing
         addWindowListener(new WindowAdapter() {
-
+            
             @Override
             public void windowClosing(WindowEvent e) {
                 showConfirmDialog("Are you sure leaving the program?");
             }
         });
-        
+
         //for the time and date
         c = Calendar.getInstance();
         timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask(){
-
+        timer.scheduleAtFixedRate(new TimerTask() {
+            
             @Override
             public void run() {
                 c = Calendar.getInstance();
@@ -83,18 +87,15 @@ public class Main extends javax.swing.JFrame {
             }
             
         }, Math.min(60, 60 - c.get(Calendar.SECOND)), 1000);
-        
-        
-        
+
         //adding filters for the save-open dialogs
         FileFilter filter = FilerHandler.getFileFilter();
         saveChooser.setFileFilter(filter);
         openChooser.setFileFilter(filter);
-       
         
     }
-
-    private BufferedImage getImage(String name){
+    
+    private BufferedImage getImage(String name) {
         try {
             return ImageIO.read(new File(getClass().getClassLoader().getResource("resources/" + name).getFile()));
         } catch (IOException ex) {
@@ -102,11 +103,12 @@ public class Main extends javax.swing.JFrame {
         }
         return null;
     }
-    private void showConfirmDialog(String message){
-        if(JOptionPane.showConfirmDialog(Main.this, message, "Confirm", 
-                       JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
-                   System.exit(0);
-               }
+
+    private void showConfirmDialog(String message) {
+        if (JOptionPane.showConfirmDialog(Main.this, message, "Confirm",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
     }
 //        @Override
 //        protected void paintComponent(Graphics g) {
@@ -115,6 +117,7 @@ public class Main extends javax.swing.JFrame {
 //            g.drawLine(0, 0, 100, 100);
 //        }
 //        
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -141,6 +144,7 @@ public class Main extends javax.swing.JFrame {
         actionFile = new javax.swing.JButton();
         shutdownButton = new javax.swing.JButton();
         jButton17 = new javax.swing.JButton();
+        jButton14 = new javax.swing.JButton();
         FileMenu = new javax.swing.JPopupMenu();
         moveFile = new javax.swing.JMenuItem();
         deleteFile = new javax.swing.JMenuItem();
@@ -171,6 +175,11 @@ public class Main extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         cordY = new javax.swing.JTextField();
+        OneValueInput = new javax.swing.JDialog();
+        oneInText = new javax.swing.JLabel();
+        oneInTextFeild = new javax.swing.JTextField();
+        oneInOk = new javax.swing.JButton();
+        oneInCancel = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -325,21 +334,33 @@ public class Main extends javax.swing.JFrame {
 
         jButton17.setText("Variable");
 
+        jButton14.setText("Delay");
+        jButton14.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton14ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout newActionDialogLayout = new javax.swing.GroupLayout(newActionDialog.getContentPane());
         newActionDialog.getContentPane().setLayout(newActionDialogLayout);
         newActionDialogLayout.setHorizontalGroup(
             newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(newActionDialogLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lunchAppButton, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
-                    .addComponent(mouseActionButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton13, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(shutdownButton, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
-                    .addComponent(actionFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(newActionDialogLayout.createSequentialGroup()
+                        .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lunchAppButton, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                            .addComponent(mouseActionButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton13, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(shutdownButton, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
+                            .addComponent(actionFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(newActionDialogLayout.createSequentialGroup()
+                        .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         newActionDialogLayout.setVerticalGroup(
@@ -357,6 +378,8 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lunchAppButton)
                     .addComponent(jButton17))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton14)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -547,6 +570,52 @@ public class Main extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, CoordinateInputDialogLayout.createSequentialGroup()
                         .addComponent(cordCancel)
                         .addContainerGap())))
+        );
+
+        oneInText.setText("Enter");
+
+        oneInOk.setText("Ok");
+        oneInOk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                oneInOkActionPerformed(evt);
+            }
+        });
+
+        oneInCancel.setText("Cancel");
+        oneInCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                oneInCancelActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout OneValueInputLayout = new javax.swing.GroupLayout(OneValueInput.getContentPane());
+        OneValueInput.getContentPane().setLayout(OneValueInputLayout);
+        OneValueInputLayout.setHorizontalGroup(
+            OneValueInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(OneValueInputLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(OneValueInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(OneValueInputLayout.createSequentialGroup()
+                        .addComponent(oneInCancel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(oneInOk))
+                    .addGroup(OneValueInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(oneInText, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(oneInTextFeild, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        OneValueInputLayout.setVerticalGroup(
+            OneValueInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(OneValueInputLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(oneInText)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(oneInTextFeild, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(OneValueInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(oneInOk)
+                    .addComponent(oneInCancel))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -806,15 +875,15 @@ public class Main extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         EventSelector.pack();
-        EventSelector.setBounds(this.getX() + this.getWidth() / 2 - EventSelector.getWidth()/2, this.getY() + this.getHeight() / 2 - EventSelector.getHeight()/2,
+        EventSelector.setBounds(this.getX() + this.getWidth() / 2 - EventSelector.getWidth() / 2, this.getY() + this.getHeight() / 2 - EventSelector.getHeight() / 2,
                 EventSelector.getWidth(), EventSelector.getHeight());
         EventSelector.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-       saveDialog.pack();
-       centerDialog(saveDialog);
-       saveDialog.setVisible(true);
+        saveDialog.pack();
+        centerDialog(saveDialog);
+        saveDialog.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
@@ -822,9 +891,9 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-       openDialog.pack();
+        openDialog.pack();
         centerDialog(openDialog);
-       openDialog.setVisible(true);
+        openDialog.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void submitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitActionPerformed
@@ -838,7 +907,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void actionFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actionFileActionPerformed
-        FileMenu.show(actionFile, actionFile.getX()/2, 0);
+        FileMenu.show(actionFile, actionFile.getX() / 2, 0);
     }//GEN-LAST:event_actionFileActionPerformed
 
     private void moveFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveFileActionPerformed
@@ -846,15 +915,15 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_moveFileActionPerformed
 
     private void shutdownButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shutdownButtonActionPerformed
-        ShutDownMenu.show(shutdownButton, shutdownButton.getX()/2, 0);
+        ShutDownMenu.show(shutdownButton, shutdownButton.getX() / 2, 0);
     }//GEN-LAST:event_shutdownButtonActionPerformed
 
     private void mouseActionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mouseActionButtonActionPerformed
-        MouseActionMenu.show(mouseActionButton, mouseActionButton.getX()/2, 0);
+        MouseActionMenu.show(mouseActionButton, mouseActionButton.getX() / 2, 0);
     }//GEN-LAST:event_mouseActionButtonActionPerformed
 
     private void clickMouseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clickMouseActionPerformed
-       MouseActionDialog.pack();
+        MouseActionDialog.pack();
         centerDialog(MouseActionDialog);
         MouseActionDialog.setVisible(true);
         newActionDialog.dispose();
@@ -868,7 +937,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_pressMouseActionPerformed
 
     private void releaseActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_releaseActionActionPerformed
-         MouseActionDialog.pack();
+        MouseActionDialog.pack();
         centerDialog(MouseActionDialog);
         MouseActionDialog.setVisible(true);
         newActionDialog.dispose();
@@ -892,26 +961,49 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_cordOkActionPerformed
 
     private void cordCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cordCancelActionPerformed
-       CoordinateInputDialog.dispose();
+        CoordinateInputDialog.dispose();
     }//GEN-LAST:event_cordCancelActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
         handler.start();
     }//GEN-LAST:event_jButton10ActionPerformed
 
-    public void centerDialog(JDialog dialog){
+    private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
+        OneValueInput.pack();
+        centerDialog(OneValueInput);
+        OneValueInput.setVisible(true);
+        newActionDialog.dispose();
+        oneInputID = 0;
+    }//GEN-LAST:event_jButton14ActionPerformed
+
+    private void oneInOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_oneInOkActionPerformed
+        switch (oneInputID) {
+            case 0:
+                DelayAction action = new DelayAction(Event.POR_START, 3 * 1000); // 3 seconds
+                DefaultListModel<String> model = (DefaultListModel<String>) actionList.getModel();
+                model.addElement(action.getDescription());
+                testEvent.addAction(action);
+                handler.addEvent(testEvent);
+                break;
+        }
+    }//GEN-LAST:event_oneInOkActionPerformed
+
+    private void oneInCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_oneInCancelActionPerformed
+        OneValueInput.dispose();
+    }//GEN-LAST:event_oneInCancelActionPerformed
+    
+    public void centerDialog(JDialog dialog) {
         dialog.setBounds(getMiddleX(dialog), getMiddleY(dialog), dialog.getWidth(), dialog.getHeight());
     }
     
-    public int getMiddleX(JDialog dialog){
-        return getX() + getWidth()/2 - dialog.getWidth()/2;
+    public int getMiddleX(JDialog dialog) {
+        return getX() + getWidth() / 2 - dialog.getWidth() / 2;
     }
     
-    public int getMiddleY(JDialog dialog){
-        return getY() + getHeight()/2 - dialog.getHeight()/2;
+    public int getMiddleY(JDialog dialog) {
+        return getY() + getHeight() / 2 - dialog.getHeight() / 2;
     }
-    
-    
+
     /**
      * @param args the command line arguments
      */
@@ -953,6 +1045,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JPopupMenu FileMenu;
     private javax.swing.JDialog MouseActionDialog;
     private javax.swing.JPopupMenu MouseActionMenu;
+    private javax.swing.JDialog OneValueInput;
     private javax.swing.JPopupMenu ShutDownMenu;
     private javax.swing.JButton actionFile;
     private javax.swing.JList actionList;
@@ -972,6 +1065,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
+    private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton17;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -1013,6 +1107,10 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem moveFile;
     private javax.swing.JMenuItem moveMouse;
     private javax.swing.JDialog newActionDialog;
+    private javax.swing.JButton oneInCancel;
+    private javax.swing.JButton oneInOk;
+    private javax.swing.JLabel oneInText;
+    private javax.swing.JTextField oneInTextFeild;
     private javax.swing.JFileChooser openChooser;
     private javax.swing.JDialog openDialog;
     private javax.swing.JMenuItem pressMouse;

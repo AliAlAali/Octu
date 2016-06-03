@@ -5,6 +5,7 @@
  */
 package octu.core;
 
+import octu.core.action.Action;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -48,7 +49,7 @@ public class Handler {
     public void start(){
         stop();
         hasStarted = true;
-        timer.scheduleAtFixedRate(new Queqy(), 0, 200);
+        timer.schedule(new Queqy(), 200);
     }
     
     /*
@@ -103,10 +104,10 @@ public class Handler {
             //basic implementation for testing only
             if(index < actions.size()){
                 Action action = actions.get(index);
-                while(!action.isFinished()){
-                    action.occur();
-                }
-                index++;
+                action.occur();
+                if(action.isFinished())
+                    index++;
+                timer.schedule(new Queqy(), 200);
             }
         }
         
