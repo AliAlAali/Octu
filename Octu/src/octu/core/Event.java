@@ -39,6 +39,9 @@ public class Event implements Listable{
         this.actions = actions;
     }
 
+    public Action removeAction(int index){
+        return actions.remove(index);
+    }
     public String getName() {
         return name;
     }

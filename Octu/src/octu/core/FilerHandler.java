@@ -38,6 +38,43 @@ public class FilerHandler {
         return filter;
     }
     
+    public static FileFilter getDirectoryFilter(){
+        //create a file-filter for saving and opening sessions
+        FileFilter filter = new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                if(f.isDirectory()){
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public String getDescription() {
+                return "Directory";
+            }
+        };
+        
+        return filter;
+    }
+    
+    public static FileFilter getAbsoluteFilter(){
+        //create a file-filter for saving and opening sessions
+        FileFilter filter = new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                return true;
+            }
+
+            @Override
+            public String getDescription() {
+                return "All";
+            }
+        };
+        
+        return filter;
+    }
+    
     public void makeTextFile(){
         /*
             implement later

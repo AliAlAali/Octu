@@ -45,21 +45,39 @@ public class Handler {
     }
 
     /*
-        used to start the series of actions
+     used to start the series of actions
      */
     public void start() {
         stop();
         hasStarted = true;
         timer.schedule(new Queqy(), 200);
+
     }
 
+    private void run() {
+        if (index < actions.size()) {
+            Action action = actions.get(index);
+            action.occur();
+            if (actionOccur != null) {
+                actionOccur.change(action);
+            }
+            while (!action.isFinished()) {
+
+            }
+            if (action.isFinished()) {
+                index++;
+            }
+            if (index < actions.size()) {
+                run();
+            }
+        }
+    }
     /*
-        used for stopping the series of actions
+     used for stopping the series of actions
      */
+
     public void stop() {
-        timer.cancel();
-        timer = new Timer();
-        hasStarted = false;
+        flush();
     }
 
     public boolean isAlive() {
@@ -79,6 +97,26 @@ public class Handler {
         v.assignValue(initial);
         variables.add(v);
         return true;
+    }
+
+    
+    public Action removeAction(int index){
+        return actions.remove(index);
+    }
+    
+    public int findAction(int por, int inEventIndex) {
+        int initial = -1;
+        for (int i = 0; i < actions.size(); i++) {
+            Action act = actions.get(i);
+            if(act.getPriority() == por && initial == -1){
+                initial = i;
+                break;
+            }
+        }
+        if(initial > -1){
+            return initial + inEventIndex;
+        }
+        return -1;
     }
 
     public boolean addEvent(Event evt) {
@@ -104,11 +142,16 @@ public class Handler {
             //basic implementation for testing only
             if (index < actions.size()) {
                 Action action = actions.get(index);
-                action.occur();
-                if(actionOccur != null){
-                    actionOccur.change(action);
+                if (!action.isOccuring()) {
+                    action.occur();
+                    if (actionOccur != null) {
+                        actionOccur.change(action);
+                    }
+                }else{
+                    if(actionOccur != null){
+                        actionOccur.change(null);
+                    }
                 }
-                
                 if (action.isFinished()) {
                     index++;
                 }
@@ -118,12 +161,26 @@ public class Handler {
 
     }
 
-    public void setOnActoinOccurListener(OnActionOccurListener change){
+    public void flush() {
+        index = 0;
+        hasStarted = false;
+        timer.cancel();
+        timer = new Timer();
+
+        for (int i = 0; i < events.size(); i++) {
+            Event event = events.get(i);
+            for (int j = 0; j < event.getActions().size(); j++) {
+                event.getActions().get(j).flush();
+            }
+        }
+    }
+
+    public void setOnActoinOccurListener(OnActionOccurListener change) {
         this.actionOccur = change;
     }
-    
+
     public interface OnActionOccurListener {
-        
+
         public void change(Action act);
     }
 }

@@ -24,6 +24,7 @@ public class Action implements Listable{
     
     private int por; //constant from Event class
     private boolean finish;
+    private boolean isOccuring;
     
     private Condition condition; //null if no condition
     
@@ -32,7 +33,11 @@ public class Action implements Listable{
     }
     
     public void occur(){
-        
+        this.isOccuring = true;
+    }
+    
+    public boolean isOccuring(){
+        return isOccuring;
     }
     
     /*
@@ -60,6 +65,14 @@ public class Action implements Listable{
     
     public Condition getCondition(){
         return this.condition;
+    }
+    
+    /*
+        return every thing to its original state
+    */
+    public void flush(){
+        isOccuring = false;
+        finish = false;
     }
 
     @Override

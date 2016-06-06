@@ -36,6 +36,19 @@ public class DelayAction extends Action{
         }, delay);
     }
 
+    public long getDelay(){
+        return this.delay;
+    }
+
+    @Override
+    public void flush() {
+        super.flush(); 
+        timer.cancel();
+        timer = new Timer();
+    }
+    
+    
+    
     @Override
     public String getDescription() {
         return "Delay: for " + (delay/1000.0) + " second(s)";
