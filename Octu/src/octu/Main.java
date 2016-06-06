@@ -25,11 +25,13 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import octu.core.Event;
 import octu.core.FilerHandler;
 import octu.core.Handler;
+import octu.core.action.KeyStrokeAction;
 import octu.core.action.Action;
 import octu.core.action.DelayAction;
 import octu.core.action.LooperAction;
@@ -355,6 +357,11 @@ public class Main extends javax.swing.JFrame {
         });
 
         jButton13.setText("Keystroke");
+        jButton13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton13ActionPerformed(evt);
+            }
+        });
 
         lunchAppButton.setText("Lunch App");
         lunchAppButton.addActionListener(new java.awt.event.ActionListener() {
@@ -531,6 +538,11 @@ public class Main extends javax.swing.JFrame {
         MouseActionMenu.add(releaseAction);
 
         scrollMouse.setText("Scroll");
+        scrollMouse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                scrollMouseActionPerformed(evt);
+            }
+        });
         MouseActionMenu.add(scrollMouse);
 
         moveMouse.setText("Move");
@@ -1425,6 +1437,31 @@ public class Main extends javax.swing.JFrame {
         fileChooser_chooser.setFileFilter(FilerHandler.getAbsoluteFilter());
     }//GEN-LAST:event_copyFileActionPerformed
 
+    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
+        newActionDialog.dispose();
+        String text = JOptionPane.showInputDialog(this,"Type text for Keystroke Action:");
+        KeyStrokeAction action = new KeyStrokeAction(Event.POR_START, text);
+        addElementToList(actionList, action.getDescription());
+        testEvent.addAction(action);
+        handler.addEvent(testEvent);
+    }//GEN-LAST:event_jButton13ActionPerformed
+
+    private void scrollMouseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scrollMouseActionPerformed
+        newActionDialog.dispose();
+        int scroll = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter the Y change: "));
+        MouseAction act = new MouseAction(Event.POR_START, MouseAction.ACTION_SCROLL, null);
+        act.setY(scroll);
+        addElementToList(actionList, act.getDescription());
+        testEvent.addAction(act);
+        handler.addEvent(testEvent);
+        
+    }//GEN-LAST:event_scrollMouseActionPerformed
+
+    public void addElementToList(JList list, String elem){
+        DefaultListModel<String> model = (DefaultListModel<String>)list.getModel();
+        model.addElement(elem);
+    }
+    
     public void centerDialog(JDialog dialog) {
         dialog.setBounds(getMiddleX(dialog), getMiddleY(dialog), dialog.getWidth(), dialog.getHeight());
     }

@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package octu.core;
+package octu.core.action;
 
+import octu.core.Command;
 import octu.core.action.Action;
 
 /**

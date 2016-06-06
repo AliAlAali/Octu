@@ -235,6 +235,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Keystroke"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton13ActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="lunchAppButton">
           <Properties>
@@ -404,6 +407,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Scroll"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="scrollMouseActionPerformed"/>
+          </Events>
         </MenuItem>
         <MenuItem class="javax.swing.JMenuItem" name="moveMouse">
           <Properties>
