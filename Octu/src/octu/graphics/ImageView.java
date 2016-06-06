@@ -29,7 +29,7 @@ public class ImageView extends JPanel{
     
     public ImageView(){
         try {
-            image = ImageIO.read(new File(getClass().getClassLoader().getResource("resources/MouseDrawing.png").getFile()));
+            image = ImageIO.read(new File(getClass().getClassLoader().getResource("resources/ImprovedMouse2.png").getFile()));
         } catch (IOException ex) {
            ex.printStackTrace();
         }

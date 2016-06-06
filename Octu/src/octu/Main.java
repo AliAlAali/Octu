@@ -23,10 +23,18 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
+import octu.core.Event;
 import octu.core.FilerHandler;
+import octu.core.Handler;
+import octu.core.action.Action;
+import octu.core.action.DelayAction;
+import octu.core.action.LooperAction;
+import octu.core.action.MouseAction;
+import octu.core.action.StopApplicationAction;
 
 /**
  *
@@ -38,11 +46,20 @@ public class Main extends javax.swing.JFrame {
     private Timer timer;
     private Calendar c;
     private List<BufferedImage> icons;
+    private Handler handler;
+    private Event testEvent;
+
+    private int oneInputID; //for managing variety of actions using one dialog
+
     /**
      * Creates new form Main
      */
     public Main() {
-         //adding images to the icons for the JVM to select from
+        //initializing the handler for events and actions
+        handler = new Handler();
+        testEvent = new Event();
+        testEvent.setName("onStart");
+        //adding images to the icons for the JVM to select from
         icons = new ArrayList<BufferedImage>();
         icons.add(getImage("Octo_16.png"));
         icons.add(getImage("Octo_32.png"));
@@ -51,7 +68,7 @@ public class Main extends javax.swing.JFrame {
         initComponents();
         //to show in the middle of the screen
         screen = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((int)screen.getWidth()/2 - getWidth()/2, (int)screen.getHeight()/2 - getHeight()/2, getWidth(), getHeight());
+        setBounds((int) screen.getWidth() / 2 - getWidth() / 2, (int) screen.getHeight() / 2 - getHeight() / 2, getWidth(), getHeight());
         //preventing accedintal closing
         addWindowListener(new WindowAdapter() {
 
@@ -60,31 +77,40 @@ public class Main extends javax.swing.JFrame {
                 showConfirmDialog("Are you sure leaving the program?");
             }
         });
+
+        //change the graph
+        handler.setOnActoinOccurListener(new Handler.OnActionOccurListener() {
+            @Override
+            public void change(Action act) {
+               if(act instanceof DelayAction){
+                   graph1.peak(false);
+               }else{
+                   graph1.peak(true);
+               }
+            }
+        });
         
         //for the time and date
         c = Calendar.getInstance();
         timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask(){
+        timer.scheduleAtFixedRate(new TimerTask() {
 
             @Override
             public void run() {
                 c = Calendar.getInstance();
                 systemTime.setText(c.getTime().toString());
             }
-            
+
         }, Math.min(60, 60 - c.get(Calendar.SECOND)), 1000);
-        
-        
-        
+
         //adding filters for the save-open dialogs
         FileFilter filter = FilerHandler.getFileFilter();
         saveChooser.setFileFilter(filter);
         openChooser.setFileFilter(filter);
-       
-        
+
     }
 
-    private BufferedImage getImage(String name){
+    private BufferedImage getImage(String name) {
         try {
             return ImageIO.read(new File(getClass().getClassLoader().getResource("resources/" + name).getFile()));
         } catch (IOException ex) {
@@ -92,11 +118,12 @@ public class Main extends javax.swing.JFrame {
         }
         return null;
     }
-    private void showConfirmDialog(String message){
-        if(JOptionPane.showConfirmDialog(Main.this, message, "Confirm", 
-                       JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
-                   System.exit(0);
-               }
+
+    private void showConfirmDialog(String message) {
+        if (JOptionPane.showConfirmDialog(Main.this, message, "Confirm",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
     }
 //        @Override
 //        protected void paintComponent(Graphics g) {
@@ -105,6 +132,7 @@ public class Main extends javax.swing.JFrame {
 //            g.drawLine(0, 0, 100, 100);
 //        }
 //        
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -120,19 +148,20 @@ public class Main extends javax.swing.JFrame {
         jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
         saveDialog = new javax.swing.JDialog();
         saveChooser = new javax.swing.JFileChooser();
         openDialog = new javax.swing.JDialog();
         openChooser = new javax.swing.JFileChooser();
         newActionDialog = new javax.swing.JDialog();
-        jButton12 = new javax.swing.JButton();
+        mouseActionButton = new javax.swing.JButton();
         jButton13 = new javax.swing.JButton();
         lunchAppButton = new javax.swing.JButton();
         actionFile = new javax.swing.JButton();
         shutdownButton = new javax.swing.JButton();
         jButton17 = new javax.swing.JButton();
+        jButton14 = new javax.swing.JButton();
+        jButton15 = new javax.swing.JButton();
+        jButton16 = new javax.swing.JButton();
         FileMenu = new javax.swing.JPopupMenu();
         moveFile = new javax.swing.JMenuItem();
         deleteFile = new javax.swing.JMenuItem();
@@ -144,12 +173,36 @@ public class Main extends javax.swing.JFrame {
         logOff = new javax.swing.JMenuItem();
         restartCom = new javax.swing.JMenuItem();
         shutCom = new javax.swing.JMenuItem();
+        MouseActionMenu = new javax.swing.JPopupMenu();
+        clickMouse = new javax.swing.JMenuItem();
+        pressMouse = new javax.swing.JMenuItem();
+        releaseAction = new javax.swing.JMenuItem();
+        scrollMouse = new javax.swing.JMenuItem();
+        moveMouse = new javax.swing.JMenuItem();
+        MouseActionDialog = new javax.swing.JDialog();
+        jLayeredPane1 = new javax.swing.JLayeredPane();
+        imageView1 = new octu.graphics.ImageView();
+        mouseActionLeft = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        CoordinateInputDialog = new javax.swing.JDialog();
+        cordOk = new javax.swing.JButton();
+        cordCancel = new javax.swing.JButton();
+        cordX = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        cordY = new javax.swing.JTextField();
+        OneValueInput = new javax.swing.JDialog();
+        oneInText = new javax.swing.JLabel();
+        oneInTextFeild = new javax.swing.JTextField();
+        oneInOk = new javax.swing.JButton();
+        oneInCancel = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList();
+        actionList = new javax.swing.JList();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
@@ -157,6 +210,7 @@ public class Main extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         systemTime = new javax.swing.JLabel();
+        jButton12 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jList3 = new javax.swing.JList();
@@ -222,10 +276,6 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel3.setText("jLabel3");
-
-        jLabel5.setText("jLabel5");
-
         saveDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         saveDialog.setTitle("Save Session");
         saveDialog.setIconImages(icons);
@@ -274,7 +324,12 @@ public class Main extends javax.swing.JFrame {
         newActionDialog.setTitle("Action");
         newActionDialog.setIconImages(icons);
 
-        jButton12.setText("Mouse");
+        mouseActionButton.setText("Mouse");
+        mouseActionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mouseActionButtonActionPerformed(evt);
+            }
+        });
 
         jButton13.setText("Keystroke");
 
@@ -294,7 +349,28 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jButton17.setText("Set");
+        jButton17.setText("Variable");
+
+        jButton14.setText("Delay");
+        jButton14.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton14ActionPerformed(evt);
+            }
+        });
+
+        jButton15.setText("Stop");
+        jButton15.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton15ActionPerformed(evt);
+            }
+        });
+
+        jButton16.setText("Looper");
+        jButton16.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton16ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout newActionDialogLayout = new javax.swing.GroupLayout(newActionDialog.getContentPane());
         newActionDialog.getContentPane().setLayout(newActionDialogLayout);
@@ -302,16 +378,23 @@ public class Main extends javax.swing.JFrame {
             newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(newActionDialogLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lunchAppButton, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
-                    .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jButton12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton13, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(shutdownButton, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
-                    .addComponent(actionFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(newActionDialogLayout.createSequentialGroup()
+                        .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lunchAppButton, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                            .addComponent(mouseActionButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton13, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(shutdownButton, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
+                            .addComponent(actionFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(newActionDialogLayout.createSequentialGroup()
+                        .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jButton16, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton14, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         newActionDialogLayout.setVerticalGroup(
@@ -319,7 +402,7 @@ public class Main extends javax.swing.JFrame {
             .addGroup(newActionDialogLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton12)
+                    .addComponent(mouseActionButton)
                     .addComponent(actionFile))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -329,6 +412,12 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lunchAppButton)
                     .addComponent(jButton17))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton14)
+                    .addComponent(jButton15))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton16)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -364,6 +453,210 @@ public class Main extends javax.swing.JFrame {
         shutCom.setText("Shutdown");
         ShutDownMenu.add(shutCom);
 
+        clickMouse.setText("Click");
+        clickMouse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clickMouseActionPerformed(evt);
+            }
+        });
+        MouseActionMenu.add(clickMouse);
+
+        pressMouse.setText("Press");
+        pressMouse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pressMouseActionPerformed(evt);
+            }
+        });
+        MouseActionMenu.add(pressMouse);
+
+        releaseAction.setText("Release");
+        releaseAction.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                releaseActionActionPerformed(evt);
+            }
+        });
+        MouseActionMenu.add(releaseAction);
+
+        scrollMouse.setText("Scroll");
+        MouseActionMenu.add(scrollMouse);
+
+        moveMouse.setText("Move");
+        moveMouse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                moveMouseActionPerformed(evt);
+            }
+        });
+        MouseActionMenu.add(moveMouse);
+
+        MouseActionDialog.setTitle("Select Mouse Button");
+        MouseActionDialog.setIconImages(icons);
+
+        mouseActionLeft.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        mouseActionLeft.setText("Left");
+
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("Right");
+
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("Middle");
+
+        javax.swing.GroupLayout imageView1Layout = new javax.swing.GroupLayout(imageView1);
+        imageView1.setLayout(imageView1Layout);
+        imageView1Layout.setHorizontalGroup(
+            imageView1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(imageView1Layout.createSequentialGroup()
+                .addGap(42, 42, 42)
+                .addGroup(imageView1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(imageView1Layout.createSequentialGroup()
+                        .addComponent(mouseActionLeft, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(26, Short.MAX_VALUE))
+        );
+        imageView1Layout.setVerticalGroup(
+            imageView1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(imageView1Layout.createSequentialGroup()
+                .addComponent(jLabel4)
+                .addGap(46, 46, 46)
+                .addGroup(imageView1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(mouseActionLeft, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(144, Short.MAX_VALUE))
+        );
+
+        jLayeredPane1.setLayer(imageView1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
+        jLayeredPane1.setLayout(jLayeredPane1Layout);
+        jLayeredPane1Layout.setHorizontalGroup(
+            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(imageView1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jLayeredPane1Layout.setVerticalGroup(
+            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
+                .addGap(0, 17, Short.MAX_VALUE)
+                .addComponent(imageView1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        javax.swing.GroupLayout MouseActionDialogLayout = new javax.swing.GroupLayout(MouseActionDialog.getContentPane());
+        MouseActionDialog.getContentPane().setLayout(MouseActionDialogLayout);
+        MouseActionDialogLayout.setHorizontalGroup(
+            MouseActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLayeredPane1)
+        );
+        MouseActionDialogLayout.setVerticalGroup(
+            MouseActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(MouseActionDialogLayout.createSequentialGroup()
+                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        cordOk.setText("Ok");
+        cordOk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cordOkActionPerformed(evt);
+            }
+        });
+
+        cordCancel.setText("Cancel");
+        cordCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cordCancelActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("X");
+
+        jLabel6.setText("Y");
+
+        javax.swing.GroupLayout CoordinateInputDialogLayout = new javax.swing.GroupLayout(CoordinateInputDialog.getContentPane());
+        CoordinateInputDialog.getContentPane().setLayout(CoordinateInputDialogLayout);
+        CoordinateInputDialogLayout.setHorizontalGroup(
+            CoordinateInputDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CoordinateInputDialogLayout.createSequentialGroup()
+                .addGroup(CoordinateInputDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(CoordinateInputDialogLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cordX, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cordY))
+                    .addGroup(CoordinateInputDialogLayout.createSequentialGroup()
+                        .addGap(72, 72, 72)
+                        .addComponent(cordCancel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cordOk, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        CoordinateInputDialogLayout.setVerticalGroup(
+            CoordinateInputDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CoordinateInputDialogLayout.createSequentialGroup()
+                .addContainerGap(17, Short.MAX_VALUE)
+                .addGroup(CoordinateInputDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(cordX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6)
+                    .addComponent(cordY, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(CoordinateInputDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cordOk)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, CoordinateInputDialogLayout.createSequentialGroup()
+                        .addComponent(cordCancel)
+                        .addContainerGap())))
+        );
+
+        oneInText.setText("Enter");
+
+        oneInOk.setText("Ok");
+        oneInOk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                oneInOkActionPerformed(evt);
+            }
+        });
+
+        oneInCancel.setText("Cancel");
+        oneInCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                oneInCancelActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout OneValueInputLayout = new javax.swing.GroupLayout(OneValueInput.getContentPane());
+        OneValueInput.getContentPane().setLayout(OneValueInputLayout);
+        OneValueInputLayout.setHorizontalGroup(
+            OneValueInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(OneValueInputLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(OneValueInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(OneValueInputLayout.createSequentialGroup()
+                        .addComponent(oneInCancel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(oneInOk))
+                    .addGroup(OneValueInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(oneInText, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(oneInTextFeild, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        OneValueInputLayout.setVerticalGroup(
+            OneValueInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(OneValueInputLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(oneInText)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(oneInTextFeild, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(OneValueInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(oneInOk)
+                    .addComponent(oneInCancel))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Octo");
         setIconImages(icons);
@@ -377,12 +670,8 @@ public class Main extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jList1);
 
-        jList2.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane2.setViewportView(jList2);
+        actionList.setModel(new DefaultListModel<String>());
+        jScrollPane2.setViewportView(actionList);
 
         jLabel1.setText("Events");
 
@@ -409,6 +698,8 @@ public class Main extends javax.swing.JFrame {
         systemTime.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         systemTime.setText("Time and Date");
 
+        jButton12.setText("Edit Action");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -425,14 +716,16 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButton4))))
-                        .addGap(0, 511, Short.MAX_VALUE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel2)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGap(10, 10, 10)
+                                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 384, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -452,12 +745,13 @@ public class Main extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton3))
+                    .addComponent(jButton3)
+                    .addComponent(jButton12))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
                     .addComponent(jButton4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 96, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 133, Short.MAX_VALUE)
                 .addComponent(systemTime)
                 .addContainerGap())
         );
@@ -519,6 +813,11 @@ public class Main extends javax.swing.JFrame {
         );
 
         jButton10.setText("Run");
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
 
         jButton11.setText("Stop");
 
@@ -615,15 +914,15 @@ public class Main extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         EventSelector.pack();
-        EventSelector.setBounds(this.getX() + this.getWidth() / 2 - EventSelector.getWidth()/2, this.getY() + this.getHeight() / 2 - EventSelector.getHeight()/2,
+        EventSelector.setBounds(this.getX() + this.getWidth() / 2 - EventSelector.getWidth() / 2, this.getY() + this.getHeight() / 2 - EventSelector.getHeight() / 2,
                 EventSelector.getWidth(), EventSelector.getHeight());
         EventSelector.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-       saveDialog.pack();
-       centerDialog(saveDialog);
-       saveDialog.setVisible(true);
+        saveDialog.pack();
+        centerDialog(saveDialog);
+        saveDialog.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
@@ -631,9 +930,9 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-       openDialog.pack();
+        openDialog.pack();
         centerDialog(openDialog);
-       openDialog.setVisible(true);
+        openDialog.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void submitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitActionPerformed
@@ -647,7 +946,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void actionFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actionFileActionPerformed
-        FileMenu.show(actionFile, actionFile.getX()/2, 0);
+        FileMenu.show(actionFile, actionFile.getX() / 2, 0);
     }//GEN-LAST:event_actionFileActionPerformed
 
     private void moveFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveFileActionPerformed
@@ -655,22 +954,120 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_moveFileActionPerformed
 
     private void shutdownButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shutdownButtonActionPerformed
-        ShutDownMenu.show(shutdownButton, shutdownButton.getX()/2, 0);
+        ShutDownMenu.show(shutdownButton, shutdownButton.getX() / 2, 0);
     }//GEN-LAST:event_shutdownButtonActionPerformed
 
-    public void centerDialog(JDialog dialog){
+    private void mouseActionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mouseActionButtonActionPerformed
+        MouseActionMenu.show(mouseActionButton, mouseActionButton.getX() / 2, 0);
+    }//GEN-LAST:event_mouseActionButtonActionPerformed
+
+    private void clickMouseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clickMouseActionPerformed
+        MouseActionDialog.pack();
+        centerDialog(MouseActionDialog);
+        MouseActionDialog.setVisible(true);
+        newActionDialog.dispose();
+    }//GEN-LAST:event_clickMouseActionPerformed
+
+    private void pressMouseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pressMouseActionPerformed
+        MouseActionDialog.pack();
+        centerDialog(MouseActionDialog);
+        MouseActionDialog.setVisible(true);
+        newActionDialog.dispose();
+    }//GEN-LAST:event_pressMouseActionPerformed
+
+    private void releaseActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_releaseActionActionPerformed
+        MouseActionDialog.pack();
+        centerDialog(MouseActionDialog);
+        MouseActionDialog.setVisible(true);
+        newActionDialog.dispose();
+    }//GEN-LAST:event_releaseActionActionPerformed
+
+    private void moveMouseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveMouseActionPerformed
+        CoordinateInputDialog.pack();
+        centerDialog(CoordinateInputDialog);
+        CoordinateInputDialog.setVisible(true);
+        newActionDialog.dispose();
+    }//GEN-LAST:event_moveMouseActionPerformed
+
+    private void cordOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cordOkActionPerformed
+        MouseAction action = new MouseAction(octu.core.Event.POR_START, MouseAction.ACTION_MOVE, null);
+        action.setX(Integer.parseInt(cordX.getText()));
+        action.setY(Integer.parseInt(cordY.getText()));
+        DefaultListModel<String> model = (DefaultListModel<String>) actionList.getModel();
+        model.addElement(action.getDescription());
+        testEvent.addAction(action);
+        handler.addEvent(testEvent);
+    }//GEN-LAST:event_cordOkActionPerformed
+
+    private void cordCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cordCancelActionPerformed
+        CoordinateInputDialog.dispose();
+    }//GEN-LAST:event_cordCancelActionPerformed
+
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        handler.start();
+    }//GEN-LAST:event_jButton10ActionPerformed
+
+    private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
+        OneValueInput.pack();
+        centerDialog(OneValueInput);
+        OneValueInput.setVisible(true);
+        newActionDialog.dispose();
+        oneInputID = 0;
+    }//GEN-LAST:event_jButton14ActionPerformed
+
+    private void oneInOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_oneInOkActionPerformed
+        switch (oneInputID) {
+            case 0:
+                DelayAction action = new DelayAction(Event.POR_START, 3 * 1000); // 3 seconds
+                DefaultListModel<String> model = (DefaultListModel<String>) actionList.getModel();
+                model.addElement(action.getDescription());
+                testEvent.addAction(action);
+                handler.addEvent(testEvent);
+                break;
+        }
+    }//GEN-LAST:event_oneInOkActionPerformed
+
+    private void oneInCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_oneInCancelActionPerformed
+        OneValueInput.dispose();
+    }//GEN-LAST:event_oneInCancelActionPerformed
+
+    private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
+        StopApplicationAction action = new StopApplicationAction(Event.POR_START); // 3 seconds
+        DefaultListModel<String> model = (DefaultListModel<String>) actionList.getModel();
+        model.addElement(action.getDescription());
+        testEvent.addAction(action);
+        handler.addEvent(testEvent);
+    }//GEN-LAST:event_jButton15ActionPerformed
+
+    private void jButton16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton16ActionPerformed
+        LooperAction act = new LooperAction(Event.POR_START);
+        act.addAction(new MouseAction(Event.POR_START, MouseAction.ACTION_CLICK, null));
+        act.addAction(new StopApplicationAction(Event.POR_START));
+        act.addAction(new DelayAction(Event.POR_START, 2000));
+        act.addAction(new MouseAction(Event.POR_START, MouseAction.ACTION_CLICK, null));
+        act.addAction(new StopApplicationAction(Event.POR_START));
+        act.addAction(new DelayAction(Event.POR_START, 2000));
+        act.addAction(new MouseAction(Event.POR_START, MouseAction.ACTION_CLICK, null));
+        act.addAction(new StopApplicationAction(Event.POR_START));
+        act.addAction(new DelayAction(Event.POR_START, 2000));
+        DefaultListModel<String> model = (DefaultListModel<String>) actionList.getModel();
+        model.addElement(act.getDescription());
+        testEvent.addAction(act);
+
+    }//GEN-LAST:event_jButton16ActionPerformed
+
+    public void centerDialog(JDialog dialog) {
         dialog.setBounds(getMiddleX(dialog), getMiddleY(dialog), dialog.getWidth(), dialog.getHeight());
     }
-    
-    public int getMiddleX(JDialog dialog){
-        return getX() + getWidth()/2 - dialog.getWidth()/2;
+
+    public int getMiddleX(JDialog dialog) {
+        return getX() + getWidth() / 2 - dialog.getWidth() / 2;
     }
-    
-    public int getMiddleY(JDialog dialog){
-        return getY() + getHeight()/2 - dialog.getHeight()/2;
+
+    public int getMiddleY(JDialog dialog) {
+        return getY() + getHeight() / 2 - dialog.getHeight() / 2;
     }
-    
-    
+
     /**
      * @param args the command line arguments
      */
@@ -707,20 +1104,34 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JDialog CoordinateInputDialog;
     private javax.swing.JDialog EventSelector;
     private javax.swing.JPopupMenu FileMenu;
+    private javax.swing.JDialog MouseActionDialog;
+    private javax.swing.JPopupMenu MouseActionMenu;
+    private javax.swing.JDialog OneValueInput;
     private javax.swing.JPopupMenu ShutDownMenu;
     private javax.swing.JButton actionFile;
+    private javax.swing.JList actionList;
     private javax.swing.JCheckBox active;
     private javax.swing.JMenuItem changeAttrib;
+    private javax.swing.JMenuItem clickMouse;
     private javax.swing.JMenuItem copyFile;
+    private javax.swing.JButton cordCancel;
+    private javax.swing.JButton cordOk;
+    private javax.swing.JTextField cordX;
+    private javax.swing.JTextField cordY;
     private javax.swing.JMenuItem deleteFile;
     private octu.graphics.Graph graph1;
+    private octu.graphics.ImageView imageView1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
+    private javax.swing.JButton jButton14;
+    private javax.swing.JButton jButton15;
+    private javax.swing.JButton jButton16;
     private javax.swing.JButton jButton17;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -733,9 +1144,11 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JList jList1;
-    private javax.swing.JList jList2;
     private javax.swing.JList jList3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -755,14 +1168,24 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem logOff;
     private javax.swing.JButton lunchAppButton;
     private javax.swing.JMenuItem makeDir;
+    private javax.swing.JButton mouseActionButton;
+    private javax.swing.JLabel mouseActionLeft;
     private javax.swing.JMenuItem moveFile;
+    private javax.swing.JMenuItem moveMouse;
     private javax.swing.JDialog newActionDialog;
+    private javax.swing.JButton oneInCancel;
+    private javax.swing.JButton oneInOk;
+    private javax.swing.JLabel oneInText;
+    private javax.swing.JTextField oneInTextFeild;
     private javax.swing.JFileChooser openChooser;
     private javax.swing.JDialog openDialog;
+    private javax.swing.JMenuItem pressMouse;
+    private javax.swing.JMenuItem releaseAction;
     private javax.swing.JMenuItem renameFile;
     private javax.swing.JMenuItem restartCom;
     private javax.swing.JFileChooser saveChooser;
     private javax.swing.JDialog saveDialog;
+    private javax.swing.JMenuItem scrollMouse;
     private javax.swing.JMenuItem shutCom;
     private javax.swing.JButton shutdownButton;
     private javax.swing.JButton submit;
