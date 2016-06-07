@@ -34,9 +34,15 @@ public class Handler {
     }
 
     /*
+<<<<<<< HEAD
      arrange event's actions according to their importance
      this must be called when start() called
      */
+=======
+        arrange event's actions according to their importance
+        this must be called when start() called
+    */
+>>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
     private void arrangeActionsFromEvents(ArrayList<Event> from,
             ArrayList<Action> to) {
         //to be implemented later
@@ -44,6 +50,7 @@ public class Handler {
         int por = 1;
         //basic implementation for testing purposes
         // this should be the number of available events
+<<<<<<< HEAD
         for (int k = 0; k < 5; k++) {
             for (int i = 0; i < events.size(); i++) {
                
@@ -57,6 +64,22 @@ public class Handler {
                 
             }
             por++;
+=======
+        for (int i = 0; i < events.size(); i++) {
+            por = 1;
+            for (int k = 0; k < 5; k++) {
+                
+            
+            Event event = events.get(i);
+            if(event.getPor() == por){
+                for (int j = 0; j < event.getActions().size(); j++) {
+                    Action get = event.getActions().get(j);
+                    actions.add(get);
+                }
+            }
+            por++;
+            }
+>>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
         }
     }
 
@@ -153,7 +176,18 @@ public class Handler {
         }
         return -1;
     }
+    
+    public Event getEvent(String name){
+        for (int i = 0; i < events.size(); i++) {
+            Event get = events.get(i);
+            if(get.getName().equals(name)){
+                return get;
+            }
+        }
+        return null;
+    }
 
+<<<<<<< HEAD
     public Event getEvent(String name) {
         for (int i = 0; i < events.size(); i++) {
             Event get = events.get(i);
@@ -175,6 +209,14 @@ public class Handler {
         return null;
     }
 
+=======
+    public Event getEvent(int index){
+        if(events.size() > 0)
+            return events.get(index);
+        return null;
+    }
+    
+>>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
     public boolean addEvent(Event evt) {
         //make sure not to add an event twice
         for (int i = 0; i < events.size(); i++) {

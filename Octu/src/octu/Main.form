@@ -937,49 +937,67 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Shift"/>
               </Properties>
+<<<<<<< HEAD
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menu_vk_shiftActionPerformed"/>
               </Events>
+=======
+>>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menu_vk_enter">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Enter"/>
               </Properties>
+<<<<<<< HEAD
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menu_vk_enterActionPerformed"/>
               </Events>
+=======
+>>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menu_vk_del">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Delete"/>
               </Properties>
+<<<<<<< HEAD
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menu_vk_delActionPerformed"/>
               </Events>
+=======
+>>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menu_vk_ctrl">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Ctrl"/>
               </Properties>
+<<<<<<< HEAD
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menu_vk_ctrlActionPerformed"/>
               </Events>
+=======
+>>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menu_vk_esc">
               <Properties>
                 <Property name="text" type="java.lang.String" value="ESC"/>
               </Properties>
+<<<<<<< HEAD
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menu_vk_escActionPerformed"/>
               </Events>
+=======
+>>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menu_vk_letter">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Letter"/>
               </Properties>
+<<<<<<< HEAD
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menu_vk_letterActionPerformed"/>
               </Events>
+=======
+>>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -992,49 +1010,67 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Shift"/>
               </Properties>
+<<<<<<< HEAD
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menu_vk_shiftRActionPerformed"/>
               </Events>
+=======
+>>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menu_vk_enterR">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Enter"/>
               </Properties>
+<<<<<<< HEAD
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menu_vk_enterRActionPerformed"/>
               </Events>
+=======
+>>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menu_vk_delR">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Delete"/>
               </Properties>
+<<<<<<< HEAD
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menu_vk_delRActionPerformed"/>
               </Events>
+=======
+>>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menu_vk_ctrlR">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Ctrl"/>
               </Properties>
+<<<<<<< HEAD
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menu_vk_ctrlRActionPerformed"/>
               </Events>
+=======
+>>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menu_vk_escR">
               <Properties>
                 <Property name="text" type="java.lang.String" value="ESC"/>
               </Properties>
+<<<<<<< HEAD
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menu_vk_escRActionPerformed"/>
               </Events>
+=======
+>>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menu_vk_letterR">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Letter"/>
               </Properties>
+<<<<<<< HEAD
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menu_vk_letterRActionPerformed"/>
               </Events>
+=======
+>>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -1329,9 +1365,12 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Down"/>
               </Properties>
+<<<<<<< HEAD
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton19ActionPerformed"/>
               </Events>
+=======
+>>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
             </Component>
           </SubComponents>
         </Container>
