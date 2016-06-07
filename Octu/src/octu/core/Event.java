@@ -19,12 +19,15 @@ public class Event implements Listable{
     public static final int POR_GOING = 4;
     public static final int POR_SCHEDULE = 2;
     public static final int POR_TRIGGER = 3;
+    public static final int POR_LOOP = 5;
     
     private ArrayList<Action> actions;
     private String name;
+    private int por;
 
-    public Event(){
+    public Event(int por){
         actions = new ArrayList<Action>();
+        this.por = por;
     }
     @Override
     public String getDescription() {
@@ -55,5 +58,15 @@ public class Event implements Listable{
         
         //basic implementation for testing propuses
         actions.add(act);
+    }
+
+    public int getPor() {
+        return por;
+    }
+    
+    public Action getAction(int index){
+        if(actions.size() > 0)
+             return actions.get(index);
+        return null;
     }
 }

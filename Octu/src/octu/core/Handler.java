@@ -33,14 +33,30 @@ public class Handler {
         timer = new Timer();
     }
 
+    /*
+     arrange event's actions according to their importance
+     this must be called when start() called
+     */
     private void arrangeActionsFromEvents(ArrayList<Event> from,
             ArrayList<Action> to) {
         //to be implemented later
-
+        actions.clear();
+        int por = 1;
         //basic implementation for testing purposes
-        for (int i = 0; i < events.size(); i++) {
-            Event event = events.get(i);
-            actions = event.getActions();
+        // this should be the number of available events
+        for (int k = 0; k < 5; k++) {
+            for (int i = 0; i < events.size(); i++) {
+               
+                Event event = events.get(i);
+                if (event.getPor() == por) {
+                    for (int j = 0; j < event.getActions().size(); j++) {
+                        Action get = event.getActions().get(j);
+                        actions.add(get);
+                    }
+                }
+                
+            }
+            por++;
         }
     }
 
@@ -49,6 +65,7 @@ public class Handler {
      */
     public void start() {
         stop();
+        arrangeActionsFromEvents(events, actions);
         hasStarted = true;
         timer.schedule(new Queqy(), 200);
 
@@ -99,24 +116,63 @@ public class Handler {
         return true;
     }
 
-    
-    public Action removeAction(int index){
+    public Action removeAction(int index) {
         return actions.remove(index);
     }
     
+    public boolean removeEventAndActions(String evtName){
+        for (int i = 0; i < actions.size(); i++) {
+            if(actions.get(i).getPriority() == getEvent(evtName).getPor()){
+                actions.remove(i);
+                i--;
+            }
+            
+        }
+        for (int i = 0; i < events.size(); i++) {
+            Event event = events.get(i);
+            if(event.getName().equals(evtName)){
+                events.remove(i);
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
     public int findAction(int por, int inEventIndex) {
         int initial = -1;
         for (int i = 0; i < actions.size(); i++) {
             Action act = actions.get(i);
-            if(act.getPriority() == por && initial == -1){
+            if (act.getPriority() == por && initial == -1) {
                 initial = i;
                 break;
             }
         }
-        if(initial > -1){
+        if (initial > -1) {
             return initial + inEventIndex;
         }
         return -1;
+    }
+
+    public Event getEvent(String name) {
+        for (int i = 0; i < events.size(); i++) {
+            Event get = events.get(i);
+            if (get.getName().equals(name)) {
+                return get;
+            }
+        }
+        return null;
+    }
+    
+    public ArrayList<Event> getEvents(){
+        return this.events;
+    }
+
+    public Event getEvent(int index) {
+        if (events.size() > 0) {
+            return events.get(index);
+        }
+        return null;
     }
 
     public boolean addEvent(Event evt) {
@@ -147,8 +203,8 @@ public class Handler {
                     if (actionOccur != null) {
                         actionOccur.change(action);
                     }
-                }else{
-                    if(actionOccur != null){
+                } else {
+                    if (actionOccur != null) {
                         actionOccur.change(null);
                     }
                 }

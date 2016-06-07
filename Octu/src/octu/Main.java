@@ -49,9 +49,9 @@ public class Main extends javax.swing.JFrame {
     private Calendar c;
     private List<BufferedImage> icons;
     private Handler handler;
-    private Event testEvent;
 
     private int oneInputID; //for managing variety of actions using one dialog
+    private String selectedEvent;
 
     /**
      * Creates new form Main
@@ -59,8 +59,6 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         //initializing the handler for events and actions
         handler = new Handler();
-        testEvent = new Event();
-        testEvent.setName("onStart");
         //adding images to the icons for the JVM to select from
         icons = new ArrayList<BufferedImage>();
         icons.add(getImage("Octo_16.png"));
@@ -154,11 +152,11 @@ public class Main extends javax.swing.JFrame {
     private void initComponents() {
 
         EventSelector = new javax.swing.JDialog();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
+        bt_event_start = new javax.swing.JButton();
+        bt_event_going = new javax.swing.JButton();
+        bt_event_trigger = new javax.swing.JButton();
+        bt_event_loop = new javax.swing.JButton();
+        bt_event_schedule = new javax.swing.JButton();
         saveDialog = new javax.swing.JDialog();
         saveChooser = new javax.swing.JFileChooser();
         openDialog = new javax.swing.JDialog();
@@ -224,10 +222,26 @@ public class Main extends javax.swing.JFrame {
         twoPath_oldText = new javax.swing.JTextField();
         twoPath_newPath = new javax.swing.JButton();
         twoPath_newText = new javax.swing.JTextField();
+        KeystrokeMenu = new javax.swing.JPopupMenu();
+        menu_type = new javax.swing.JMenuItem();
+        menu_vk_press = new javax.swing.JMenu();
+        menu_vk_shift = new javax.swing.JMenuItem();
+        menu_vk_enter = new javax.swing.JMenuItem();
+        menu_vk_del = new javax.swing.JMenuItem();
+        menu_vk_ctrl = new javax.swing.JMenuItem();
+        menu_vk_esc = new javax.swing.JMenuItem();
+        menu_vk_letter = new javax.swing.JMenuItem();
+        menu_vk_release = new javax.swing.JMenu();
+        menu_vk_shiftR = new javax.swing.JMenuItem();
+        menu_vk_enterR = new javax.swing.JMenuItem();
+        menu_vk_delR = new javax.swing.JMenuItem();
+        menu_vk_ctrlR = new javax.swing.JMenuItem();
+        menu_vk_escR = new javax.swing.JMenuItem();
+        menu_vk_letterR = new javax.swing.JMenuItem();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
+        eventList = new javax.swing.JList();
         jScrollPane2 = new javax.swing.JScrollPane();
         actionList = new javax.swing.JList();
         jLabel1 = new javax.swing.JLabel();
@@ -238,6 +252,8 @@ public class Main extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         systemTime = new javax.swing.JLabel();
         jButton12 = new javax.swing.JButton();
+        jButton18 = new javax.swing.JButton();
+        jButton19 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         historyList = new javax.swing.JList();
@@ -258,15 +274,40 @@ public class Main extends javax.swing.JFrame {
         EventSelector.setTitle("New Event");
         EventSelector.setIconImages(icons);
 
-        jButton5.setText("onStart");
+        bt_event_start.setText("onStart");
+        bt_event_start.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_event_startActionPerformed(evt);
+            }
+        });
 
-        jButton6.setText("onGoing");
+        bt_event_going.setText("onGoing");
+        bt_event_going.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_event_goingActionPerformed(evt);
+            }
+        });
 
-        jButton7.setText("Trigger");
+        bt_event_trigger.setText("Trigger");
+        bt_event_trigger.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_event_triggerActionPerformed(evt);
+            }
+        });
 
-        jButton8.setText("Interval");
+        bt_event_loop.setText("Loop");
+        bt_event_loop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_event_loopActionPerformed(evt);
+            }
+        });
 
-        jButton9.setText("Schedule");
+        bt_event_schedule.setText("Schedule");
+        bt_event_schedule.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_event_scheduleActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout EventSelectorLayout = new javax.swing.GroupLayout(EventSelector.getContentPane());
         EventSelector.getContentPane().setLayout(EventSelectorLayout);
@@ -275,14 +316,13 @@ public class Main extends javax.swing.JFrame {
             .addGroup(EventSelectorLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(EventSelectorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(EventSelectorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(bt_event_trigger, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(bt_event_going, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(bt_event_start, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(EventSelectorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(bt_event_schedule, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(bt_event_loop, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         EventSelectorLayout.setVerticalGroup(
@@ -290,14 +330,14 @@ public class Main extends javax.swing.JFrame {
             .addGroup(EventSelectorLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(EventSelectorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton5)
-                    .addComponent(jButton8))
+                    .addComponent(bt_event_start)
+                    .addComponent(bt_event_loop))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(EventSelectorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton6)
-                    .addComponent(jButton9))
+                    .addComponent(bt_event_going)
+                    .addComponent(bt_event_schedule))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton7)
+                .addComponent(bt_event_trigger)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -896,18 +936,131 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        menu_type.setText("Type");
+        menu_type.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu_typeActionPerformed(evt);
+            }
+        });
+        KeystrokeMenu.add(menu_type);
+
+        menu_vk_press.setText("Press");
+
+        menu_vk_shift.setText("Shift");
+        menu_vk_shift.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu_vk_shiftActionPerformed(evt);
+            }
+        });
+        menu_vk_press.add(menu_vk_shift);
+
+        menu_vk_enter.setText("Enter");
+        menu_vk_enter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu_vk_enterActionPerformed(evt);
+            }
+        });
+        menu_vk_press.add(menu_vk_enter);
+
+        menu_vk_del.setText("Delete");
+        menu_vk_del.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu_vk_delActionPerformed(evt);
+            }
+        });
+        menu_vk_press.add(menu_vk_del);
+
+        menu_vk_ctrl.setText("Ctrl");
+        menu_vk_ctrl.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu_vk_ctrlActionPerformed(evt);
+            }
+        });
+        menu_vk_press.add(menu_vk_ctrl);
+
+        menu_vk_esc.setText("ESC");
+        menu_vk_esc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu_vk_escActionPerformed(evt);
+            }
+        });
+        menu_vk_press.add(menu_vk_esc);
+
+        menu_vk_letter.setText("Letter");
+        menu_vk_letter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu_vk_letterActionPerformed(evt);
+            }
+        });
+        menu_vk_press.add(menu_vk_letter);
+
+        KeystrokeMenu.add(menu_vk_press);
+
+        menu_vk_release.setText("Release");
+
+        menu_vk_shiftR.setText("Shift");
+        menu_vk_shiftR.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu_vk_shiftRActionPerformed(evt);
+            }
+        });
+        menu_vk_release.add(menu_vk_shiftR);
+
+        menu_vk_enterR.setText("Enter");
+        menu_vk_enterR.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu_vk_enterRActionPerformed(evt);
+            }
+        });
+        menu_vk_release.add(menu_vk_enterR);
+
+        menu_vk_delR.setText("Delete");
+        menu_vk_delR.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu_vk_delRActionPerformed(evt);
+            }
+        });
+        menu_vk_release.add(menu_vk_delR);
+
+        menu_vk_ctrlR.setText("Ctrl");
+        menu_vk_ctrlR.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu_vk_ctrlRActionPerformed(evt);
+            }
+        });
+        menu_vk_release.add(menu_vk_ctrlR);
+
+        menu_vk_escR.setText("ESC");
+        menu_vk_escR.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu_vk_escRActionPerformed(evt);
+            }
+        });
+        menu_vk_release.add(menu_vk_escR);
+
+        menu_vk_letterR.setText("Letter");
+        menu_vk_letterR.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu_vk_letterRActionPerformed(evt);
+            }
+        });
+        menu_vk_release.add(menu_vk_letterR);
+
+        KeystrokeMenu.add(menu_vk_release);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Octo");
         setIconImages(icons);
 
         jPanel1.setToolTipText("");
 
-        jList1.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
+        eventList.setModel(new DefaultListModel<String>());
+        eventList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                eventListMousePressed(evt);
+            }
         });
-        jScrollPane1.setViewportView(jList1);
+        jScrollPane1.setViewportView(eventList);
 
         actionList.setModel(new DefaultListModel<String>());
         jScrollPane2.setViewportView(actionList);
@@ -924,6 +1077,11 @@ public class Main extends javax.swing.JFrame {
         });
 
         jButton2.setText("Delete Event");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("New Action");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -943,6 +1101,20 @@ public class Main extends javax.swing.JFrame {
         systemTime.setText("Time and Date");
 
         jButton12.setText("Edit Action");
+
+        jButton18.setText("Up");
+        jButton18.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton18ActionPerformed(evt);
+            }
+        });
+
+        jButton19.setText("Down");
+        jButton19.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton19ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -969,7 +1141,11 @@ public class Main extends javax.swing.JFrame {
                                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(18, 18, 18)
                         .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 380, Short.MAX_VALUE)))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 289, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -990,11 +1166,13 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton3)
-                    .addComponent(jButton12))
+                    .addComponent(jButton12)
+                    .addComponent(jButton18))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
-                    .addComponent(jButton4))
+                    .addComponent(jButton4)
+                    .addComponent(jButton19))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 133, Short.MAX_VALUE)
                 .addComponent(systemTime)
                 .addContainerGap())
@@ -1159,6 +1337,10 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        if (eventList.getSelectedIndex() == -1) {
+            JOptionPane.showMessageDialog(this, "You must have and select an event!");
+            return;
+        }
         newActionDialog.pack();
         centerDialog(newActionDialog);
         newActionDialog.setVisible(true);
@@ -1214,13 +1396,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_moveMouseActionPerformed
 
     private void cordOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cordOkActionPerformed
-        MouseAction action = new MouseAction(octu.core.Event.POR_START, MouseAction.ACTION_MOVE, null);
+        MouseAction action = new MouseAction(handler.getEvent(selectedEvent).getPor(), MouseAction.ACTION_MOVE, null);
         action.setX(Integer.parseInt(cordX.getText()));
         action.setY(Integer.parseInt(cordY.getText()));
         DefaultListModel<String> model = (DefaultListModel<String>) actionList.getModel();
         model.addElement(action.getDescription());
-        testEvent.addAction(action);
-        handler.addEvent(testEvent);
+        handler.getEvent(selectedEvent).addAction(action);
     }//GEN-LAST:event_cordOkActionPerformed
 
     private void cordCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cordCancelActionPerformed
@@ -1242,11 +1423,12 @@ public class Main extends javax.swing.JFrame {
     private void oneInOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_oneInOkActionPerformed
         switch (oneInputID) {
             case 0:
-                DelayAction action = new DelayAction(Event.POR_START, 3 * 1000); // 3 seconds
+                Event event = handler.getEvent(selectedEvent);
+                DelayAction action = new DelayAction(event.getPor(), Integer.parseInt(oneInTextFeild.getText())); // 3 seconds
                 DefaultListModel<String> model = (DefaultListModel<String>) actionList.getModel();
                 model.addElement(action.getDescription());
-                testEvent.addAction(action);
-                handler.addEvent(testEvent);
+                event.addAction(action);
+                OneValueInput.dispose();
                 break;
         }
     }//GEN-LAST:event_oneInOkActionPerformed
@@ -1256,52 +1438,51 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_oneInCancelActionPerformed
 
     private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
-        StopApplicationAction action = new StopApplicationAction(Event.POR_START); // 3 seconds
+        StopApplicationAction action = new StopApplicationAction(handler.getEvent(selectedEvent).getPor()); // 3 seconds
         DefaultListModel<String> model = (DefaultListModel<String>) actionList.getModel();
         model.addElement(action.getDescription());
-        testEvent.addAction(action);
-        handler.addEvent(testEvent);
+        handler.getEvent(selectedEvent).addAction(action);
     }//GEN-LAST:event_jButton15ActionPerformed
 
     private void jButton16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton16ActionPerformed
-        LooperAction act = new LooperAction(Event.POR_START);
-        act.addAction(new MouseAction(Event.POR_START, MouseAction.ACTION_CLICK, null));
-        act.addAction(new StopApplicationAction(Event.POR_START));
-        act.addAction(new DelayAction(Event.POR_START, 2000));
-        act.addAction(new MouseAction(Event.POR_START, MouseAction.ACTION_CLICK, null));
-        act.addAction(new StopApplicationAction(Event.POR_START));
-        act.addAction(new DelayAction(Event.POR_START, 2000));
-        act.addAction(new MouseAction(Event.POR_START, MouseAction.ACTION_CLICK, null));
-        act.addAction(new StopApplicationAction(Event.POR_START));
-        act.addAction(new DelayAction(Event.POR_START, 2000));
+        LooperAction act = new LooperAction(handler.getEvent(selectedEvent).getPor());
+        act.addAction(new MouseAction(handler.getEvent(selectedEvent).getPor(), MouseAction.ACTION_CLICK, null));
+        act.addAction(new StopApplicationAction(handler.getEvent(selectedEvent).getPor()));
+        act.addAction(new DelayAction(handler.getEvent(selectedEvent).getPor(), 2000));
+        act.addAction(new MouseAction(handler.getEvent(selectedEvent).getPor(), MouseAction.ACTION_CLICK, null));
+        act.addAction(new StopApplicationAction(handler.getEvent(selectedEvent).getPor()));
+        act.addAction(new DelayAction(handler.getEvent(selectedEvent).getPor(), 2000));
+        act.addAction(new MouseAction(handler.getEvent(selectedEvent).getPor(), MouseAction.ACTION_CLICK, null));
+        act.addAction(new StopApplicationAction(handler.getEvent(selectedEvent).getPor()));
+        act.addAction(new DelayAction(handler.getEvent(selectedEvent).getPor(), 2000));
         DefaultListModel<String> model = (DefaultListModel<String>) actionList.getModel();
         model.addElement(act.getDescription());
-        testEvent.addAction(act);
+        handler.getEvent(selectedEvent).addAction(act);
 
     }//GEN-LAST:event_jButton16ActionPerformed
 
     private void lunchAppButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lunchAppButtonActionPerformed
         //adding actoins for testing propuses only
+        Event event = handler.getEvent(selectedEvent);
         DefaultListModel<String> model = (DefaultListModel<String>) actionList.getModel();
-        MouseAction act1 = new MouseAction(Event.POR_START, MouseAction.ACTION_MOVE, null);
+        MouseAction act1 = new MouseAction(event.getPor(), MouseAction.ACTION_MOVE, null);
         act1.setX(200);
         act1.setY(200);
-        DelayAction d1 = new DelayAction(Event.POR_START, 2000);
-        MouseAction act2 = new MouseAction(Event.POR_START, MouseAction.ACTION_MOVE, null);
+        DelayAction d1 = new DelayAction(event.getPor(), 2000);
+        MouseAction act2 = new MouseAction(event.getPor(), MouseAction.ACTION_MOVE, null);
         act2.setX(500);
         act2.setY(500);
-        DelayAction d2 = new DelayAction(Event.POR_START, 3000);
-        MouseAction act3 = new MouseAction(Event.POR_START, MouseAction.ACTION_MOVE, null);
+        DelayAction d2 = new DelayAction(event.getPor(), 3000);
+        MouseAction act3 = new MouseAction(event.getPor(), MouseAction.ACTION_MOVE, null);
         act3.setX(600);
         act3.setY(600);
-        DelayAction d3 = new DelayAction(Event.POR_START, 5000);
-        testEvent.addAction(act1);
-        testEvent.addAction(d1);
-        testEvent.addAction(act2);
-        testEvent.addAction(d2);
-        testEvent.addAction(act3);
-        testEvent.addAction(d3);
-        handler.addEvent(testEvent);
+        DelayAction d3 = new DelayAction(event.getPor(), 5000);
+        handler.getEvent(selectedEvent).addAction(act1);
+        handler.getEvent(selectedEvent).addAction(d1);
+        handler.getEvent(selectedEvent).addAction(act2);
+        handler.getEvent(selectedEvent).addAction(d2);
+        handler.getEvent(selectedEvent).addAction(act3);
+        handler.getEvent(selectedEvent).addAction(d3);
         model.addElement(act1.getDescription());
         model.addElement(d1.getDescription());
         model.addElement(act2.getDescription());
@@ -1317,10 +1498,10 @@ public class Main extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         int selection = actionList.getSelectedIndex();
-        int eventNum = Event.POR_START; //change this later, indicate selected event
-        handler.removeAction(handler.findAction(eventNum, selection));
-        //events.removeAction(selection);
-        //testEvent.removeAction(selection);
+        if (selection == -1) {
+            return;
+        }
+        handler.getEvent(selectedEvent).removeAction(selection);
         DefaultListModel<String> model = (DefaultListModel<String>) actionList.getModel();
         model.remove(selection);
     }//GEN-LAST:event_jButton4ActionPerformed
@@ -1397,10 +1578,10 @@ public class Main extends javax.swing.JFrame {
 
     private void twoPath_okActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_twoPath_okActionPerformed
         String title = twoPathDialog.getTitle();
-        if(title.startsWith("Copy")){
-            
-        }else if(title.startsWith("Move")){
-            
+        if (title.startsWith("Copy")) {
+
+        } else if (title.startsWith("Move")) {
+
         }
     }//GEN-LAST:event_twoPath_okActionPerformed
 
@@ -1438,30 +1619,306 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_copyFileActionPerformed
 
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
-        newActionDialog.dispose();
-        String text = JOptionPane.showInputDialog(this,"Type text for Keystroke Action:");
-        KeyStrokeAction action = new KeyStrokeAction(Event.POR_START, text);
-        addElementToList(actionList, action.getDescription());
-        testEvent.addAction(action);
-        handler.addEvent(testEvent);
+//        newActionDialog.dispose();
+//        String text = JOptionPane.showInputDialog(this,"Type text for Keystroke Action:");
+//        KeyStrokeAction action = new KeyStrokeAction(Event.POR_START, text);
+//        addElementToList(actionList, action.getDescription());
+//        testEvent.addAction(action);
+//        handler.addEvent(testEvent);
+        KeystrokeMenu.show(jButton13, jButton13.getX() / 2, 0);
     }//GEN-LAST:event_jButton13ActionPerformed
 
     private void scrollMouseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scrollMouseActionPerformed
         newActionDialog.dispose();
         int scroll = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter the Y change: "));
-        MouseAction act = new MouseAction(Event.POR_START, MouseAction.ACTION_SCROLL, null);
+        MouseAction act = new MouseAction(handler.getEvent(selectedEvent).getPor(), MouseAction.ACTION_SCROLL, null);
         act.setY(scroll);
         addElementToList(actionList, act.getDescription());
-        testEvent.addAction(act);
-        handler.addEvent(testEvent);
-        
+        handler.getEvent(selectedEvent).addAction(act);
+
     }//GEN-LAST:event_scrollMouseActionPerformed
 
-    public void addElementToList(JList list, String elem){
-        DefaultListModel<String> model = (DefaultListModel<String>)list.getModel();
+    private void jButton18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton18ActionPerformed
+        int actSelection = actionList.getSelectedIndex();
+        if (actSelection == -1) {
+            JOptionPane.showMessageDialog(this, "You must select an action first");
+        } else {
+            if (actSelection > 0) {
+                ArrayList<Action> actions = handler.getEvent(selectedEvent).getActions();
+                actions.add(actSelection - 1, handler.getEvent(selectedEvent).getAction(actSelection));
+                actions.remove(actSelection + 1);
+                DefaultListModel<String> model = new DefaultListModel<String>();
+                for (int i = 0; i < actions.size(); i++) {
+                    Action action = actions.get(i);
+                    model.addElement(action.getDescription());
+                }
+                actionList.setModel(model);
+            }
+            actionList.setSelectedIndex(actSelection - 1);
+        }
+    }//GEN-LAST:event_jButton18ActionPerformed
+
+    private void menu_typeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_typeActionPerformed
+        newActionDialog.dispose();
+        String text = JOptionPane.showInputDialog(this, "Type text for Keystroke Action:");
+        KeyStrokeAction action = new KeyStrokeAction(handler.getEvent(selectedEvent).getPor(), KeyStrokeAction.OPERATION_TYPE, text);
+        addElementToList(actionList, action.getDescription());
+        handler.getEvent(selectedEvent).addAction(action);
+    }//GEN-LAST:event_menu_typeActionPerformed
+
+    private void bt_event_startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_event_startActionPerformed
+        addEvent("onStart", Event.POR_START);
+        eventList.setSelectedIndex(eventList.getLastVisibleIndex());
+        Event event = handler.getEvent(eventList.getSelectedIndex());
+        selectedEvent = event.getName();
+        //update the view of actionList
+        DefaultListModel<String> model = new DefaultListModel<String>();
+        for (int i = 0; i < event.getActions().size(); i++) {
+            model.addElement(event.getActions().get(i).getDescription());
+        }
+        actionList.setModel(model);
+
+    }//GEN-LAST:event_bt_event_startActionPerformed
+
+    private void bt_event_goingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_event_goingActionPerformed
+        addEvent("onGoing", Event.POR_GOING);
+        eventList.setSelectedIndex(eventList.getLastVisibleIndex());
+        Event event = handler.getEvent(eventList.getSelectedIndex());
+        selectedEvent = event.getName();
+        //update the view of actionList
+        DefaultListModel<String> model = new DefaultListModel<String>();
+        for (int i = 0; i < event.getActions().size(); i++) {
+            model.addElement(event.getActions().get(i).getDescription());
+        }
+        actionList.setModel(model);
+    }//GEN-LAST:event_bt_event_goingActionPerformed
+
+    private void bt_event_loopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_event_loopActionPerformed
+        addEvent("Loop", Event.POR_LOOP);
+        eventList.setSelectedIndex(eventList.getLastVisibleIndex());
+        Event event = handler.getEvent(eventList.getSelectedIndex());
+        selectedEvent = event.getName();
+        //update the view of actionList
+        DefaultListModel<String> model = new DefaultListModel<String>();
+        for (int i = 0; i < event.getActions().size(); i++) {
+            model.addElement(event.getActions().get(i).getDescription());
+        }
+        actionList.setModel(model);
+    }//GEN-LAST:event_bt_event_loopActionPerformed
+
+    private void bt_event_scheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_event_scheduleActionPerformed
+        addEvent("Schedule", Event.POR_SCHEDULE);
+        eventList.setSelectedIndex(eventList.getLastVisibleIndex());
+        Event event = handler.getEvent(eventList.getSelectedIndex());
+        selectedEvent = event.getName();
+        //update the view of actionList
+        DefaultListModel<String> model = new DefaultListModel<String>();
+        for (int i = 0; i < event.getActions().size(); i++) {
+            model.addElement(event.getActions().get(i).getDescription());
+        }
+        actionList.setModel(model);
+    }//GEN-LAST:event_bt_event_scheduleActionPerformed
+
+    private void bt_event_triggerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_event_triggerActionPerformed
+        addEvent("Trigger", Event.POR_TRIGGER);
+        eventList.setSelectedIndex(eventList.getLastVisibleIndex());
+        Event event = handler.getEvent(eventList.getSelectedIndex());
+        selectedEvent = event.getName();
+        //update the view of actionList
+        DefaultListModel<String> model = new DefaultListModel<String>();
+        for (int i = 0; i < event.getActions().size(); i++) {
+            model.addElement(event.getActions().get(i).getDescription());
+        }
+        actionList.setModel(model);
+    }//GEN-LAST:event_bt_event_triggerActionPerformed
+
+    private void eventListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eventListMousePressed
+        Event event = handler.getEvent(eventList.getSelectedIndex());
+        selectedEvent = event.getName();
+
+        //update the view of actionList
+        DefaultListModel<String> model = new DefaultListModel<String>();
+        for (int i = 0; i < event.getActions().size(); i++) {
+            model.addElement(event.getActions().get(i).getDescription());
+        }
+        actionList.setModel(model);
+    }//GEN-LAST:event_eventListMousePressed
+
+    private void jButton19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton19ActionPerformed
+        int actSelection = actionList.getSelectedIndex();
+        if (actSelection == -1) {
+            JOptionPane.showMessageDialog(this, "You must select an action first");
+        } else {
+            if (actSelection < actionList.getLastVisibleIndex() - 1) {
+                ArrayList<Action> actions = handler.getEvent(selectedEvent).getActions();
+                actions.add(actSelection + 2, handler.getEvent(selectedEvent).getAction(actSelection));
+                actions.remove(actSelection);
+                DefaultListModel<String> model = new DefaultListModel<String>();
+                for (int i = 0; i < actions.size(); i++) {
+                    Action action = actions.get(i);
+                    model.addElement(action.getDescription());
+                }
+                actionList.setModel(model);
+                actionList.setSelectedIndex(actSelection + 1);
+            } else {
+                ArrayList<Action> actions = handler.getEvent(selectedEvent).getActions();
+                actions.add(handler.getEvent(selectedEvent).getAction(actSelection));
+                actions.remove(actSelection);
+                DefaultListModel<String> model = new DefaultListModel<String>();
+                for (int i = 0; i < actions.size(); i++) {
+                    Action action = actions.get(i);
+                    model.addElement(action.getDescription());
+                }
+                actionList.setModel(model);
+                actionList.setSelectedIndex(actionList.getLastVisibleIndex());
+            }
+        }
+    }//GEN-LAST:event_jButton19ActionPerformed
+
+    private void menu_vk_shiftActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_vk_shiftActionPerformed
+        Event event = handler.getEvent(selectedEvent);
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_PRESS, KeyStrokeAction.KEY_SHIFT);
+        prepareAction(act);
+        newActionDialog.dispose();
+    }//GEN-LAST:event_menu_vk_shiftActionPerformed
+
+    private void menu_vk_enterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_vk_enterActionPerformed
+        Event event = handler.getEvent(selectedEvent);
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_PRESS, KeyStrokeAction.KEY_ENTER);
+        prepareAction(act);
+        newActionDialog.dispose();
+    }//GEN-LAST:event_menu_vk_enterActionPerformed
+
+    private void menu_vk_delActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_vk_delActionPerformed
+        Event event = handler.getEvent(selectedEvent);
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_PRESS, KeyStrokeAction.KEY_DEL);
+        prepareAction(act);
+        newActionDialog.dispose();
+    }//GEN-LAST:event_menu_vk_delActionPerformed
+
+    private void menu_vk_ctrlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_vk_ctrlActionPerformed
+        Event event = handler.getEvent(selectedEvent);
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_PRESS, KeyStrokeAction.KEY_CTRL);
+        prepareAction(act);
+        newActionDialog.dispose();
+    }//GEN-LAST:event_menu_vk_ctrlActionPerformed
+
+    private void menu_vk_escActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_vk_escActionPerformed
+        Event event = handler.getEvent(selectedEvent);
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_PRESS, KeyStrokeAction.KEY_ESC);
+        prepareAction(act);
+        newActionDialog.dispose();
+    }//GEN-LAST:event_menu_vk_escActionPerformed
+
+    private void menu_vk_letterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_vk_letterActionPerformed
+        Event event = handler.getEvent(selectedEvent);
+        String str = JOptionPane.showInputDialog(this, "Enter a single Letter:");
+        if (str.length() == 0) {
+            return;
+        }
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_PRESS, str.substring(0, 1));
+        prepareAction(act);
+        newActionDialog.dispose();
+    }//GEN-LAST:event_menu_vk_letterActionPerformed
+
+    private void menu_vk_shiftRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_vk_shiftRActionPerformed
+        Event event = handler.getEvent(selectedEvent);
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_RELEASE, KeyStrokeAction.KEY_SHIFT);
+        prepareAction(act);
+        newActionDialog.dispose();
+    }//GEN-LAST:event_menu_vk_shiftRActionPerformed
+
+    private void menu_vk_enterRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_vk_enterRActionPerformed
+        Event event = handler.getEvent(selectedEvent);
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_RELEASE, KeyStrokeAction.KEY_ENTER);
+        prepareAction(act);
+        newActionDialog.dispose();
+    }//GEN-LAST:event_menu_vk_enterRActionPerformed
+
+    private void menu_vk_delRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_vk_delRActionPerformed
+        Event event = handler.getEvent(selectedEvent);
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_RELEASE, KeyStrokeAction.KEY_DEL);
+        prepareAction(act);
+        newActionDialog.dispose();
+    }//GEN-LAST:event_menu_vk_delRActionPerformed
+
+    private void menu_vk_ctrlRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_vk_ctrlRActionPerformed
+        Event event = handler.getEvent(selectedEvent);
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_RELEASE, KeyStrokeAction.KEY_DEL);
+        prepareAction(act);
+        newActionDialog.dispose();
+    }//GEN-LAST:event_menu_vk_ctrlRActionPerformed
+
+    private void menu_vk_escRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_vk_escRActionPerformed
+        Event event = handler.getEvent(selectedEvent);
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_RELEASE, KeyStrokeAction.KEY_ESC);
+        prepareAction(act);
+        newActionDialog.dispose();
+    }//GEN-LAST:event_menu_vk_escRActionPerformed
+
+    private void menu_vk_letterRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_vk_letterRActionPerformed
+        Event event = handler.getEvent(selectedEvent);
+        String str = JOptionPane.showInputDialog(this, "Enter a single Letter:");
+        if (str.length() == 0) {
+            return;
+        }
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_RELEASE, str.substring(0, 1));
+        prepareAction(act);
+        newActionDialog.dispose();
+    }//GEN-LAST:event_menu_vk_letterRActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        int evtSel = eventList.getSelectedIndex();
+        if (evtSel == -1) {
+            JOptionPane.showMessageDialog(this, "Select an event first");
+            return;
+        }
+
+        handler.removeEventAndActions(handler.getEvent(evtSel).getName());
+        DefaultListModel<String> model = new DefaultListModel<String>();
+        if (handler.getEvents().size() > 0) {
+            Event event = handler.getEvent(eventList.getLastVisibleIndex() - 1);
+            selectedEvent = event.getName();
+
+            //update the view of actionList
+            for (int i = 0; i < event.getActions().size(); i++) {
+                model.addElement(event.getActions().get(i).getDescription());
+            }
+        }
+        actionList.setModel(model);
+        //update events' list
+        DefaultListModel<String> evtModel = new DefaultListModel<String>();
+        if (handler.getEvents().size() > 0) {
+            for (int i = 0; i < handler.getEvents().size(); i++) {
+                evtModel.addElement(handler.getEvents().get(i).getName());
+            }
+        }
+        eventList.setModel(evtModel);
+        eventList.setSelectedIndex(eventList.getLastVisibleIndex()); //highlighting it again
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    public void addEvent(String name, int por) {
+        Event event = new Event(por);
+        event.setName(name);
+        if (handler.addEvent(event)) {
+            addElementToList(eventList, event.getName());
+        }
+        EventSelector.dispose();
+    }
+
+    /*
+     simplify the process of adding actions
+     */
+    private void prepareAction(Action act) {
+        handler.getEvent(selectedEvent).addAction(act);
+        addElementToList(actionList, act.getDescription());
+    }
+
+    public void addElementToList(JList list, String elem) {
+        DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
         model.addElement(elem);
     }
-    
+
     public void centerDialog(JDialog dialog) {
         dialog.setBounds(getMiddleX(dialog), getMiddleY(dialog), dialog.getWidth(), dialog.getHeight());
     }
@@ -1514,12 +1971,18 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JDialog EventSelector;
     private javax.swing.JPopupMenu FileMenu;
     private javax.swing.JDialog FileSelector;
+    private javax.swing.JPopupMenu KeystrokeMenu;
     private javax.swing.JDialog MouseActionDialog;
     private javax.swing.JPopupMenu MouseActionMenu;
     private javax.swing.JDialog OneValueInput;
     private javax.swing.JPopupMenu ShutDownMenu;
     private javax.swing.JButton actionFile;
     private javax.swing.JList actionList;
+    private javax.swing.JButton bt_event_going;
+    private javax.swing.JButton bt_event_loop;
+    private javax.swing.JButton bt_event_schedule;
+    private javax.swing.JButton bt_event_start;
+    private javax.swing.JButton bt_event_trigger;
     private javax.swing.JMenuItem changeAttrib;
     private javax.swing.JMenuItem clickMouse;
     private javax.swing.JMenuItem copyFile;
@@ -1528,6 +1991,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JTextField cordX;
     private javax.swing.JTextField cordY;
     private javax.swing.JMenuItem deleteFile;
+    private javax.swing.JList eventList;
     private javax.swing.JFileChooser fileChooser_chooser;
     private octu.graphics.Graph graph1;
     private javax.swing.JList historyList;
@@ -1541,14 +2005,11 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton jButton15;
     private javax.swing.JButton jButton16;
     private javax.swing.JButton jButton17;
+    private javax.swing.JButton jButton18;
+    private javax.swing.JButton jButton19;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -1556,7 +2017,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLayeredPane jLayeredPane1;
-    private javax.swing.JList jList1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -1577,6 +2037,21 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem logOff;
     private javax.swing.JButton lunchAppButton;
     private javax.swing.JMenuItem makeDir;
+    private javax.swing.JMenuItem menu_type;
+    private javax.swing.JMenuItem menu_vk_ctrl;
+    private javax.swing.JMenuItem menu_vk_ctrlR;
+    private javax.swing.JMenuItem menu_vk_del;
+    private javax.swing.JMenuItem menu_vk_delR;
+    private javax.swing.JMenuItem menu_vk_enter;
+    private javax.swing.JMenuItem menu_vk_enterR;
+    private javax.swing.JMenuItem menu_vk_esc;
+    private javax.swing.JMenuItem menu_vk_escR;
+    private javax.swing.JMenuItem menu_vk_letter;
+    private javax.swing.JMenuItem menu_vk_letterR;
+    private javax.swing.JMenu menu_vk_press;
+    private javax.swing.JMenu menu_vk_release;
+    private javax.swing.JMenuItem menu_vk_shift;
+    private javax.swing.JMenuItem menu_vk_shiftR;
     private javax.swing.JButton mouseActionButton;
     private javax.swing.JLabel mouseActionLeft;
     private javax.swing.JMenuItem moveFile;
