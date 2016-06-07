@@ -33,14 +33,31 @@ public class Handler {
         timer = new Timer();
     }
 
+    /*
+        arrange event's actions according to their importance
+        this must be called when start() called
+    */
     private void arrangeActionsFromEvents(ArrayList<Event> from,
             ArrayList<Action> to) {
         //to be implemented later
-
+        actions.clear();
+        int por = 1;
         //basic implementation for testing purposes
+        // this should be the number of available events
         for (int i = 0; i < events.size(); i++) {
+            por = 1;
+            for (int k = 0; k < 5; k++) {
+                
+            
             Event event = events.get(i);
-            actions = event.getActions();
+            if(event.getPor() == por){
+                for (int j = 0; j < event.getActions().size(); j++) {
+                    Action get = event.getActions().get(j);
+                    actions.add(get);
+                }
+            }
+            por++;
+            }
         }
     }
 
@@ -49,6 +66,7 @@ public class Handler {
      */
     public void start() {
         stop();
+        arrangeActionsFromEvents(events, actions);
         hasStarted = true;
         timer.schedule(new Queqy(), 200);
 
@@ -118,7 +136,23 @@ public class Handler {
         }
         return -1;
     }
+    
+    public Event getEvent(String name){
+        for (int i = 0; i < events.size(); i++) {
+            Event get = events.get(i);
+            if(get.getName().equals(name)){
+                return get;
+            }
+        }
+        return null;
+    }
 
+    public Event getEvent(int index){
+        if(events.size() > 0)
+            return events.get(index);
+        return null;
+    }
+    
     public boolean addEvent(Event evt) {
         //make sure not to add an event twice
         for (int i = 0; i < events.size(); i++) {
