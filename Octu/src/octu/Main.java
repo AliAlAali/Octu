@@ -49,10 +49,7 @@ public class Main extends javax.swing.JFrame {
     private Calendar c;
     private List<BufferedImage> icons;
     private Handler handler;
-<<<<<<< HEAD
-=======
 
->>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
 
     private int oneInputID; //for managing variety of actions using one dialog
     private String selectedEvent;
@@ -953,7 +950,6 @@ public class Main extends javax.swing.JFrame {
         menu_vk_press.setText("Press");
 
         menu_vk_shift.setText("Shift");
-<<<<<<< HEAD
         menu_vk_shift.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menu_vk_shiftActionPerformed(evt);
@@ -999,23 +995,7 @@ public class Main extends javax.swing.JFrame {
                 menu_vk_letterActionPerformed(evt);
             }
         });
-=======
-        menu_vk_press.add(menu_vk_shift);
 
-        menu_vk_enter.setText("Enter");
-        menu_vk_press.add(menu_vk_enter);
-
-        menu_vk_del.setText("Delete");
-        menu_vk_press.add(menu_vk_del);
-
-        menu_vk_ctrl.setText("Ctrl");
-        menu_vk_press.add(menu_vk_ctrl);
-
-        menu_vk_esc.setText("ESC");
-        menu_vk_press.add(menu_vk_esc);
-
-        menu_vk_letter.setText("Letter");
->>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
         menu_vk_press.add(menu_vk_letter);
 
         KeystrokeMenu.add(menu_vk_press);
@@ -1023,7 +1003,6 @@ public class Main extends javax.swing.JFrame {
         menu_vk_release.setText("Release");
 
         menu_vk_shiftR.setText("Shift");
-<<<<<<< HEAD
         menu_vk_shiftR.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menu_vk_shiftRActionPerformed(evt);
@@ -1069,23 +1048,7 @@ public class Main extends javax.swing.JFrame {
                 menu_vk_letterRActionPerformed(evt);
             }
         });
-=======
-        menu_vk_release.add(menu_vk_shiftR);
 
-        menu_vk_enterR.setText("Enter");
-        menu_vk_release.add(menu_vk_enterR);
-
-        menu_vk_delR.setText("Delete");
-        menu_vk_release.add(menu_vk_delR);
-
-        menu_vk_ctrlR.setText("Ctrl");
-        menu_vk_release.add(menu_vk_ctrlR);
-
-        menu_vk_escR.setText("ESC");
-        menu_vk_release.add(menu_vk_escR);
-
-        menu_vk_letterR.setText("Letter");
->>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
         menu_vk_release.add(menu_vk_letterR);
 
         KeystrokeMenu.add(menu_vk_release);
@@ -1152,14 +1115,11 @@ public class Main extends javax.swing.JFrame {
         });
 
         jButton19.setText("Down");
-<<<<<<< HEAD
         jButton19.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton19ActionPerformed(evt);
             }
         });
-=======
->>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -1382,11 +1342,8 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-<<<<<<< HEAD
-        if (eventList.getSelectedIndex() == -1) {
-=======
+
         if(eventList.getSelectedIndex() == -1){
->>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
             JOptionPane.showMessageDialog(this, "You must have and select an event!");
             return;
         }
@@ -1476,10 +1433,7 @@ public class Main extends javax.swing.JFrame {
                 DelayAction action = new DelayAction(event.getPor(), Integer.parseInt(oneInTextFeild.getText())); // 3 seconds
                 DefaultListModel<String> model = (DefaultListModel<String>) actionList.getModel();
                 model.addElement(action.getDescription());
-<<<<<<< HEAD
-=======
-                Event event = handler.getEvent(selectedEvent);
->>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
+
                 event.addAction(action);
                 OneValueInput.dispose();
                 break;
@@ -1529,11 +1483,8 @@ public class Main extends javax.swing.JFrame {
         MouseAction act3 = new MouseAction(event.getPor(), MouseAction.ACTION_MOVE, null);
         act3.setX(600);
         act3.setY(600);
-<<<<<<< HEAD
         DelayAction d3 = new DelayAction(event.getPor(), 5000);
-=======
-        DelayAction d3 = new DelayAction(Event.POR_START, 5000);
->>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
+
         handler.getEvent(selectedEvent).addAction(act1);
         handler.getEvent(selectedEvent).addAction(d1);
         handler.getEvent(selectedEvent).addAction(act2);
@@ -1682,11 +1633,8 @@ public class Main extends javax.swing.JFrame {
 //        addElementToList(actionList, action.getDescription());
 //        testEvent.addAction(action);
 //        handler.addEvent(testEvent);
-<<<<<<< HEAD
-        KeystrokeMenu.show(jButton13, jButton13.getX() / 2, 0);
-=======
+
         KeystrokeMenu.show(jButton13, jButton13.getX()/2, 0);
->>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
     }//GEN-LAST:event_jButton13ActionPerformed
 
     private void scrollMouseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scrollMouseActionPerformed
@@ -1696,11 +1644,10 @@ public class Main extends javax.swing.JFrame {
         act.setY(scroll);
         addElementToList(actionList, act.getDescription());
         handler.getEvent(selectedEvent).addAction(act);
-<<<<<<< HEAD
 
     }//GEN-LAST:event_scrollMouseActionPerformed
 
-    private void jButton18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton18ActionPerformed
+    private void jButton18ActionPerformed(java.awt.event.ActionEvent evt) {                                          
         int actSelection = actionList.getSelectedIndex();
         if (actSelection == -1) {
             JOptionPane.showMessageDialog(this, "You must select an action first");
@@ -1718,31 +1665,23 @@ public class Main extends javax.swing.JFrame {
             }
             actionList.setSelectedIndex(actSelection - 1);
         }
-=======
        
-    }//GEN-LAST:event_scrollMouseActionPerformed
+    }                                           
 
-    private void jButton18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton18ActionPerformed
-        // TODO add your handling code here:
->>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
-    }//GEN-LAST:event_jButton18ActionPerformed
+                                            
 
     private void menu_typeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_typeActionPerformed
         newActionDialog.dispose();
-<<<<<<< HEAD
         String text = JOptionPane.showInputDialog(this, "Type text for Keystroke Action:");
         KeyStrokeAction action = new KeyStrokeAction(handler.getEvent(selectedEvent).getPor(), KeyStrokeAction.OPERATION_TYPE, text);
-=======
-        String text = JOptionPane.showInputDialog(this,"Type text for Keystroke Action:");
-        KeyStrokeAction action = new KeyStrokeAction(Event.POR_START, text);
->>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
+
+        
         addElementToList(actionList, action.getDescription());
         handler.getEvent(selectedEvent).addAction(action);
     }//GEN-LAST:event_menu_typeActionPerformed
 
     private void bt_event_startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_event_startActionPerformed
         addEvent("onStart", Event.POR_START);
-<<<<<<< HEAD
         eventList.setSelectedIndex(eventList.getLastVisibleIndex());
         Event event = handler.getEvent(eventList.getSelectedIndex());
         selectedEvent = event.getName();
@@ -1753,13 +1692,11 @@ public class Main extends javax.swing.JFrame {
         }
         actionList.setModel(model);
 
-=======
->>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
+
     }//GEN-LAST:event_bt_event_startActionPerformed
 
     private void bt_event_goingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_event_goingActionPerformed
         addEvent("onGoing", Event.POR_GOING);
-<<<<<<< HEAD
         eventList.setSelectedIndex(eventList.getLastVisibleIndex());
         Event event = handler.getEvent(eventList.getSelectedIndex());
         selectedEvent = event.getName();
@@ -1769,13 +1706,10 @@ public class Main extends javax.swing.JFrame {
             model.addElement(event.getActions().get(i).getDescription());
         }
         actionList.setModel(model);
-=======
->>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
     }//GEN-LAST:event_bt_event_goingActionPerformed
 
     private void bt_event_loopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_event_loopActionPerformed
         addEvent("Loop", Event.POR_LOOP);
-<<<<<<< HEAD
         eventList.setSelectedIndex(eventList.getLastVisibleIndex());
         Event event = handler.getEvent(eventList.getSelectedIndex());
         selectedEvent = event.getName();
@@ -1785,13 +1719,11 @@ public class Main extends javax.swing.JFrame {
             model.addElement(event.getActions().get(i).getDescription());
         }
         actionList.setModel(model);
-=======
->>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
+
     }//GEN-LAST:event_bt_event_loopActionPerformed
 
     private void bt_event_scheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_event_scheduleActionPerformed
         addEvent("Schedule", Event.POR_SCHEDULE);
-<<<<<<< HEAD
         eventList.setSelectedIndex(eventList.getLastVisibleIndex());
         Event event = handler.getEvent(eventList.getSelectedIndex());
         selectedEvent = event.getName();
@@ -1801,13 +1733,12 @@ public class Main extends javax.swing.JFrame {
             model.addElement(event.getActions().get(i).getDescription());
         }
         actionList.setModel(model);
-=======
->>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
+
     }//GEN-LAST:event_bt_event_scheduleActionPerformed
 
     private void bt_event_triggerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_event_triggerActionPerformed
         addEvent("Trigger", Event.POR_TRIGGER);
-<<<<<<< HEAD
+
         eventList.setSelectedIndex(eventList.getLastVisibleIndex());
         Event event = handler.getEvent(eventList.getSelectedIndex());
         selectedEvent = event.getName();
@@ -1817,18 +1748,13 @@ public class Main extends javax.swing.JFrame {
             model.addElement(event.getActions().get(i).getDescription());
         }
         actionList.setModel(model);
-=======
->>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
+
     }//GEN-LAST:event_bt_event_triggerActionPerformed
 
     private void eventListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eventListMousePressed
         Event event = handler.getEvent(eventList.getSelectedIndex());
         selectedEvent = event.getName();
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
         //update the view of actionList
         DefaultListModel<String> model = new DefaultListModel<String>();
         for (int i = 0; i < event.getActions().size(); i++) {
@@ -1837,7 +1763,6 @@ public class Main extends javax.swing.JFrame {
         actionList.setModel(model);
     }//GEN-LAST:event_eventListMousePressed
 
-<<<<<<< HEAD
     private void jButton19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton19ActionPerformed
         int actSelection = actionList.getSelectedIndex();
         if (actSelection == -1) {
@@ -2010,19 +1935,6 @@ public class Main extends javax.swing.JFrame {
 
     public void addElementToList(JList list, String elem) {
         DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
-=======
-    public void addEvent(String name, int por){
-        Event event = new Event(por);
-        event.setName(name);
-        if(handler.addEvent(event))
-            addElementToList(eventList, event.getName());
-        EventSelector.dispose();
-    }
-    
-    public void addElementToList(JList list, String elem){
-        DefaultListModel<String> model = (DefaultListModel<String>)list.getModel();
->>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
-        model.addElement(elem);
     }
 
     public void centerDialog(JDialog dialog) {
