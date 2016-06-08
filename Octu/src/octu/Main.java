@@ -1935,6 +1935,7 @@ public class Main extends javax.swing.JFrame {
 
     public void addElementToList(JList list, String elem) {
         DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
+        model.addElement(elem);
     }
 
     public void centerDialog(JDialog dialog) {

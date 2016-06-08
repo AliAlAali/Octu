@@ -64,13 +64,9 @@ public class Event implements Listable{
         return por;
     }
     
-<<<<<<< HEAD
     public Action getAction(int index){
         if(actions.size() > 0)
              return actions.get(index);
         return null;
     }
-=======
-    
->>>>>>> 0eeab5323e53a32e6ed53148a65600fed1ae57ba
 }
