@@ -40,6 +40,7 @@ import octu.core.action.Action;
 import octu.core.action.DelayAction;
 import octu.core.action.FileAction;
 import octu.core.action.LooperAction;
+import octu.core.action.LunchAppAction;
 import octu.core.action.MouseAction;
 import octu.core.action.ShutDownAction;
 import octu.core.action.StopApplicationAction;
@@ -188,7 +189,7 @@ public class Main extends javax.swing.JFrame {
         actionFile = new javax.swing.JButton();
         shutdownButton = new javax.swing.JButton();
         jButton17 = new javax.swing.JButton();
-        jButton14 = new javax.swing.JButton();
+        delayActionButton = new javax.swing.JButton();
         jButton15 = new javax.swing.JButton();
         jButton16 = new javax.swing.JButton();
         FileMenu = new javax.swing.JPopupMenu();
@@ -451,10 +452,10 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jButton14.setText("Delay");
-        jButton14.addActionListener(new java.awt.event.ActionListener() {
+        delayActionButton.setText("Delay");
+        delayActionButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton14ActionPerformed(evt);
+                delayActionButtonActionPerformed(evt);
             }
         });
 
@@ -492,7 +493,7 @@ public class Main extends javax.swing.JFrame {
                     .addGroup(newActionDialogLayout.createSequentialGroup()
                         .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jButton16, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton14, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
+                            .addComponent(delayActionButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -514,7 +515,7 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(jButton17))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton14)
+                    .addComponent(delayActionButton)
                     .addComponent(jButton15))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton16)
@@ -1162,6 +1163,11 @@ public class Main extends javax.swing.JFrame {
         systemTime.setText("Time and Date");
 
         jButton12.setText("Edit Action");
+        jButton12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton12ActionPerformed(evt);
+            }
+        });
 
         jButton18.setText("Up");
         jButton18.addActionListener(new java.awt.event.ActionListener() {
@@ -1479,23 +1485,26 @@ public class Main extends javax.swing.JFrame {
         handler.start();
     }//GEN-LAST:event_jButton10ActionPerformed
 
-    private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
+    private void delayActionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delayActionButtonActionPerformed
         OneValueInput.pack();
         centerDialog(OneValueInput);
         OneValueInput.setVisible(true);
         newActionDialog.dispose();
         oneInputID = 0;
-    }//GEN-LAST:event_jButton14ActionPerformed
+    }//GEN-LAST:event_delayActionButtonActionPerformed
 
     private void oneInOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_oneInOkActionPerformed
         switch (oneInputID) {
             case 0:
                 Event event = handler.getEvent(selectedEvent);
                 DelayAction action = new DelayAction(event.getPor(), Integer.parseInt(oneInTextFeild.getText())); // 3 seconds
-                DefaultListModel<String> model = (DefaultListModel<String>) actionList.getModel();
-                model.addElement(action.getDescription());
                 
-                event.addAction(action);
+                if(edit){
+                    updateAction(action, actionList.getSelectedIndex());
+                    OneValueInput.dispose();
+                    return;
+                }
+                prepareAction(action);
                 OneValueInput.dispose();
                 break;
         }
@@ -1535,32 +1544,40 @@ public class Main extends javax.swing.JFrame {
         //adding actoins for testing propuses only
         newActionDialog.dispose();
         Event event = handler.getEvent(selectedEvent);
-        DefaultListModel<String> model = (DefaultListModel<String>) actionList.getModel();
-        MouseAction act1 = new MouseAction(event.getPor(), MouseAction.ACTION_MOVE, null);
-        act1.setX(200);
-        act1.setY(200);
-        DelayAction d1 = new DelayAction(event.getPor(), 2000);
-        MouseAction act2 = new MouseAction(event.getPor(), MouseAction.ACTION_MOVE, null);
-        act2.setX(500);
-        act2.setY(500);
-        DelayAction d2 = new DelayAction(event.getPor(), 3000);
-        MouseAction act3 = new MouseAction(event.getPor(), MouseAction.ACTION_MOVE, null);
-        act3.setX(600);
-        act3.setY(600);
-        DelayAction d3 = new DelayAction(event.getPor(), 5000);
-        
-        handler.getEvent(selectedEvent).addAction(act1);
-        handler.getEvent(selectedEvent).addAction(d1);
-        handler.getEvent(selectedEvent).addAction(act2);
-        handler.getEvent(selectedEvent).addAction(d2);
-        handler.getEvent(selectedEvent).addAction(act3);
-        handler.getEvent(selectedEvent).addAction(d3);
-        model.addElement(act1.getDescription());
-        model.addElement(d1.getDescription());
-        model.addElement(act2.getDescription());
-        model.addElement(d2.getDescription());
-        model.addElement(act3.getDescription());
-        model.addElement(d3.getDescription());
+//        DefaultListModel<String> model = (DefaultListModel<String>) actionList.getModel();
+//        MouseAction act1 = new MouseAction(event.getPor(), MouseAction.ACTION_MOVE, null);
+//        act1.setX(200);
+//        act1.setY(200);
+//        DelayAction d1 = new DelayAction(event.getPor(), 2000);
+//        MouseAction act2 = new MouseAction(event.getPor(), MouseAction.ACTION_MOVE, null);
+//        act2.setX(500);
+//        act2.setY(500);
+//        DelayAction d2 = new DelayAction(event.getPor(), 3000);
+//        MouseAction act3 = new MouseAction(event.getPor(), MouseAction.ACTION_MOVE, null);
+//        act3.setX(600);
+//        act3.setY(600);
+//        DelayAction d3 = new DelayAction(event.getPor(), 5000);
+//        
+//        handler.getEvent(selectedEvent).addAction(act1);
+//        handler.getEvent(selectedEvent).addAction(d1);
+//        handler.getEvent(selectedEvent).addAction(act2);
+//        handler.getEvent(selectedEvent).addAction(d2);
+//        handler.getEvent(selectedEvent).addAction(act3);
+//        handler.getEvent(selectedEvent).addAction(d3);
+//        model.addElement(act1.getDescription());
+//        model.addElement(d1.getDescription());
+//        model.addElement(act2.getDescription());
+//        model.addElement(d2.getDescription());
+//        model.addElement(act3.getDescription());
+//        model.addElement(d3.getDescription());
+        onePathDialog.pack();
+        onePathDialog.setTitle("Lunch Application: select path");
+        centerDialog(onePathDialog);
+        onePathDialog.setVisible(true);
+        newActionDialog.dispose();
+        fileChooser_chooser.setFileFilter(FilerHandler.getAbsoluteFilter());
+  
+          
 
     }//GEN-LAST:event_lunchAppButtonActionPerformed
 
@@ -1660,6 +1677,17 @@ public class Main extends javax.swing.JFrame {
                 return;
             }
             act = new FileAction(event.getPor(), ((com == 'h') ? FileAction.TYPE_HIDE_FILE:FileAction.TYPE_UNHIDE_FILE), path1);
+        }else if(title.startsWith("Lunch")){
+            
+                act = new LunchAppAction(event.getPor(), path1);
+            if(edit){
+                //TODO: FIX
+                updateAction(act, actionList.getSelectedIndex());
+                edit = false;
+                onePathDialog.dispose();
+                return;
+            }
+                
         }
         prepareAction(act);
         onePathDialog.dispose();
@@ -2051,6 +2079,20 @@ public class Main extends javax.swing.JFrame {
         newActionDialog.dispose();
         JOptionPane.showMessageDialog(this, "Future update");
     }//GEN-LAST:event_jButton17ActionPerformed
+
+    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
+        edit = true;
+        Event event = handler.getEvent(selectedEvent);
+       int actSel = actionList.getSelectedIndex();
+       Action act = event.getAction(actSel);
+       if(act instanceof DelayAction){
+           delayActionButton.doClick();
+       }else if(act instanceof LunchAppAction){
+           lunchAppButton.doClick();
+       }else if(act instanceof MouseAction){
+           
+       }
+    }//GEN-LAST:event_jButton12ActionPerformed
     
     private void createMouseAction(String type, String button) {
         MouseActionDialog.dispose();
@@ -2104,9 +2146,20 @@ public class Main extends javax.swing.JFrame {
         addElementToList(actionList, act.getDescription());
     }
     
+    private void updateAction(Action act, int pos){
+        handler.getEvent(selectedEvent).addAction(act);
+        addElementToListAndRemove(actionList, act.getDescription(), pos);
+    }
+    
     public void addElementToList(JList list, String elem) {
         DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
         model.addElement(elem);
+    }
+    
+    public void addElementToListAndRemove(JList list, String elem, int index) {
+        DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
+        model.remove(index);
+        model.add(index, elem);
     }
     
     public void centerDialog(JDialog dialog) {
@@ -2180,6 +2233,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton cordOk;
     private javax.swing.JTextField cordX;
     private javax.swing.JTextField cordY;
+    private javax.swing.JButton delayActionButton;
     private javax.swing.JMenuItem deleteFile;
     private javax.swing.JList eventList;
     private javax.swing.JFileChooser fileChooser_chooser;
@@ -2191,7 +2245,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton15;
     private javax.swing.JButton jButton16;
     private javax.swing.JButton jButton17;
