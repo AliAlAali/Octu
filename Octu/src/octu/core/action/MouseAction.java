@@ -46,6 +46,14 @@ public class MouseAction extends Action {
         }
     }
 
+    public void setType(String type){
+        this.type = type;
+    }
+    
+    public void setButton(String button){
+        this.button = button;
+    }
+    
     @Override
     public void occur() {
         super.occur();
@@ -76,16 +84,16 @@ public class MouseAction extends Action {
     private void click(String button) {
         switch (button) {
             case BUTTON_RIGHT:
-                robot.mousePress(InputEvent.BUTTON2_DOWN_MASK);
-                robot.mouseRelease(InputEvent.BUTTON2_DOWN_MASK);
+                robot.mousePress(InputEvent.BUTTON3_DOWN_MASK);
+                robot.mouseRelease(InputEvent.BUTTON3_DOWN_MASK);
                 break;
             case BUTTON_LEFT:
                 robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
                 robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
                 break;
             case BUTTON_CENTER:
-                robot.mousePress(InputEvent.BUTTON3_DOWN_MASK);
-                robot.mouseRelease(InputEvent.BUTTON3_DOWN_MASK);
+                robot.mousePress(InputEvent.BUTTON2_DOWN_MASK);
+                robot.mouseRelease(InputEvent.BUTTON2_DOWN_MASK);
                 break;
         }
     }

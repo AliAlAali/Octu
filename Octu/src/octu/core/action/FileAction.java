@@ -30,6 +30,9 @@ public class FileAction extends Action {
 
     public FileAction(int por, String type, String path) {
         super(por);
+        this.type = type;
+        this.oldPath = path;
+        cmd = new Command();
     }
 
     public String getNewPath(){

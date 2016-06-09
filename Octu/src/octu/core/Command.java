@@ -142,4 +142,11 @@ public class Command {
 		}
 		return path;
 	}
+        
+        public static void preventComputerFromSleeping(){
+            //move mouse and return it back to its original position
+            
+        }
 }
+
+            //supposed to do that every 3 mintuest without any action
