@@ -66,6 +66,7 @@ public class FileAction extends Action {
                     cmd.deleteFile(oldPath);
                     break;
                 case TYPE_RENAME_FILE:
+                    System.out.println("renamed things");
                     cmd.renameFile(oldPath, newPath);
                     break;
                 case TYPE_COPY_FILE:

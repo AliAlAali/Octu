@@ -1620,7 +1620,6 @@ public class Main extends javax.swing.JFrame {
         fileChooser_chooser.showOpenDialog(onePath_select);
         File file = fileChooser_chooser.getSelectedFile();
         onePath_text.setText(file.getAbsolutePath());
-
     }//GEN-LAST:event_onePath_selectActionPerformed
 
     private void fileChooser_chooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileChooser_chooserActionPerformed
@@ -1638,7 +1637,15 @@ public class Main extends javax.swing.JFrame {
         Action act = null;
         if (title.startsWith("Rename")) {
             //ask for the new file name
-            
+            String fileName = JOptionPane.showInputDialog(this, "Enter the new file name: ");
+            String ext = "";
+            if(fileName.indexOf(".") == -1){
+                ext = path1.substring(path1.lastIndexOf("."));
+            }else{
+                ext = "\"";
+            }
+            act = new FileAction(event.getPor(), FileAction.TYPE_RENAME_FILE, path1);
+            ((FileAction)act).setNewPath("\"" + fileName + ext + "\"");
         } else if (title.startsWith("Delete")) {
             //just delete
             act = new FileAction(event.getPor(), FileAction.TYPE_DELETE_FILE, path1);
@@ -1664,11 +1671,24 @@ public class Main extends javax.swing.JFrame {
 
     private void twoPath_okActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_twoPath_okActionPerformed
         String title = twoPathDialog.getTitle();
+        String oldPath = "\"" + twoPath_oldText.getText() + "\"";
+        String newPath = "\"" + twoPath_newText.getText();
+        
+        //getting the name fo the file
+        String fileName = twoPath_oldText.getText().substring(twoPath_oldText.getText().lastIndexOf("\\") + 1);
+        boolean folder = (fileName.indexOf(".") != -1) ? false:true;
+        System.out.println(fileName + "  " + oldPath + " " + newPath);
+        Event event = handler.getEvent(selectedEvent);
+        Action act = null;
         if (title.startsWith("Copy")) {
-            
+            act = new FileAction(event.getPor(), FileAction.TYPE_COPY_FILE, oldPath);
+            ((FileAction)act).setNewPath(newPath + "\\" + fileName + "\"");
         } else if (title.startsWith("Move")) {
-            
+             act = new FileAction(event.getPor(), FileAction.TYPE_MOVE_FILE, oldPath);
+            ((FileAction)act).setNewPath(newPath + "\\" + fileName + "\"");
         }
+        prepareAction(act);
+        twoPathDialog.dispose();
     }//GEN-LAST:event_twoPath_okActionPerformed
 
     private void twoPath_oldPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_twoPath_oldPathActionPerformed
