@@ -65,8 +65,13 @@ public class Handler {
      used to start the series of actions
      */
     public void start() {
+        
         stop();
         arrangeActionsFromEvents(events, actions);
+//        for (int i = 0; i < actions.size(); i++) {
+//            Action action = actions.get(i);
+//            System.out.print(action.getDescription());
+//        }
         hasStarted = true;
         timer.schedule(new Queqy(), 200);
 

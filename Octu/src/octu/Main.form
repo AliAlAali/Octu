@@ -194,7 +194,7 @@
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="jButton16" alignment="0" max="32767" attributes="0"/>
+                              <Component id="newAction_looper" alignment="0" max="32767" attributes="0"/>
                               <Component id="delayActionButton" alignment="0" pref="148" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -229,7 +229,7 @@
                       <Component id="jButton15" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="jButton16" min="-2" max="-2" attributes="0"/>
+                  <Component id="newAction_looper" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -300,12 +300,12 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton15ActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton16">
+        <Component class="javax.swing.JButton" name="newAction_looper">
           <Properties>
             <Property name="text" type="java.lang.String" value="Looper"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton16ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newAction_looperActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
@@ -557,6 +557,13 @@
       </SubComponents>
     </Container>
     <Container class="javax.swing.JDialog" name="CoordinateInputDialog">
+      <Properties>
+        <Property name="defaultCloseOperation" type="int" value="2"/>
+        <Property name="title" type="java.lang.String" value="Coordinates"/>
+        <Property name="iconImages" type="java.util.List" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="icons" type="code"/>
+        </Property>
+      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
@@ -641,6 +648,13 @@
       </SubComponents>
     </Container>
     <Container class="javax.swing.JDialog" name="OneValueInput">
+      <Properties>
+        <Property name="defaultCloseOperation" type="int" value="2"/>
+        <Property name="title" type="java.lang.String" value="Input"/>
+        <Property name="iconImages" type="java.util.List" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="icons" type="code"/>
+        </Property>
+      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
@@ -651,7 +665,7 @@
                       <Group type="102" attributes="0">
                           <Component id="oneInCancel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="oneInOk" min="-2" max="-2" attributes="0"/>
+                          <Component id="oneInOk" min="-2" pref="64" max="-2" attributes="0"/>
                       </Group>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="oneInText" min="-2" pref="128" max="-2" attributes="0"/>
@@ -682,7 +696,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="oneInText">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Enter"/>
+            <Property name="text" type="java.lang.String" value="Enter delay in milliseconds"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="oneInTextFeild">
@@ -1062,6 +1076,532 @@
         </Menu>
       </SubComponents>
     </Container>
+    <Container class="javax.swing.JDialog" name="subActionEditor">
+      <Properties>
+        <Property name="defaultCloseOperation" type="int" value="2"/>
+        <Property name="title" type="java.lang.String" value="Sub Action Editor"/>
+        <Property name="iconImages" type="java.util.List" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="icons" type="code"/>
+        </Property>
+        <Property name="modalityType" type="java.awt.Dialog$ModalityType" editor="org.netbeans.modules.form.editors.EnumEditor">
+          <Value id="null"/>
+        </Property>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Group type="102" attributes="0">
+                          <Component id="subAction_cancel" min="-2" pref="79" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="subAction_submit" min="-2" pref="84" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="jScrollPane4" min="-2" pref="349" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="subAction_add" max="32767" attributes="0"/>
+                      <Component id="subAction_remove" alignment="0" max="32767" attributes="0"/>
+                      <Component id="subAction_up" max="32767" attributes="0"/>
+                      <Component id="subAction_down" max="32767" attributes="0"/>
+                      <Component id="subAction_edit" alignment="0" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                          <Component id="subAction_add" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="subAction_edit" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="subAction_remove" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="subAction_up" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="subAction_down" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jScrollPane4" min="-2" pref="249" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="subAction_submit" max="32767" attributes="0"/>
+                      <Component id="subAction_cancel" min="-2" pref="33" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Container class="javax.swing.JScrollPane" name="jScrollPane4">
+          <AuxValues>
+            <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+          </AuxValues>
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+          <SubComponents>
+            <Component class="javax.swing.JList" name="subAction_list">
+              <Properties>
+                <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="new DefaultListModel&lt;String&gt;()" type="code"/>
+                </Property>
+              </Properties>
+            </Component>
+          </SubComponents>
+        </Container>
+        <Component class="javax.swing.JButton" name="subAction_add">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="+ Action"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subAction_addActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="subAction_edit">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Edit"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="subAction_remove">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="- Action"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="subAction_up">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Up"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="subAction_down">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Down"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="subAction_submit">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Submit"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="subAction_cancel">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Cancel"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subAction_cancelActionPerformed"/>
+          </Events>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JDialog" name="newSubActionDialog">
+      <Properties>
+        <Property name="defaultCloseOperation" type="int" value="2"/>
+        <Property name="title" type="java.lang.String" value="Action"/>
+        <Property name="iconImages" type="java.util.List" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="icons" type="code"/>
+        </Property>
+        <Property name="modalityType" type="java.awt.Dialog$ModalityType" editor="org.netbeans.modules.form.editors.EnumEditor">
+          <Value id="null"/>
+        </Property>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="newSubAct_lunch" alignment="0" pref="148" max="32767" attributes="0"/>
+                              <Component id="newSubAct_mouse" alignment="0" max="32767" attributes="0"/>
+                              <Component id="newSubAct_keystroke" alignment="0" pref="148" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="newSubAct_shutdown" alignment="0" pref="146" max="32767" attributes="0"/>
+                              <Component id="newSubAct_file" alignment="0" max="32767" attributes="0"/>
+                              <Component id="newSubAct_varialb" alignment="0" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="newSubAct_delay" min="-2" pref="148" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="newSubAct_stop" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="newSubAct_mouse" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="newSubAct_file" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="newSubAct_keystroke" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="newSubAct_shutdown" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="newSubAct_lunch" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="newSubAct_varialb" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="newSubAct_delay" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="newSubAct_stop" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JButton" name="newSubAct_mouse">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Mouse"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newSubAct_mouseActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="newSubAct_keystroke">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Keystroke"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newSubAct_keystrokeActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="newSubAct_lunch">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Lunch App"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newSubAct_lunchActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="newSubAct_file">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="File"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newSubAct_fileActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="newSubAct_shutdown">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Shutdown"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newSubAct_shutdownActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="newSubAct_varialb">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Variable"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newSubAct_varialbActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="newSubAct_delay">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Delay"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newSubAct_delayActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="newSubAct_stop">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Stop"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newSubAct_stopActionPerformed"/>
+          </Events>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPopupMenu" name="subFileMenu">
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
+        <Property name="useNullLayout" type="boolean" value="true"/>
+      </Layout>
+      <SubComponents>
+        <MenuItem class="javax.swing.JMenuItem" name="subFileMenu_move">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Move File"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subFileMenu_moveActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="subFileMenu_del">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Delete File"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subFileMenu_delActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="subFileMenu_rename">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Rename File"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subFileMenu_renameActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="subFileMenu_copy">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Copy File"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subFileMenu_copyActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="subFileMenu_makeDir">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Make Directory"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subFileMenu_makeDirActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="subFileMenu_changeAtrib">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Hide/Unhide File"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subFileMenu_changeAtribActionPerformed"/>
+          </Events>
+        </MenuItem>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPopupMenu" name="subShutMenu">
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
+        <Property name="useNullLayout" type="boolean" value="true"/>
+      </Layout>
+      <SubComponents>
+        <MenuItem class="javax.swing.JMenuItem" name="subShutMenu_log">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Log Off"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subShutMenu_logActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="subShutMenu_restart">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Restart"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subShutMenu_restartActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="subShutMenu_shutcom">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Shutdown"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subShutMenu_shutcomActionPerformed"/>
+          </Events>
+        </MenuItem>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPopupMenu" name="subMouseMenu">
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
+        <Property name="useNullLayout" type="boolean" value="true"/>
+      </Layout>
+      <SubComponents>
+        <MenuItem class="javax.swing.JMenuItem" name="subMouseMenu_click">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Click"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subMouseMenu_clickActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="subMouseMenu_press">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Press"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subMouseMenu_pressActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="subMouseMenu_release">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Release"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subMouseMenu_releaseActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="subMouseMenu_scroll">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Scroll"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subMouseMenu_scrollActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="subMouseMenu_move">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Move"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subMouseMenu_moveActionPerformed"/>
+          </Events>
+        </MenuItem>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPopupMenu" name="subKeyMenu">
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
+        <Property name="useNullLayout" type="boolean" value="true"/>
+      </Layout>
+      <SubComponents>
+        <MenuItem class="javax.swing.JMenuItem" name="subKeyMenu_type">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Type"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subKeyMenu_typeActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <Menu class="javax.swing.JMenu" name="subKeyMenu_press">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Press"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="subKeyMenu_press_shift">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Shift"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subKeyMenu_press_shiftActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="subKeyMenu_press_enter">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Enter"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subKeyMenu_press_enterActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="subKeyMenu_press_del">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Delete"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subKeyMenu_press_delActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="subKeyMenu_press_ctrl">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Ctrl"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subKeyMenu_press_ctrlActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="subKeyMenu_press_esc">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="ESC"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subKeyMenu_press_escActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="subKeyMenu_press_letter">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Letter"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subKeyMenu_press_letterActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="subKeyMenu_release">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Release"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="subKeyMenu_release_shfit">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Shift"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subKeyMenu_release_shfitActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="subKeyMenu_release_enter">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Enter"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subKeyMenu_release_enterActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="subKeyMenu_release_del">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Delete"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subKeyMenu_release_delActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="subKeyMenu_release_ctrl">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Ctrl"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subKeyMenu_release_ctrlActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="subKeyMenu_release_esc">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="ESC"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subKeyMenu_release_escActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="subKeyMenu_release_letter">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Letter"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subKeyMenu_release_letterActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
+      </SubComponents>
+    </Container>
     <Menu class="javax.swing.JMenuBar" name="jMenuBar1">
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="jMenu1">
@@ -1100,15 +1640,18 @@
             <Property name="text" type="java.lang.String" value="About"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem4">
+            <MenuItem class="javax.swing.JMenuItem" name="aboutMenu_help">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Help"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem5">
+            <MenuItem class="javax.swing.JMenuItem" name="aboutMenu_dev">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Developer"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="aboutMenu_devActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -1127,6 +1670,9 @@
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
     <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
+  <Events>
+    <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="formKeyPressed"/>
+  </Events>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -1195,7 +1741,7 @@
                                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                                       <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
-                                          <Component id="jButton3" min="-2" pref="127" max="-2" attributes="0"/>
+                                          <Component id="newActionButton" min="-2" pref="127" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
@@ -1206,7 +1752,19 @@
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="jButton12" min="-2" pref="109" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="jLabel4" max="32767" attributes="0"/>
+                                  <Component id="jLabel3" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="control_mouseX" alignment="1" min="-2" pref="66" max="-2" attributes="0"/>
+                                  <Component id="control_mouseY" alignment="1" min="-2" pref="66" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="control_freeze" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -1230,18 +1788,30 @@
                           <Component id="jScrollPane2" max="32767" attributes="0"/>
                           <Component id="jScrollPane1" min="-2" pref="239" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButton3" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButton12" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButton18" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButton4" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButton19" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="newActionButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jButton12" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jButton18" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="control_mouseX" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jButton4" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jButton19" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="control_mouseY" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                              <Component id="control_freeze" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace pref="133" max="32767" attributes="0"/>
                       <Component id="systemTime" min="-2" max="-2" attributes="0"/>
@@ -1312,12 +1882,12 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton3">
+            <Component class="javax.swing.JButton" name="newActionButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="New Action"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton3ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newActionButtonActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="jButton4">
@@ -1358,6 +1928,36 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton19ActionPerformed"/>
               </Events>
             </Component>
+            <Component class="javax.swing.JTextField" name="control_mouseX">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="control_mouseY">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel3">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="X"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel4">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="Y"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JToggleButton" name="control_freeze">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Freeze (F3)"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="control_freezeActionPerformed"/>
+              </Events>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="jPanel2">
@@ -1380,8 +1980,8 @@
                               <Component id="jScrollPane3" min="-2" pref="626" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="jButton10" max="32767" attributes="0"/>
-                                  <Component id="jButton11" pref="103" max="32767" attributes="0"/>
+                                  <Component id="runButton" max="32767" attributes="0"/>
+                                  <Component id="stopButton" pref="103" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -1396,9 +1996,9 @@
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="jScrollPane3" min="-2" pref="238" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
-                              <Component id="jButton11" min="-2" max="-2" attributes="0"/>
+                              <Component id="stopButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jButton10" min="-2" max="-2" attributes="0"/>
+                              <Component id="runButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -1467,20 +2067,20 @@
                 </Container>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JButton" name="jButton10">
+            <Component class="javax.swing.JButton" name="runButton">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Run"/>
+                <Property name="text" type="java.lang.String" value="Run (F1)"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton10ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="runButtonActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton11">
+            <Component class="javax.swing.JButton" name="stopButton">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Stop"/>
+                <Property name="text" type="java.lang.String" value="Stop (F2)"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton11ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="stopButtonActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

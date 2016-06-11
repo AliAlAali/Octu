@@ -40,7 +40,7 @@ public class KeyStrokeAction extends Action {
         try {
             robot = new Robot();
         } catch (AWTException ex) {
-            Logger.getLogger(KeyStrokeAction.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
 
     }
@@ -109,6 +109,7 @@ public class KeyStrokeAction extends Action {
                     break;
             }
         }
+        finish();
     }
 
     @Override

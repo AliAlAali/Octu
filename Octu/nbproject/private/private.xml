@@ -3,11 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Ali/Documents/GitHub/Octu/src/octu/core/Event.java</file>
-            <file>file:/C:/Users/Ali/Documents/GitHub/Octu/src/octu/core/action/KeyStrokeAction.java</file>
             <file>file:/C:/Users/Ali/Documents/GitHub/Octu/src/octu/core/Handler.java</file>
-            <file>file:/C:/Users/Ali/Documents/GitHub/Octu/src/octu/core/action/Action.java</file>
-            <file>file:/C:/Users/Ali/Documents/GitHub/Octu/src/octu/core/action/MouseAction.java</file>
+            <file>file:/C:/Users/Ali/Documents/GitHub/Octu/src/octu/core/action/ScheduledAction.java</file>
             <file>file:/C:/Users/Ali/Documents/GitHub/Octu/src/octu/Main.java</file>
         </group>
     </open-files>

@@ -8,6 +8,10 @@ package octu;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -35,13 +39,14 @@ import octu.core.Command;
 import octu.core.Event;
 import octu.core.FilerHandler;
 import octu.core.Handler;
-import octu.core.action.KeyStrokeAction;
 import octu.core.action.Action;
 import octu.core.action.DelayAction;
 import octu.core.action.FileAction;
+import octu.core.action.KeyStrokeAction;
 import octu.core.action.LooperAction;
 import octu.core.action.LunchAppAction;
 import octu.core.action.MouseAction;
+import octu.core.action.ScheduledAction;
 import octu.core.action.ShutDownAction;
 import octu.core.action.StopApplicationAction;
 
@@ -50,14 +55,16 @@ import octu.core.action.StopApplicationAction;
  * @author Ali
  */
 public class Main extends javax.swing.JFrame {
-    
+
     private Dimension screen;
     private Timer timer;
+
     private Calendar c;
     private List<BufferedImage> icons;
     private Handler handler;
-    
+
     private int oneInputID; //for managing variety of actions using one dialog
+    private int lastSelectedActionl; //loop and schedule events
     private String mouseButtonSelection; //used to determine which button is selected
     private String selectedEvent;
     private boolean edit;
@@ -80,7 +87,7 @@ public class Main extends javax.swing.JFrame {
         setBounds((int) screen.getWidth() / 2 - getWidth() / 2, (int) screen.getHeight() / 2 - getHeight() / 2, getWidth(), getHeight());
         //preventing accedintal closing
         addWindowListener(new WindowAdapter() {
-            
+
             @Override
             public void windowClosing(WindowEvent e) {
                 showConfirmDialog("Are you sure leaving the program?");
@@ -100,7 +107,7 @@ public class Main extends javax.swing.JFrame {
                         return;
                     }
                 } else if (act instanceof LooperAction) {
-                    
+
                 } else {
                     graph1.peak(true);
                 }
@@ -112,15 +119,29 @@ public class Main extends javax.swing.JFrame {
         c = Calendar.getInstance();
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
-            
+
             @Override
             public void run() {
+                //update system time
                 c = Calendar.getInstance();
                 systemTime.setText(c.getTime().toString());
+
             }
-            
+
         }, Math.min(60, 60 - c.get(Calendar.SECOND)), 1000);
 
+        timer.scheduleAtFixedRate(new TimerTask() {
+
+            @Override
+            public void run() {
+                //update mouse position
+                if (!control_freeze.isSelected()) {
+                    Point p = MouseInfo.getPointerInfo().getLocation();
+                    control_mouseX.setText(String.valueOf(p.getX()));
+                    control_mouseY.setText(String.valueOf(p.getY()));
+                }
+            }
+        }, 0, 50);
         //adding filters for the save-open dialogs
         FileFilter filter = FilerHandler.getFileFilter();
         saveChooser.setFileFilter(filter);
@@ -130,16 +151,33 @@ public class Main extends javax.swing.JFrame {
         oneInTextFeild.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                super.keyPressed(e); 
-                System.out.println("listne");
-                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                super.keyPressed(e);
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     oneInOk.doClick();
                 }
             }
-            
+
+        });
+
+        //listening to global keyevents
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+
+            @Override
+            public boolean dispatchKeyEvent(KeyEvent e) {
+                //listening for a freeze command
+                if (e.getKeyCode() == KeyEvent.VK_F3) {
+                    control_freeze.setSelected(true);
+                } else if (e.getKeyCode() == KeyEvent.VK_F2) {
+                    //for stopping the application
+                    stopButton.doClick();
+                } else if (e.getKeyCode() == KeyEvent.VK_F1) {
+                    runButton.doClick();
+                }
+                return false;
+            }
         });
     }
-    
+
     private BufferedImage getImage(String name) {
         try {
             return ImageIO.read(new File(getClass().getClassLoader().getResource("resources/" + name).getFile()));
@@ -148,7 +186,7 @@ public class Main extends javax.swing.JFrame {
         }
         return null;
     }
-    
+
     private void showConfirmDialog(String message) {
         if (JOptionPane.showConfirmDialog(Main.this, message, "Confirm",
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
@@ -191,7 +229,7 @@ public class Main extends javax.swing.JFrame {
         jButton17 = new javax.swing.JButton();
         delayActionButton = new javax.swing.JButton();
         jButton15 = new javax.swing.JButton();
-        jButton16 = new javax.swing.JButton();
+        newAction_looper = new javax.swing.JButton();
         FileMenu = new javax.swing.JPopupMenu();
         moveFile = new javax.swing.JMenuItem();
         deleteFile = new javax.swing.JMenuItem();
@@ -259,6 +297,58 @@ public class Main extends javax.swing.JFrame {
         menu_vk_ctrlR = new javax.swing.JMenuItem();
         menu_vk_escR = new javax.swing.JMenuItem();
         menu_vk_letterR = new javax.swing.JMenuItem();
+        subActionEditor = new javax.swing.JDialog();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        subAction_list = new javax.swing.JList();
+        subAction_add = new javax.swing.JButton();
+        subAction_edit = new javax.swing.JButton();
+        subAction_remove = new javax.swing.JButton();
+        subAction_up = new javax.swing.JButton();
+        subAction_down = new javax.swing.JButton();
+        subAction_submit = new javax.swing.JButton();
+        subAction_cancel = new javax.swing.JButton();
+        newSubActionDialog = new javax.swing.JDialog();
+        newSubAct_mouse = new javax.swing.JButton();
+        newSubAct_keystroke = new javax.swing.JButton();
+        newSubAct_lunch = new javax.swing.JButton();
+        newSubAct_file = new javax.swing.JButton();
+        newSubAct_shutdown = new javax.swing.JButton();
+        newSubAct_varialb = new javax.swing.JButton();
+        newSubAct_delay = new javax.swing.JButton();
+        newSubAct_stop = new javax.swing.JButton();
+        subFileMenu = new javax.swing.JPopupMenu();
+        subFileMenu_move = new javax.swing.JMenuItem();
+        subFileMenu_del = new javax.swing.JMenuItem();
+        subFileMenu_rename = new javax.swing.JMenuItem();
+        subFileMenu_copy = new javax.swing.JMenuItem();
+        subFileMenu_makeDir = new javax.swing.JMenuItem();
+        subFileMenu_changeAtrib = new javax.swing.JMenuItem();
+        subShutMenu = new javax.swing.JPopupMenu();
+        subShutMenu_log = new javax.swing.JMenuItem();
+        subShutMenu_restart = new javax.swing.JMenuItem();
+        subShutMenu_shutcom = new javax.swing.JMenuItem();
+        subMouseMenu = new javax.swing.JPopupMenu();
+        subMouseMenu_click = new javax.swing.JMenuItem();
+        subMouseMenu_press = new javax.swing.JMenuItem();
+        subMouseMenu_release = new javax.swing.JMenuItem();
+        subMouseMenu_scroll = new javax.swing.JMenuItem();
+        subMouseMenu_move = new javax.swing.JMenuItem();
+        subKeyMenu = new javax.swing.JPopupMenu();
+        subKeyMenu_type = new javax.swing.JMenuItem();
+        subKeyMenu_press = new javax.swing.JMenu();
+        subKeyMenu_press_shift = new javax.swing.JMenuItem();
+        subKeyMenu_press_enter = new javax.swing.JMenuItem();
+        subKeyMenu_press_del = new javax.swing.JMenuItem();
+        subKeyMenu_press_ctrl = new javax.swing.JMenuItem();
+        subKeyMenu_press_esc = new javax.swing.JMenuItem();
+        subKeyMenu_press_letter = new javax.swing.JMenuItem();
+        subKeyMenu_release = new javax.swing.JMenu();
+        subKeyMenu_release_shfit = new javax.swing.JMenuItem();
+        subKeyMenu_release_enter = new javax.swing.JMenuItem();
+        subKeyMenu_release_del = new javax.swing.JMenuItem();
+        subKeyMenu_release_ctrl = new javax.swing.JMenuItem();
+        subKeyMenu_release_esc = new javax.swing.JMenuItem();
+        subKeyMenu_release_letter = new javax.swing.JMenuItem();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -269,27 +359,32 @@ public class Main extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        newActionButton = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         systemTime = new javax.swing.JLabel();
         jButton12 = new javax.swing.JButton();
         jButton18 = new javax.swing.JButton();
         jButton19 = new javax.swing.JButton();
+        control_mouseX = new javax.swing.JTextField();
+        control_mouseY = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        control_freeze = new javax.swing.JToggleButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         historyList = new javax.swing.JList();
         jPanel3 = new javax.swing.JPanel();
         graph1 = new octu.graphics.Graph();
-        jButton10 = new javax.swing.JButton();
-        jButton11 = new javax.swing.JButton();
+        runButton = new javax.swing.JButton();
+        stopButton = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
+        aboutMenu_help = new javax.swing.JMenuItem();
+        aboutMenu_dev = new javax.swing.JMenuItem();
 
         EventSelector.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         EventSelector.setTitle("New Event");
@@ -466,10 +561,10 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jButton16.setText("Looper");
-        jButton16.addActionListener(new java.awt.event.ActionListener() {
+        newAction_looper.setText("Looper");
+        newAction_looper.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton16ActionPerformed(evt);
+                newAction_looperActionPerformed(evt);
             }
         });
 
@@ -492,7 +587,7 @@ public class Main extends javax.swing.JFrame {
                             .addComponent(jButton17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(newActionDialogLayout.createSequentialGroup()
                         .addGroup(newActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jButton16, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(newAction_looper, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(delayActionButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -518,7 +613,7 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(delayActionButton)
                     .addComponent(jButton15))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton16)
+                .addComponent(newAction_looper)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -691,8 +786,6 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap(144, Short.MAX_VALUE))
         );
 
-        jLayeredPane1.setLayer(imageView1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
         jLayeredPane1Layout.setHorizontalGroup(
@@ -705,6 +798,7 @@ public class Main extends javax.swing.JFrame {
                 .addGap(0, 17, Short.MAX_VALUE)
                 .addComponent(imageView1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
+        jLayeredPane1.setLayer(imageView1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout MouseActionDialogLayout = new javax.swing.GroupLayout(MouseActionDialog.getContentPane());
         MouseActionDialog.getContentPane().setLayout(MouseActionDialogLayout);
@@ -718,6 +812,10 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
+
+        CoordinateInputDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        CoordinateInputDialog.setTitle("Coordinates");
+        CoordinateInputDialog.setIconImages(icons);
 
         cordOk.setText("Ok");
         cordOk.addActionListener(new java.awt.event.ActionListener() {
@@ -777,7 +875,11 @@ public class Main extends javax.swing.JFrame {
                         .addContainerGap())))
         );
 
-        oneInText.setText("Enter");
+        OneValueInput.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        OneValueInput.setTitle("Input");
+        OneValueInput.setIconImages(icons);
+
+        oneInText.setText("Enter delay in milliseconds");
 
         oneInOk.setText("Ok");
         oneInOk.addActionListener(new java.awt.event.ActionListener() {
@@ -803,7 +905,7 @@ public class Main extends javax.swing.JFrame {
                     .addGroup(OneValueInputLayout.createSequentialGroup()
                         .addComponent(oneInCancel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(oneInOk))
+                        .addComponent(oneInOk, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(OneValueInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(oneInText, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(oneInTextFeild, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -1110,9 +1212,422 @@ public class Main extends javax.swing.JFrame {
 
         KeystrokeMenu.add(menu_vk_release);
 
+        subActionEditor.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        subActionEditor.setTitle("Sub Action Editor");
+        subActionEditor.setIconImages(icons);
+        subActionEditor.setModalityType(null);
+
+        subAction_list.setModel(new DefaultListModel<String>());
+        jScrollPane4.setViewportView(subAction_list);
+
+        subAction_add.setText("+ Action");
+        subAction_add.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subAction_addActionPerformed(evt);
+            }
+        });
+
+        subAction_edit.setText("Edit");
+
+        subAction_remove.setText("- Action");
+
+        subAction_up.setText("Up");
+
+        subAction_down.setText("Down");
+
+        subAction_submit.setText("Submit");
+
+        subAction_cancel.setText("Cancel");
+        subAction_cancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subAction_cancelActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout subActionEditorLayout = new javax.swing.GroupLayout(subActionEditor.getContentPane());
+        subActionEditor.getContentPane().setLayout(subActionEditorLayout);
+        subActionEditorLayout.setHorizontalGroup(
+            subActionEditorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(subActionEditorLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(subActionEditorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(subActionEditorLayout.createSequentialGroup()
+                        .addComponent(subAction_cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(subAction_submit, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(subActionEditorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(subAction_add, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(subAction_remove, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(subAction_up, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(subAction_down, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(subAction_edit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        subActionEditorLayout.setVerticalGroup(
+            subActionEditorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(subActionEditorLayout.createSequentialGroup()
+                .addGroup(subActionEditorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(subActionEditorLayout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(subAction_add)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(subAction_edit)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(subAction_remove)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(subAction_up)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(subAction_down))
+                    .addGroup(subActionEditorLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(subActionEditorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(subAction_submit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(subAction_cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        newSubActionDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        newSubActionDialog.setTitle("Action");
+        newSubActionDialog.setIconImages(icons);
+        newSubActionDialog.setModalityType(null);
+
+        newSubAct_mouse.setText("Mouse");
+        newSubAct_mouse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newSubAct_mouseActionPerformed(evt);
+            }
+        });
+
+        newSubAct_keystroke.setText("Keystroke");
+        newSubAct_keystroke.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newSubAct_keystrokeActionPerformed(evt);
+            }
+        });
+
+        newSubAct_lunch.setText("Lunch App");
+        newSubAct_lunch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newSubAct_lunchActionPerformed(evt);
+            }
+        });
+
+        newSubAct_file.setText("File");
+        newSubAct_file.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newSubAct_fileActionPerformed(evt);
+            }
+        });
+
+        newSubAct_shutdown.setText("Shutdown");
+        newSubAct_shutdown.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newSubAct_shutdownActionPerformed(evt);
+            }
+        });
+
+        newSubAct_varialb.setText("Variable");
+        newSubAct_varialb.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newSubAct_varialbActionPerformed(evt);
+            }
+        });
+
+        newSubAct_delay.setText("Delay");
+        newSubAct_delay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newSubAct_delayActionPerformed(evt);
+            }
+        });
+
+        newSubAct_stop.setText("Stop");
+        newSubAct_stop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newSubAct_stopActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout newSubActionDialogLayout = new javax.swing.GroupLayout(newSubActionDialog.getContentPane());
+        newSubActionDialog.getContentPane().setLayout(newSubActionDialogLayout);
+        newSubActionDialogLayout.setHorizontalGroup(
+            newSubActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(newSubActionDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(newSubActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(newSubActionDialogLayout.createSequentialGroup()
+                        .addGroup(newSubActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(newSubAct_lunch, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                            .addComponent(newSubAct_mouse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(newSubAct_keystroke, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(newSubActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(newSubAct_shutdown, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
+                            .addComponent(newSubAct_file, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(newSubAct_varialb, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(newSubActionDialogLayout.createSequentialGroup()
+                        .addComponent(newSubAct_delay, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(newSubAct_stop, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        newSubActionDialogLayout.setVerticalGroup(
+            newSubActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(newSubActionDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(newSubActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(newSubAct_mouse)
+                    .addComponent(newSubAct_file))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(newSubActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(newSubAct_keystroke)
+                    .addComponent(newSubAct_shutdown))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(newSubActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(newSubAct_lunch)
+                    .addComponent(newSubAct_varialb))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(newSubActionDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(newSubAct_delay)
+                    .addComponent(newSubAct_stop))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        subFileMenu_move.setText("Move File");
+        subFileMenu_move.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subFileMenu_moveActionPerformed(evt);
+            }
+        });
+        subFileMenu.add(subFileMenu_move);
+
+        subFileMenu_del.setText("Delete File");
+        subFileMenu_del.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subFileMenu_delActionPerformed(evt);
+            }
+        });
+        subFileMenu.add(subFileMenu_del);
+
+        subFileMenu_rename.setText("Rename File");
+        subFileMenu_rename.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subFileMenu_renameActionPerformed(evt);
+            }
+        });
+        subFileMenu.add(subFileMenu_rename);
+
+        subFileMenu_copy.setText("Copy File");
+        subFileMenu_copy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subFileMenu_copyActionPerformed(evt);
+            }
+        });
+        subFileMenu.add(subFileMenu_copy);
+
+        subFileMenu_makeDir.setText("Make Directory");
+        subFileMenu_makeDir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subFileMenu_makeDirActionPerformed(evt);
+            }
+        });
+        subFileMenu.add(subFileMenu_makeDir);
+
+        subFileMenu_changeAtrib.setText("Hide/Unhide File");
+        subFileMenu_changeAtrib.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subFileMenu_changeAtribActionPerformed(evt);
+            }
+        });
+        subFileMenu.add(subFileMenu_changeAtrib);
+
+        subShutMenu_log.setText("Log Off");
+        subShutMenu_log.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subShutMenu_logActionPerformed(evt);
+            }
+        });
+        subShutMenu.add(subShutMenu_log);
+
+        subShutMenu_restart.setText("Restart");
+        subShutMenu_restart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subShutMenu_restartActionPerformed(evt);
+            }
+        });
+        subShutMenu.add(subShutMenu_restart);
+
+        subShutMenu_shutcom.setText("Shutdown");
+        subShutMenu_shutcom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subShutMenu_shutcomActionPerformed(evt);
+            }
+        });
+        subShutMenu.add(subShutMenu_shutcom);
+
+        subMouseMenu_click.setText("Click");
+        subMouseMenu_click.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subMouseMenu_clickActionPerformed(evt);
+            }
+        });
+        subMouseMenu.add(subMouseMenu_click);
+
+        subMouseMenu_press.setText("Press");
+        subMouseMenu_press.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subMouseMenu_pressActionPerformed(evt);
+            }
+        });
+        subMouseMenu.add(subMouseMenu_press);
+
+        subMouseMenu_release.setText("Release");
+        subMouseMenu_release.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subMouseMenu_releaseActionPerformed(evt);
+            }
+        });
+        subMouseMenu.add(subMouseMenu_release);
+
+        subMouseMenu_scroll.setText("Scroll");
+        subMouseMenu_scroll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subMouseMenu_scrollActionPerformed(evt);
+            }
+        });
+        subMouseMenu.add(subMouseMenu_scroll);
+
+        subMouseMenu_move.setText("Move");
+        subMouseMenu_move.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subMouseMenu_moveActionPerformed(evt);
+            }
+        });
+        subMouseMenu.add(subMouseMenu_move);
+
+        subKeyMenu_type.setText("Type");
+        subKeyMenu_type.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subKeyMenu_typeActionPerformed(evt);
+            }
+        });
+        subKeyMenu.add(subKeyMenu_type);
+
+        subKeyMenu_press.setText("Press");
+
+        subKeyMenu_press_shift.setText("Shift");
+        subKeyMenu_press_shift.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subKeyMenu_press_shiftActionPerformed(evt);
+            }
+        });
+        subKeyMenu_press.add(subKeyMenu_press_shift);
+
+        subKeyMenu_press_enter.setText("Enter");
+        subKeyMenu_press_enter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subKeyMenu_press_enterActionPerformed(evt);
+            }
+        });
+        subKeyMenu_press.add(subKeyMenu_press_enter);
+
+        subKeyMenu_press_del.setText("Delete");
+        subKeyMenu_press_del.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subKeyMenu_press_delActionPerformed(evt);
+            }
+        });
+        subKeyMenu_press.add(subKeyMenu_press_del);
+
+        subKeyMenu_press_ctrl.setText("Ctrl");
+        subKeyMenu_press_ctrl.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subKeyMenu_press_ctrlActionPerformed(evt);
+            }
+        });
+        subKeyMenu_press.add(subKeyMenu_press_ctrl);
+
+        subKeyMenu_press_esc.setText("ESC");
+        subKeyMenu_press_esc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subKeyMenu_press_escActionPerformed(evt);
+            }
+        });
+        subKeyMenu_press.add(subKeyMenu_press_esc);
+
+        subKeyMenu_press_letter.setText("Letter");
+        subKeyMenu_press_letter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subKeyMenu_press_letterActionPerformed(evt);
+            }
+        });
+        subKeyMenu_press.add(subKeyMenu_press_letter);
+
+        subKeyMenu.add(subKeyMenu_press);
+
+        subKeyMenu_release.setText("Release");
+
+        subKeyMenu_release_shfit.setText("Shift");
+        subKeyMenu_release_shfit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subKeyMenu_release_shfitActionPerformed(evt);
+            }
+        });
+        subKeyMenu_release.add(subKeyMenu_release_shfit);
+
+        subKeyMenu_release_enter.setText("Enter");
+        subKeyMenu_release_enter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subKeyMenu_release_enterActionPerformed(evt);
+            }
+        });
+        subKeyMenu_release.add(subKeyMenu_release_enter);
+
+        subKeyMenu_release_del.setText("Delete");
+        subKeyMenu_release_del.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subKeyMenu_release_delActionPerformed(evt);
+            }
+        });
+        subKeyMenu_release.add(subKeyMenu_release_del);
+
+        subKeyMenu_release_ctrl.setText("Ctrl");
+        subKeyMenu_release_ctrl.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subKeyMenu_release_ctrlActionPerformed(evt);
+            }
+        });
+        subKeyMenu_release.add(subKeyMenu_release_ctrl);
+
+        subKeyMenu_release_esc.setText("ESC");
+        subKeyMenu_release_esc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subKeyMenu_release_escActionPerformed(evt);
+            }
+        });
+        subKeyMenu_release.add(subKeyMenu_release_esc);
+
+        subKeyMenu_release_letter.setText("Letter");
+        subKeyMenu_release_letter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subKeyMenu_release_letterActionPerformed(evt);
+            }
+        });
+        subKeyMenu_release.add(subKeyMenu_release_letter);
+
+        subKeyMenu.add(subKeyMenu_release);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Octo");
         setIconImages(icons);
+        addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                formKeyPressed(evt);
+            }
+        });
 
         jPanel1.setToolTipText("");
 
@@ -1145,10 +1660,10 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("New Action");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        newActionButton.setText("New Action");
+        newActionButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                newActionButtonActionPerformed(evt);
             }
         });
 
@@ -1183,6 +1698,23 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        control_mouseX.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        control_mouseY.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("X");
+
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("Y");
+
+        control_freeze.setText("Freeze (F3)");
+        control_freeze.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                control_freezeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -1205,14 +1737,24 @@ public class Main extends javax.swing.JFrame {
                                 .addComponent(jLabel2)
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addGap(10, 10, 10)
-                                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(newActionButton, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButton19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton18, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(21, 21, 21)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(control_mouseX, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(control_mouseY, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(control_freeze)
+                        .addGap(48, 48, 48)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -1229,17 +1771,26 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane2)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton3)
-                    .addComponent(jButton12)
-                    .addComponent(jButton18))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton4)
-                    .addComponent(jButton19))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1)
+                            .addComponent(newActionButton)
+                            .addComponent(jButton12)
+                            .addComponent(jButton18)
+                            .addComponent(control_mouseX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton2)
+                            .addComponent(jButton4)
+                            .addComponent(jButton19)
+                            .addComponent(control_mouseY, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(control_freeze)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 133, Short.MAX_VALUE)
                 .addComponent(systemTime)
                 .addContainerGap())
@@ -1276,17 +1827,17 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(graph1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        jButton10.setText("Run");
-        jButton10.addActionListener(new java.awt.event.ActionListener() {
+        runButton.setText("Run (F1)");
+        runButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton10ActionPerformed(evt);
+                runButtonActionPerformed(evt);
             }
         });
 
-        jButton11.setText("Stop");
-        jButton11.addActionListener(new java.awt.event.ActionListener() {
+        stopButton.setText("Stop (F2)");
+        stopButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton11ActionPerformed(evt);
+                stopButtonActionPerformed(evt);
             }
         });
 
@@ -1302,8 +1853,8 @@ public class Main extends javax.swing.JFrame {
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 626, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton11, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE))))
+                            .addComponent(runButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(stopButton, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -1313,9 +1864,9 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jButton11)
+                        .addComponent(stopButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton10)))
+                        .addComponent(runButton)))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(120, Short.MAX_VALUE))
@@ -1353,11 +1904,16 @@ public class Main extends javax.swing.JFrame {
 
         jMenu2.setText("About");
 
-        jMenuItem4.setText("Help");
-        jMenu2.add(jMenuItem4);
+        aboutMenu_help.setText("Help");
+        jMenu2.add(aboutMenu_help);
 
-        jMenuItem5.setText("Developer");
-        jMenu2.add(jMenuItem5);
+        aboutMenu_dev.setText("Developer");
+        aboutMenu_dev.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutMenu_devActionPerformed(evt);
+            }
+        });
+        jMenu2.add(aboutMenu_dev);
 
         jMenuBar1.add(jMenu2);
 
@@ -1403,16 +1959,36 @@ public class Main extends javax.swing.JFrame {
         openDialog.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        
+    private void newActionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newActionButtonActionPerformed
+
         if (eventList.getSelectedIndex() == -1) {
             JOptionPane.showMessageDialog(this, "You must have and select an event!");
             return;
         }
-        newActionDialog.pack();
-        centerDialog(newActionDialog);
-        newActionDialog.setVisible(true);
-    }//GEN-LAST:event_jButton3ActionPerformed
+        if (!handler.getEvent(selectedEvent).getName().toLowerCase().startsWith("schedu")) {
+            newActionDialog.pack();
+            centerDialog(newActionDialog);
+            newActionDialog.setVisible(true);
+        } else {
+            //lunch sub-action editor and select a time
+            int h = Math.min(24, Math.max(0, Integer.parseInt(JOptionPane.showInputDialog(this, "Enter the scheduled Hour: "))));
+            int min = Math.min(59, Math.max(0, Integer.parseInt(JOptionPane.showInputDialog(this, "Enter the scheduled Minutes: "))));
+            Event event = handler.getEvent(selectedEvent);
+            Calendar c = Calendar.getInstance();
+            c.set(Calendar.HOUR_OF_DAY, h);
+            c.set(Calendar.MINUTE, min);
+            ScheduledAction act = new ScheduledAction(event.getPor(), c, graph1, historyList);
+            prepareAction(act);
+            actionList.setSelectedIndex(actionList.getLastVisibleIndex());
+
+            //displaying action editor
+            subActionEditor.pack();
+            centerDialog(subActionEditor);
+            subActionEditor.setVisible(true);
+
+        }
+
+    }//GEN-LAST:event_newActionButtonActionPerformed
 
     private void actionFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actionFileActionPerformed
         FileMenu.show(actionFile, actionFile.getX() / 2, 0);
@@ -1474,16 +2050,17 @@ public class Main extends javax.swing.JFrame {
         DefaultListModel<String> model = (DefaultListModel<String>) actionList.getModel();
         model.addElement(action.getDescription());
         handler.getEvent(selectedEvent).addAction(action);
+        CoordinateInputDialog.dispose();
     }//GEN-LAST:event_cordOkActionPerformed
 
     private void cordCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cordCancelActionPerformed
         CoordinateInputDialog.dispose();
     }//GEN-LAST:event_cordCancelActionPerformed
 
-    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+    private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
         historyList.setModel(new DefaultListModel<String>());
         handler.start();
-    }//GEN-LAST:event_jButton10ActionPerformed
+    }//GEN-LAST:event_runButtonActionPerformed
 
     private void delayActionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delayActionButtonActionPerformed
         OneValueInput.pack();
@@ -1498,8 +2075,8 @@ public class Main extends javax.swing.JFrame {
             case 0:
                 Event event = handler.getEvent(selectedEvent);
                 DelayAction action = new DelayAction(event.getPor(), Integer.parseInt(oneInTextFeild.getText())); // 3 seconds
-                
-                if(edit){
+
+                if (edit) {
                     updateAction(action, actionList.getSelectedIndex());
                     OneValueInput.dispose();
                     return;
@@ -1522,7 +2099,7 @@ public class Main extends javax.swing.JFrame {
         newActionDialog.dispose();
     }//GEN-LAST:event_jButton15ActionPerformed
 
-    private void jButton16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton16ActionPerformed
+    private void newAction_looperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newAction_looperActionPerformed
         newActionDialog.dispose();
         LooperAction act = new LooperAction(handler.getEvent(selectedEvent).getPor());
         act.addAction(new MouseAction(handler.getEvent(selectedEvent).getPor(), MouseAction.ACTION_CLICK, null));
@@ -1538,7 +2115,7 @@ public class Main extends javax.swing.JFrame {
         model.addElement(act.getDescription());
         handler.getEvent(selectedEvent).addAction(act);
 
-    }//GEN-LAST:event_jButton16ActionPerformed
+    }//GEN-LAST:event_newAction_looperActionPerformed
 
     private void lunchAppButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lunchAppButtonActionPerformed
         //adding actoins for testing propuses only
@@ -1576,14 +2153,13 @@ public class Main extends javax.swing.JFrame {
         onePathDialog.setVisible(true);
         newActionDialog.dispose();
         fileChooser_chooser.setFileFilter(FilerHandler.getAbsoluteFilter());
-  
-          
+
 
     }//GEN-LAST:event_lunchAppButtonActionPerformed
 
-    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+    private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
         handler.flush();
-    }//GEN-LAST:event_jButton11ActionPerformed
+    }//GEN-LAST:event_stopButtonActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         int selection = actionList.getSelectedIndex();
@@ -1651,45 +2227,88 @@ public class Main extends javax.swing.JFrame {
         String title = onePathDialog.getTitle();
         String path1 = "\"" + onePath_text.getText() + "\"";
         Event event = handler.getEvent(selectedEvent);
+        System.out.println(event.getName());
         Action act = null;
-        if (title.startsWith("Rename")) {
-            //ask for the new file name
-            String fileName = JOptionPane.showInputDialog(this, "Enter the new file name: ");
-            String ext = "";
-            if(fileName.indexOf(".") == -1){
-                ext = path1.substring(path1.lastIndexOf("."));
-            }else{
-                ext = "\"";
-            }
-            act = new FileAction(event.getPor(), FileAction.TYPE_RENAME_FILE, path1);
-            ((FileAction)act).setNewPath("\"" + fileName + ext + "\"");
-        } else if (title.startsWith("Delete")) {
-            //just delete
-            act = new FileAction(event.getPor(), FileAction.TYPE_DELETE_FILE, path1);
-        } else if (title.startsWith("Make")) {
-            //take the name of the file - make sure its only folders
-            String folderName = JOptionPane.showInputDialog(this, "Type directory name: ");
-            act = new FileAction(event.getPor(), FileAction.TYPE_MAKE_DIRECTORY, path1.substring(0, path1.length()-1) + "\\" + folderName + "\"");
-        } else if (title.startsWith("Hide")) {
-            //ask whether to hide or unhide
-            char com = JOptionPane.showInputDialog(this, "Enter H: hide file, U: unhide file :").toLowerCase().charAt(0);
-            if(com != 'h' && com != 'u'){
-                return;
-            }
-            act = new FileAction(event.getPor(), ((com == 'h') ? FileAction.TYPE_HIDE_FILE:FileAction.TYPE_UNHIDE_FILE), path1);
-        }else if(title.startsWith("Lunch")){
-            
+        if (!event.getName().equals("Schedule")) {
+            if (title.startsWith("Rename")) {
+                //ask for the new file name
+                String fileName = JOptionPane.showInputDialog(this, "Enter the new file name: ");
+                String ext = "";
+                if (fileName.indexOf(".") == -1) {
+                    ext = path1.substring(path1.lastIndexOf("."));
+                } else {
+                    ext = "\"";
+                }
+                act = new FileAction(event.getPor(), FileAction.TYPE_RENAME_FILE, path1);
+                ((FileAction) act).setNewPath("\"" + fileName + ext + "\"");
+            } else if (title.startsWith("Delete")) {
+                //just delete
+                act = new FileAction(event.getPor(), FileAction.TYPE_DELETE_FILE, path1);
+            } else if (title.startsWith("Make")) {
+                //take the name of the file - make sure its only folders
+                String folderName = JOptionPane.showInputDialog(this, "Type directory name: ");
+                act = new FileAction(event.getPor(), FileAction.TYPE_MAKE_DIRECTORY, path1.substring(0, path1.length() - 1) + "\\" + folderName + "\"");
+            } else if (title.startsWith("Hide")) {
+                //ask whether to hide or unhide
+                char com = JOptionPane.showInputDialog(this, "Enter H: hide file, U: unhide file :").toLowerCase().charAt(0);
+                if (com != 'h' && com != 'u') {
+                    return;
+                }
+                act = new FileAction(event.getPor(), ((com == 'h') ? FileAction.TYPE_HIDE_FILE : FileAction.TYPE_UNHIDE_FILE), path1);
+            } else if (title.startsWith("Lunch")) {
+
                 act = new LunchAppAction(event.getPor(), path1);
-            if(edit){
-                //TODO: FIX
-                updateAction(act, actionList.getSelectedIndex());
-                edit = false;
-                onePathDialog.dispose();
-                return;
+                if (edit) {
+                    //TODO: FIX
+                    updateAction(act, actionList.getSelectedIndex());
+                    edit = false;
+                    onePathDialog.dispose();
+                    return;
+                }
+
             }
-                
+            prepareAction(act);
+        } else if (event.getName().equalsIgnoreCase("Schedule")) {
+            if (title.startsWith("Rename")) {
+                //ask for the new file name
+                String fileName = JOptionPane.showInputDialog(this, "Enter the new file name: ");
+                String ext = "";
+                if (fileName.indexOf(".") == -1) {
+                    ext = path1.substring(path1.lastIndexOf("."));
+                } else {
+                    ext = "\"";
+                }
+                act = new FileAction(event.getPor(), FileAction.TYPE_RENAME_FILE, path1);
+                ((FileAction) act).setNewPath("\"" + fileName + ext + "\"");
+            } else if (title.startsWith("Delete")) {
+                //just delete
+                act = new FileAction(event.getPor(), FileAction.TYPE_DELETE_FILE, path1);
+            } else if (title.startsWith("Make")) {
+                //take the name of the file - make sure its only folders
+                String folderName = JOptionPane.showInputDialog(this, "Type directory name: ");
+                act = new FileAction(event.getPor(), FileAction.TYPE_MAKE_DIRECTORY, path1.substring(0, path1.length() - 1) + "\\" + folderName + "\"");
+            } else if (title.startsWith("Hide")) {
+                //ask whether to hide or unhide
+                char com = JOptionPane.showInputDialog(this, "Enter H: hide file, U: unhide file :").toLowerCase().charAt(0);
+                if (com != 'h' && com != 'u') {
+                    return;
+                }
+                act = new FileAction(event.getPor(), ((com == 'h') ? FileAction.TYPE_HIDE_FILE : FileAction.TYPE_UNHIDE_FILE), path1);
+            } else if (title.startsWith("Lunch")) {
+
+                act = new LunchAppAction(event.getPor(), path1);
+                if (edit) {
+                    //TODO: FIX
+                    updateAction(act, actionList.getSelectedIndex());
+                    edit = false;
+                    onePathDialog.dispose();
+                    return;
+                }
+
+            }
+
+            prepareSubScheduledAction(act, event);
         }
-        prepareAction(act);
         onePathDialog.dispose();
     }//GEN-LAST:event_onePath_okActionPerformed
 
@@ -1701,21 +2320,25 @@ public class Main extends javax.swing.JFrame {
         String title = twoPathDialog.getTitle();
         String oldPath = "\"" + twoPath_oldText.getText() + "\"";
         String newPath = "\"" + twoPath_newText.getText();
-        
+
         //getting the name fo the file
         String fileName = twoPath_oldText.getText().substring(twoPath_oldText.getText().lastIndexOf("\\") + 1);
-        boolean folder = (fileName.indexOf(".") != -1) ? false:true;
+        boolean folder = (fileName.indexOf(".") != -1) ? false : true;
         System.out.println(fileName + "  " + oldPath + " " + newPath);
         Event event = handler.getEvent(selectedEvent);
         Action act = null;
         if (title.startsWith("Copy")) {
             act = new FileAction(event.getPor(), FileAction.TYPE_COPY_FILE, oldPath);
-            ((FileAction)act).setNewPath(newPath + "\\" + fileName + "\"");
+            ((FileAction) act).setNewPath(newPath + "\\" + fileName + "\"");
         } else if (title.startsWith("Move")) {
-             act = new FileAction(event.getPor(), FileAction.TYPE_MOVE_FILE, oldPath);
-            ((FileAction)act).setNewPath(newPath + "\\" + fileName + "\"");
+            act = new FileAction(event.getPor(), FileAction.TYPE_MOVE_FILE, oldPath);
+            ((FileAction) act).setNewPath(newPath + "\\" + fileName + "\"");
         }
-        prepareAction(act);
+        if (!event.getName().equalsIgnoreCase("Schedule")) {
+            prepareAction(act);
+        } else if (event.getName().equalsIgnoreCase("Schedule")) {
+            prepareSubScheduledAction(act, event);
+        }
         twoPathDialog.dispose();
     }//GEN-LAST:event_twoPath_okActionPerformed
 
@@ -1772,7 +2395,7 @@ public class Main extends javax.swing.JFrame {
         handler.getEvent(selectedEvent).addAction(act);
 
     }//GEN-LAST:event_scrollMouseActionPerformed
-    
+
     private void jButton18ActionPerformed(java.awt.event.ActionEvent evt) {
         int actSelection = actionList.getSelectedIndex();
         if (actSelection == -1) {
@@ -1791,15 +2414,15 @@ public class Main extends javax.swing.JFrame {
             }
             actionList.setSelectedIndex(actSelection - 1);
         }
-        
+
     }
-    
+
 
     private void menu_typeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_typeActionPerformed
         newActionDialog.dispose();
         String text = JOptionPane.showInputDialog(this, "Type text for Keystroke Action:");
         KeyStrokeAction action = new KeyStrokeAction(handler.getEvent(selectedEvent).getPor(), KeyStrokeAction.OPERATION_TYPE, text);
-        
+
         addElementToList(actionList, action.getDescription());
         handler.getEvent(selectedEvent).addAction(action);
     }//GEN-LAST:event_menu_typeActionPerformed
@@ -1815,7 +2438,7 @@ public class Main extends javax.swing.JFrame {
             model.addElement(event.getActions().get(i).getDescription());
         }
         actionList.setModel(model);
-        
+
 
     }//GEN-LAST:event_bt_event_startActionPerformed
 
@@ -1862,7 +2485,7 @@ public class Main extends javax.swing.JFrame {
 
     private void bt_event_triggerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_event_triggerActionPerformed
         addEvent("Trigger", Event.POR_TRIGGER);
-        
+
         eventList.setSelectedIndex(eventList.getLastVisibleIndex());
         Event event = handler.getEvent(eventList.getSelectedIndex());
         selectedEvent = event.getName();
@@ -2014,7 +2637,7 @@ public class Main extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Select an event first");
             return;
         }
-        
+
         handler.removeEventAndActions(handler.getEvent(evtSel).getName());
         DefaultListModel<String> model = new DefaultListModel<String>();
         if (handler.getEvents().size() > 0) {
@@ -2083,17 +2706,326 @@ public class Main extends javax.swing.JFrame {
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
         edit = true;
         Event event = handler.getEvent(selectedEvent);
-       int actSel = actionList.getSelectedIndex();
-       Action act = event.getAction(actSel);
-       if(act instanceof DelayAction){
-           delayActionButton.doClick();
-       }else if(act instanceof LunchAppAction){
-           lunchAppButton.doClick();
-       }else if(act instanceof MouseAction){
-           
-       }
+        int actSel = actionList.getSelectedIndex();
+        Action act = event.getAction(actSel);
+        if (act instanceof DelayAction) {
+            delayActionButton.doClick();
+        } else if (act instanceof LunchAppAction) {
+            lunchAppButton.doClick();
+        } else if (act instanceof MouseAction) {
+
+        }
     }//GEN-LAST:event_jButton12ActionPerformed
-    
+
+    private void control_freezeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_control_freezeActionPerformed
+        control_freeze.setSelected(false);
+    }//GEN-LAST:event_control_freezeActionPerformed
+
+    private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
+
+    }//GEN-LAST:event_formKeyPressed
+
+    private void aboutMenu_devActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenu_devActionPerformed
+        DeveloperFrame dev = new DeveloperFrame();
+        dev.pack();
+        //make sure its in the middle
+        dev.setBounds((int) (screen.getWidth() - dev.getWidth()) / 2, ((int) screen.getHeight() - dev.getHeight()) / 2,
+                dev.getWidth(), dev.getHeight());
+
+        dev.setVisible(true);
+    }//GEN-LAST:event_aboutMenu_devActionPerformed
+
+    private void subAction_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subAction_addActionPerformed
+        if (actionList.getSelectedIndex() == -1) {
+            JOptionPane.showMessageDialog(this, "You must select an action first");
+            return;
+        }
+        newSubActionDialog.pack();
+        centerDialog(newSubActionDialog);
+        newSubActionDialog.setVisible(true);
+    }//GEN-LAST:event_subAction_addActionPerformed
+
+    private void newSubAct_mouseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSubAct_mouseActionPerformed
+        subMouseMenu.show(newSubAct_mouse, newSubAct_mouse.getX() / 2, 0);
+    }//GEN-LAST:event_newSubAct_mouseActionPerformed
+
+    private void newSubAct_keystrokeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSubAct_keystrokeActionPerformed
+        subKeyMenu.show(newSubAct_keystroke, newSubAct_keystroke.getX() / 2, 0);
+    }//GEN-LAST:event_newSubAct_keystrokeActionPerformed
+
+    private void newSubAct_lunchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSubAct_lunchActionPerformed
+        onePathDialog.setTitle("Lunch Application: select a path: ");
+        newSubActionDialog.dispose();
+        displayDialog(onePathDialog);
+    }//GEN-LAST:event_newSubAct_lunchActionPerformed
+
+    private void newSubAct_fileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSubAct_fileActionPerformed
+        subFileMenu.show(newSubAct_file, newSubAct_file.getX() / 2, 0);
+    }//GEN-LAST:event_newSubAct_fileActionPerformed
+
+    private void newSubAct_shutdownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSubAct_shutdownActionPerformed
+        subShutMenu.show(newSubAct_shutdown, newSubAct_shutdown.getX() / 2, 0);
+    }//GEN-LAST:event_newSubAct_shutdownActionPerformed
+
+    private void newSubAct_varialbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSubAct_varialbActionPerformed
+        JOptionPane.showMessageDialog(this, "Future update");
+    }//GEN-LAST:event_newSubAct_varialbActionPerformed
+
+    private void newSubAct_delayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSubAct_delayActionPerformed
+        int delay = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter delay in milliseconds: "));
+        delay = Math.max(0, delay);
+        Event event = handler.getEvent(selectedEvent);
+        DelayAction act = new DelayAction(event.getPor(), delay);
+        prepareSubScheduledAction(act, event);
+    }//GEN-LAST:event_newSubAct_delayActionPerformed
+
+    public void prepareSubScheduledAction(Action act, Event event) {
+        newSubActionDialog.dispose();
+        lastSelectedActionl = actionList.getSelectedIndex();
+        ((ScheduledAction) event.getAction(actionList.getSelectedIndex())).addAction(act);
+        addElementToList(subAction_list, act.getDescription());
+        updateList(actionList, event);
+        actionList.setSelectedIndex(lastSelectedActionl);
+    }
+
+    private void newSubAct_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSubAct_stopActionPerformed
+        Event event = handler.getEvent(selectedEvent);
+        StopApplicationAction act = new StopApplicationAction(event.getPor());
+        prepareSubScheduledAction(act, event);
+    }//GEN-LAST:event_newSubAct_stopActionPerformed
+
+    private void subFileMenu_moveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subFileMenu_moveActionPerformed
+        twoPathDialog.setTitle("Move File: select a path: ");
+        displayDialog(twoPathDialog);
+        newSubActionDialog.dispose();
+    }//GEN-LAST:event_subFileMenu_moveActionPerformed
+
+    private void subFileMenu_delActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subFileMenu_delActionPerformed
+        onePathDialog.setTitle("Delete File: select a path: ");
+        newSubActionDialog.dispose();
+        displayDialog(onePathDialog);
+    }//GEN-LAST:event_subFileMenu_delActionPerformed
+
+    private void subFileMenu_renameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subFileMenu_renameActionPerformed
+        onePathDialog.setTitle("Rename File: select a path: ");
+        newSubActionDialog.dispose();
+        displayDialog(onePathDialog);
+    }//GEN-LAST:event_subFileMenu_renameActionPerformed
+
+    private void subFileMenu_copyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subFileMenu_copyActionPerformed
+        twoPathDialog.setTitle("Copy File: select a path: ");
+        displayDialog(twoPathDialog);
+        newSubActionDialog.dispose();
+    }//GEN-LAST:event_subFileMenu_copyActionPerformed
+
+    private void subFileMenu_makeDirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subFileMenu_makeDirActionPerformed
+        onePathDialog.setTitle("Make New Directory: select a path: ");
+        newSubActionDialog.dispose();
+        displayDialog(onePathDialog);
+    }//GEN-LAST:event_subFileMenu_makeDirActionPerformed
+
+    private void subFileMenu_changeAtribActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subFileMenu_changeAtribActionPerformed
+        onePathDialog.setTitle("Hide/Unhide File: select a path: ");
+        newSubActionDialog.dispose();
+        displayDialog(onePathDialog);
+    }//GEN-LAST:event_subFileMenu_changeAtribActionPerformed
+
+    private void subShutMenu_logActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subShutMenu_logActionPerformed
+        Event event = handler.getEvent(selectedEvent);
+        ShutDownAction act = new ShutDownAction(event.getPor(), Command.MACHINE_LOG_OFF);
+        prepareSubScheduledAction(act, event);
+    }//GEN-LAST:event_subShutMenu_logActionPerformed
+
+    private void subShutMenu_restartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subShutMenu_restartActionPerformed
+        Event event = handler.getEvent(selectedEvent);
+        ShutDownAction act = new ShutDownAction(event.getPor(), Command.MACHINE_RESTART);
+        prepareSubScheduledAction(act, event);
+    }//GEN-LAST:event_subShutMenu_restartActionPerformed
+
+    private void subShutMenu_shutcomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subShutMenu_shutcomActionPerformed
+        Event event = handler.getEvent(selectedEvent);
+        ShutDownAction act = new ShutDownAction(event.getPor(), Command.MACHINE_SHUTDOWN);
+        prepareSubScheduledAction(act, event);
+    }//GEN-LAST:event_subShutMenu_shutcomActionPerformed
+
+    private void subMouseMenu_clickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subMouseMenu_clickActionPerformed
+        displayDialog(MouseActionDialog);
+        mouseButtonSelection = MouseAction.ACTION_CLICK;
+        newSubActionDialog.dispose();
+    }//GEN-LAST:event_subMouseMenu_clickActionPerformed
+
+    private void subMouseMenu_pressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subMouseMenu_pressActionPerformed
+        displayDialog(MouseActionDialog);
+        mouseButtonSelection = MouseAction.ACTION_PRESS;
+        newSubActionDialog.dispose();
+    }//GEN-LAST:event_subMouseMenu_pressActionPerformed
+
+    private void subMouseMenu_releaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subMouseMenu_releaseActionPerformed
+        displayDialog(MouseActionDialog);
+        mouseButtonSelection = MouseAction.ACTION_RELEASE;
+        newSubActionDialog.dispose();
+    }//GEN-LAST:event_subMouseMenu_releaseActionPerformed
+
+    private void subMouseMenu_scrollActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subMouseMenu_scrollActionPerformed
+        newSubActionDialog.dispose();
+        int y = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter the "));
+        Event event = handler.getEvent(selectedEvent);
+        MouseAction act = new MouseAction(event.getPor(), MouseAction.ACTION_SCROLL, null);
+        act.setY(y);
+        lastSelectedActionl = actionList.getSelectedIndex();
+        ScheduledAction bigAct = ((ScheduledAction) event.getAction(actionList.getSelectedIndex()));
+        bigAct.addAction(act);
+        addElementToList(subAction_list, act.getDescription());
+        updateListWithNumbers(actionList, event);
+        actionList.setSelectedIndex(lastSelectedActionl);
+    }//GEN-LAST:event_subMouseMenu_scrollActionPerformed
+
+    public void updateList(JList list, Event evt) {
+        DefaultListModel<String> model = new DefaultListModel<String>();
+        ArrayList<Action> actions = evt.getActions();
+        for (int i = 0; i < actions.size(); i++) {
+            Action action = actions.get(i);
+            model.addElement(action.getDescription());
+        }
+        list.setModel(model);
+    }
+
+    public void updateListWithNumbers(JList list, Event evt) {
+        DefaultListModel<String> model = new DefaultListModel<String>();
+        ArrayList<Action> actions = evt.getActions();
+        for (int i = 0; i < actions.size(); i++) {
+            Action action = actions.get(i);
+            model.addElement((i + 1) + "." + action.getDescription());
+        }
+        list.setModel(model);
+    }
+    private void subMouseMenu_moveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subMouseMenu_moveActionPerformed
+        displayDialog(CoordinateInputDialog);
+        newSubActionDialog.dispose();
+    }//GEN-LAST:event_subMouseMenu_moveActionPerformed
+
+    private void subKeyMenu_typeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subKeyMenu_typeActionPerformed
+        newSubActionDialog.dispose();
+        String text = JOptionPane.showInputDialog(this, "Type text for Keystroke Action:");
+        Event event = handler.getEvent(selectedEvent);
+        KeyStrokeAction action = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_TYPE, text);
+        if (event.getName().equals("Schedule")) {
+            prepareSubScheduledAction(action, event);
+        }
+
+    }//GEN-LAST:event_subKeyMenu_typeActionPerformed
+
+    private void subKeyMenu_press_shiftActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subKeyMenu_press_shiftActionPerformed
+        Event event = handler.getEvent(selectedEvent);
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_PRESS, KeyStrokeAction.KEY_SHIFT);
+        if (event.getName().equalsIgnoreCase("Schedule")) {
+            prepareSubScheduledAction(act, event);
+        }
+    }//GEN-LAST:event_subKeyMenu_press_shiftActionPerformed
+
+    private void subKeyMenu_press_enterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subKeyMenu_press_enterActionPerformed
+        Event event = handler.getEvent(selectedEvent);
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_PRESS, KeyStrokeAction.KEY_ENTER);
+        if (event.getName().equalsIgnoreCase("Schedule")) {
+            prepareSubScheduledAction(act, event);
+        }
+    }//GEN-LAST:event_subKeyMenu_press_enterActionPerformed
+
+    private void subKeyMenu_press_delActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subKeyMenu_press_delActionPerformed
+        Event event = handler.getEvent(selectedEvent);
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_PRESS, KeyStrokeAction.KEY_DEL);
+        if (event.getName().equalsIgnoreCase("Schedule")) {
+            prepareSubScheduledAction(act, event);
+        }
+    }//GEN-LAST:event_subKeyMenu_press_delActionPerformed
+
+    private void subKeyMenu_press_ctrlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subKeyMenu_press_ctrlActionPerformed
+        Event event = handler.getEvent(selectedEvent);
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_PRESS, KeyStrokeAction.KEY_CTRL);
+        if (event.getName().equalsIgnoreCase("Schedule")) {
+            prepareSubScheduledAction(act, event);
+        }
+    }//GEN-LAST:event_subKeyMenu_press_ctrlActionPerformed
+
+    private void subKeyMenu_press_escActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subKeyMenu_press_escActionPerformed
+        Event event = handler.getEvent(selectedEvent);
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_PRESS, KeyStrokeAction.KEY_ESC);
+        if (event.getName().equalsIgnoreCase("Schedule")) {
+            prepareSubScheduledAction(act, event);
+        }
+    }//GEN-LAST:event_subKeyMenu_press_escActionPerformed
+
+    private void subKeyMenu_press_letterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subKeyMenu_press_letterActionPerformed
+       Event event = handler.getEvent(selectedEvent);
+        String str = JOptionPane.showInputDialog(this, "Enter a single Letter:");
+        if (str.length() == 0) {
+            return;
+        }
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_PRESS, str.substring(0, 1));
+        if(event.getName().equalsIgnoreCase("Schedule")){
+            prepareSubScheduledAction(act, event);
+        }
+    }//GEN-LAST:event_subKeyMenu_press_letterActionPerformed
+
+    private void subKeyMenu_release_shfitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subKeyMenu_release_shfitActionPerformed
+        Event event = handler.getEvent(selectedEvent);
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_RELEASE, KeyStrokeAction.KEY_SHIFT);
+        if (event.getName().equalsIgnoreCase("Schedule")) {
+            prepareSubScheduledAction(act, event);
+        }
+    }//GEN-LAST:event_subKeyMenu_release_shfitActionPerformed
+
+    private void subKeyMenu_release_enterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subKeyMenu_release_enterActionPerformed
+       Event event = handler.getEvent(selectedEvent);
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_RELEASE, KeyStrokeAction.KEY_ENTER);
+        if (event.getName().equalsIgnoreCase("Schedule")) {
+            prepareSubScheduledAction(act, event);
+        }
+    }//GEN-LAST:event_subKeyMenu_release_enterActionPerformed
+
+    private void subKeyMenu_release_delActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subKeyMenu_release_delActionPerformed
+       Event event = handler.getEvent(selectedEvent);
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_RELEASE, KeyStrokeAction.KEY_DEL);
+        if (event.getName().equalsIgnoreCase("Schedule")) {
+            prepareSubScheduledAction(act, event);
+        }
+    }//GEN-LAST:event_subKeyMenu_release_delActionPerformed
+
+    private void subKeyMenu_release_ctrlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subKeyMenu_release_ctrlActionPerformed
+        Event event = handler.getEvent(selectedEvent);
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_RELEASE, KeyStrokeAction.KEY_CTRL);
+        if (event.getName().equalsIgnoreCase("Schedule")) {
+            prepareSubScheduledAction(act, event);
+        }
+    }//GEN-LAST:event_subKeyMenu_release_ctrlActionPerformed
+
+    private void subKeyMenu_release_escActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subKeyMenu_release_escActionPerformed
+       Event event = handler.getEvent(selectedEvent);
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_RELEASE, KeyStrokeAction.KEY_ESC);
+        if (event.getName().equalsIgnoreCase("Schedule")) {
+            prepareSubScheduledAction(act, event);
+        }
+    }//GEN-LAST:event_subKeyMenu_release_escActionPerformed
+
+    private void subKeyMenu_release_letterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subKeyMenu_release_letterActionPerformed
+       Event event = handler.getEvent(selectedEvent);
+        String str = JOptionPane.showInputDialog(this, "Enter a single Letter:");
+        if (str.length() == 0) {
+            return;
+        }
+        KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_RELEASE, str.substring(0, 1));
+    }//GEN-LAST:event_subKeyMenu_release_letterActionPerformed
+
+    private void subAction_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subAction_cancelActionPerformed
+        subActionEditor.dispose();
+    }//GEN-LAST:event_subAction_cancelActionPerformed
+
+    public void displayDialog(JDialog dialog) {
+        dialog.pack();
+        centerDialog(dialog);
+        dialog.setVisible(true);
+    }
+
     private void createMouseAction(String type, String button) {
         MouseActionDialog.dispose();
         MouseAction act = null;
@@ -2110,7 +3042,15 @@ public class Main extends javax.swing.JFrame {
                     act = new MouseAction(evt.getPor(), MouseAction.ACTION_RELEASE, button);
                     break;
             }
-            prepareAction(act);
+            if (!evt.getName().equals("Schedule")) {
+                prepareAction(act);
+            } else {
+                lastSelectedActionl = actionList.getSelectedIndex();
+                ((ScheduledAction) evt.getAction(lastSelectedActionl)).addAction(act);
+                addElementToList(subAction_list, act.getDescription());
+                updateListWithNumbers(actionList, evt);
+                actionList.setSelectedIndex(lastSelectedActionl);
+            }
         } else {
             MouseAction action = (MouseAction) handler.getEvent(selectedEvent).getAction(actionList.getSelectedIndex());
             action.setButton(button);
@@ -2119,7 +3059,7 @@ public class Main extends javax.swing.JFrame {
             edit = false;
         }
     }
-    
+
     public void addEvent(String name, int por) {
         Event event = new Event(por);
         event.setName(name);
@@ -2128,7 +3068,7 @@ public class Main extends javax.swing.JFrame {
         }
         EventSelector.dispose();
     }
-    
+
     private void invalidateList(JList list) {
         DefaultListModel<String> model = new DefaultListModel<String>();
         Event evt = handler.getEvent(selectedEvent);
@@ -2145,31 +3085,31 @@ public class Main extends javax.swing.JFrame {
         handler.getEvent(selectedEvent).addAction(act);
         addElementToList(actionList, act.getDescription());
     }
-    
-    private void updateAction(Action act, int pos){
+
+    private void updateAction(Action act, int pos) {
         handler.getEvent(selectedEvent).addAction(act);
         addElementToListAndRemove(actionList, act.getDescription(), pos);
     }
-    
+
     public void addElementToList(JList list, String elem) {
         DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
         model.addElement(elem);
     }
-    
+
     public void addElementToListAndRemove(JList list, String elem, int index) {
         DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
         model.remove(index);
         model.add(index, elem);
     }
-    
+
     public void centerDialog(JDialog dialog) {
         dialog.setBounds(getMiddleX(dialog), getMiddleY(dialog), dialog.getWidth(), dialog.getHeight());
     }
-    
+
     public int getMiddleX(JDialog dialog) {
         return getX() + getWidth() / 2 - dialog.getWidth() / 2;
     }
-    
+
     public int getMiddleY(JDialog dialog) {
         return getY() + getHeight() / 2 - dialog.getHeight() / 2;
     }
@@ -2219,6 +3159,8 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JPopupMenu MouseActionMenu;
     private javax.swing.JDialog OneValueInput;
     private javax.swing.JPopupMenu ShutDownMenu;
+    private javax.swing.JMenuItem aboutMenu_dev;
+    private javax.swing.JMenuItem aboutMenu_help;
     private javax.swing.JButton actionFile;
     private javax.swing.JList actionList;
     private javax.swing.JButton bt_event_going;
@@ -2228,6 +3170,9 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton bt_event_trigger;
     private javax.swing.JMenuItem changeAttrib;
     private javax.swing.JMenuItem clickMouse;
+    private javax.swing.JToggleButton control_freeze;
+    private javax.swing.JTextField control_mouseX;
+    private javax.swing.JTextField control_mouseY;
     private javax.swing.JMenuItem copyFile;
     private javax.swing.JButton cordCancel;
     private javax.swing.JButton cordOk;
@@ -2241,20 +3186,18 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JList historyList;
     private octu.graphics.ImageView imageView1;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton15;
-    private javax.swing.JButton jButton16;
     private javax.swing.JButton jButton17;
     private javax.swing.JButton jButton18;
     private javax.swing.JButton jButton19;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLayeredPane jLayeredPane1;
@@ -2264,14 +3207,13 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTabbedPane jTabbedPane1;
@@ -2299,7 +3241,18 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel mouseActionRight;
     private javax.swing.JMenuItem moveFile;
     private javax.swing.JMenuItem moveMouse;
+    private javax.swing.JButton newActionButton;
     private javax.swing.JDialog newActionDialog;
+    private javax.swing.JButton newAction_looper;
+    private javax.swing.JButton newSubAct_delay;
+    private javax.swing.JButton newSubAct_file;
+    private javax.swing.JButton newSubAct_keystroke;
+    private javax.swing.JButton newSubAct_lunch;
+    private javax.swing.JButton newSubAct_mouse;
+    private javax.swing.JButton newSubAct_shutdown;
+    private javax.swing.JButton newSubAct_stop;
+    private javax.swing.JButton newSubAct_varialb;
+    private javax.swing.JDialog newSubActionDialog;
     private javax.swing.JButton oneInCancel;
     private javax.swing.JButton oneInOk;
     private javax.swing.JLabel oneInText;
@@ -2315,11 +3268,55 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem releaseAction;
     private javax.swing.JMenuItem renameFile;
     private javax.swing.JMenuItem restartCom;
+    private javax.swing.JButton runButton;
     private javax.swing.JFileChooser saveChooser;
     private javax.swing.JDialog saveDialog;
     private javax.swing.JMenuItem scrollMouse;
     private javax.swing.JMenuItem shutCom;
     private javax.swing.JButton shutdownButton;
+    private javax.swing.JButton stopButton;
+    private javax.swing.JDialog subActionEditor;
+    private javax.swing.JButton subAction_add;
+    private javax.swing.JButton subAction_cancel;
+    private javax.swing.JButton subAction_down;
+    private javax.swing.JButton subAction_edit;
+    private javax.swing.JList subAction_list;
+    private javax.swing.JButton subAction_remove;
+    private javax.swing.JButton subAction_submit;
+    private javax.swing.JButton subAction_up;
+    private javax.swing.JPopupMenu subFileMenu;
+    private javax.swing.JMenuItem subFileMenu_changeAtrib;
+    private javax.swing.JMenuItem subFileMenu_copy;
+    private javax.swing.JMenuItem subFileMenu_del;
+    private javax.swing.JMenuItem subFileMenu_makeDir;
+    private javax.swing.JMenuItem subFileMenu_move;
+    private javax.swing.JMenuItem subFileMenu_rename;
+    private javax.swing.JPopupMenu subKeyMenu;
+    private javax.swing.JMenu subKeyMenu_press;
+    private javax.swing.JMenuItem subKeyMenu_press_ctrl;
+    private javax.swing.JMenuItem subKeyMenu_press_del;
+    private javax.swing.JMenuItem subKeyMenu_press_enter;
+    private javax.swing.JMenuItem subKeyMenu_press_esc;
+    private javax.swing.JMenuItem subKeyMenu_press_letter;
+    private javax.swing.JMenuItem subKeyMenu_press_shift;
+    private javax.swing.JMenu subKeyMenu_release;
+    private javax.swing.JMenuItem subKeyMenu_release_ctrl;
+    private javax.swing.JMenuItem subKeyMenu_release_del;
+    private javax.swing.JMenuItem subKeyMenu_release_enter;
+    private javax.swing.JMenuItem subKeyMenu_release_esc;
+    private javax.swing.JMenuItem subKeyMenu_release_letter;
+    private javax.swing.JMenuItem subKeyMenu_release_shfit;
+    private javax.swing.JMenuItem subKeyMenu_type;
+    private javax.swing.JPopupMenu subMouseMenu;
+    private javax.swing.JMenuItem subMouseMenu_click;
+    private javax.swing.JMenuItem subMouseMenu_move;
+    private javax.swing.JMenuItem subMouseMenu_press;
+    private javax.swing.JMenuItem subMouseMenu_release;
+    private javax.swing.JMenuItem subMouseMenu_scroll;
+    private javax.swing.JPopupMenu subShutMenu;
+    private javax.swing.JMenuItem subShutMenu_log;
+    private javax.swing.JMenuItem subShutMenu_restart;
+    private javax.swing.JMenuItem subShutMenu_shutcom;
     private javax.swing.JLabel systemTime;
     private javax.swing.JDialog twoPathDialog;
     private javax.swing.JButton twoPath_cancel;
