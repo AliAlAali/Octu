@@ -12,6 +12,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import octu.core.FileHandler;
 import octu.graphics.Graph;
 
 /**
@@ -36,6 +37,21 @@ public class ScheduledAction extends Action{
         this.graph = graph;
         this.list = list;
     }
+
+    /*
+        should fix this thing later
+        graph and JList
+    */
+    @Override
+    public String getArguement() {
+        String s = FileHandler.ARG + getTime() + FileHandler.ARG
+                + FileHandler.ARG  + null + FileHandler.ARG
+                +FileHandler.ARG + null + FileHandler.ARG;
+        
+        return s;
+    }
+    
+    
 
     @Override
     public void occur() {

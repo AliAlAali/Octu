@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import octu.core.Command;
+import octu.core.FileHandler;
 import octu.core.action.Action;
 
 /**
@@ -27,6 +28,12 @@ public class ShutDownAction extends Action{
         this.cmd = new Command();
     }
 
+    @Override
+    public String getArguement() {
+        return FileHandler.ARG + type + FileHandler.ARG;
+    }
+
+    
     public String getType() {
         return type;
     }

@@ -16,6 +16,13 @@ public class StopApplicationAction extends Action{
     }
 
     @Override
+    public String getArguement() {
+        return "";
+    }
+    
+    
+
+    @Override
     public void occur() {
         super.occur(); 
         System.exit(0);

@@ -6,6 +6,7 @@
 package octu.core.action;
 
 import octu.core.Command;
+import octu.core.FileHandler;
 import octu.core.action.Action;
 
 /**
@@ -35,11 +36,11 @@ public class FileAction extends Action {
         cmd = new Command();
     }
 
-    public String getNewPath(){
+    public String getNewPath() {
         return this.newPath;
     }
-    
-    public void setNewPath(String path){
+
+    public void setNewPath(String path) {
         this.newPath = path;
     }
 
@@ -50,9 +51,16 @@ public class FileAction extends Action {
     public void setOldPath(String oldPath) {
         this.oldPath = oldPath;
     }
-    
-    
-    
+
+    /*
+        newPath could be null
+    */
+    @Override
+    public String getArguement() {
+        return FileHandler.ARG + type + FileHandler.ARG + FileHandler.ARG + oldPath + FileHandler.ARG 
+                + FileHandler.ARG + newPath + FileHandler.ARG;
+    }
+
     @Override
     public void occur() {
         super.occur();
@@ -92,7 +100,7 @@ public class FileAction extends Action {
     public String getDescription() {
         if (newPath != null) {
             return "File Action: " + type + " " + oldPath + " to " + newPath;
-        }else{
+        } else {
             return "File Action: " + type + " " + oldPath;
         }
     }

@@ -10,6 +10,7 @@ import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import octu.core.FileHandler;
 import octu.core.action.Action;
 
 /**
@@ -45,6 +46,14 @@ public class KeyStrokeAction extends Action {
 
     }
 
+    @Override
+    public String getArguement() {
+        return FileHandler.ARG + type + FileHandler.ARG 
+                + FileHandler.ARG + text + FileHandler.ARG;
+    }
+
+    
+    
     @Override
     public void occur() {
         super.occur();

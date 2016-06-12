@@ -10,6 +10,7 @@ import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import octu.core.FileHandler;
 
 /**
  *
@@ -45,6 +46,16 @@ public class MouseAction extends Action {
             Logger.getLogger(MouseAction.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    @Override
+    public String getArguement() {
+        return FileHandler.ARG + type + FileHandler.ARG
+                + FileHandler.ARG + button + FileHandler.ARG
+                + FileHandler.ARG + x + FileHandler.ARG
+                + FileHandler.ARG + y + FileHandler.ARG;
+    }
+    
+    
 
     public void setType(String type){
         this.type = type;

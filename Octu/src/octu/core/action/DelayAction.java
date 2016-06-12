@@ -8,6 +8,7 @@ package octu.core.action;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import octu.core.FileHandler;
 
 /**
  *
@@ -45,6 +46,11 @@ public class DelayAction extends Action{
         super.flush(); 
         timer.cancel();
         timer = new Timer();
+    }
+
+    @Override
+    public String getArguement() {
+        return FileHandler.ARG + getDelay() + FileHandler.ARG;
     }
     
     

@@ -32,12 +32,13 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import octu.core.Command;
 import octu.core.Event;
-import octu.core.FilerHandler;
+import octu.core.FileHandler;
 import octu.core.Handler;
 import octu.core.action.Action;
 import octu.core.action.DelayAction;
@@ -143,7 +144,7 @@ public class Main extends javax.swing.JFrame {
             }
         }, 0, 50);
         //adding filters for the save-open dialogs
-        FileFilter filter = FilerHandler.getFileFilter();
+        FileFilter filter = FileHandler.getFileFilter();
         saveChooser.setFileFilter(filter);
         openChooser.setFileFilter(filter);
 
@@ -1905,6 +1906,11 @@ public class Main extends javax.swing.JFrame {
         jMenu2.setText("About");
 
         aboutMenu_help.setText("Help");
+        aboutMenu_help.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutMenu_helpActionPerformed(evt);
+            }
+        });
         jMenu2.add(aboutMenu_help);
 
         aboutMenu_dev.setText("Developer");
@@ -1946,7 +1952,12 @@ public class Main extends javax.swing.JFrame {
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         saveDialog.pack();
         centerDialog(saveDialog);
-        saveDialog.setVisible(true);
+        saveChooser.showDialog(saveDialog, "Save");
+        saveChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        File file = saveChooser.getCurrentDirectory();
+        new FileHandler().saveFile(handler, file.getAbsolutePath() + "\\" + saveChooser.getSelectedFile().getName() + ".oct");
+        JOptionPane.showMessageDialog(this, "File was Saved!");
+        
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
@@ -1956,7 +1967,10 @@ public class Main extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         openDialog.pack();
         centerDialog(openDialog);
-        openDialog.setVisible(true);
+        openChooser.showOpenDialog(openDialog);
+        File file = openChooser.getSelectedFile();
+        new FileHandler().open(file, handler, eventList, actionList);
+        
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void newActionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newActionButtonActionPerformed
@@ -2000,7 +2014,7 @@ public class Main extends javax.swing.JFrame {
         centerDialog(twoPathDialog);
         twoPathDialog.setVisible(true);
         newActionDialog.dispose();
-        fileChooser_chooser.setFileFilter(FilerHandler.getAbsoluteFilter());
+        fileChooser_chooser.setFileFilter(FileHandler.getAbsoluteFilter());
     }//GEN-LAST:event_moveFileActionPerformed
 
     private void shutdownButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shutdownButtonActionPerformed
@@ -2152,7 +2166,7 @@ public class Main extends javax.swing.JFrame {
         centerDialog(onePathDialog);
         onePathDialog.setVisible(true);
         newActionDialog.dispose();
-        fileChooser_chooser.setFileFilter(FilerHandler.getAbsoluteFilter());
+        fileChooser_chooser.setFileFilter(FileHandler.getAbsoluteFilter());
 
 
     }//GEN-LAST:event_lunchAppButtonActionPerformed
@@ -2177,7 +2191,7 @@ public class Main extends javax.swing.JFrame {
         centerDialog(onePathDialog);
         onePathDialog.setVisible(true);
         newActionDialog.dispose();
-        fileChooser_chooser.setFileFilter(FilerHandler.getAbsoluteFilter());
+        fileChooser_chooser.setFileFilter(FileHandler.getAbsoluteFilter());
     }//GEN-LAST:event_deleteFileActionPerformed
 
     private void renameFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_renameFileActionPerformed
@@ -2186,7 +2200,7 @@ public class Main extends javax.swing.JFrame {
         centerDialog(onePathDialog);
         onePathDialog.setVisible(true);
         newActionDialog.dispose();
-        fileChooser_chooser.setFileFilter(FilerHandler.getAbsoluteFilter());
+        fileChooser_chooser.setFileFilter(FileHandler.getAbsoluteFilter());
     }//GEN-LAST:event_renameFileActionPerformed
 
     private void makeDirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeDirActionPerformed
@@ -2195,7 +2209,7 @@ public class Main extends javax.swing.JFrame {
         centerDialog(onePathDialog);
         onePathDialog.setVisible(true);
         newActionDialog.dispose();
-        fileChooser_chooser.setFileFilter(FilerHandler.getDirectoryFilter());
+        fileChooser_chooser.setFileFilter(FileHandler.getDirectoryFilter());
     }//GEN-LAST:event_makeDirActionPerformed
 
     private void changeAttribActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeAttribActionPerformed
@@ -2204,7 +2218,7 @@ public class Main extends javax.swing.JFrame {
         centerDialog(onePathDialog);
         onePathDialog.setVisible(true);
         newActionDialog.dispose();
-        fileChooser_chooser.setFileFilter(FilerHandler.getAbsoluteFilter());
+        fileChooser_chooser.setFileFilter(FileHandler.getAbsoluteFilter());
     }//GEN-LAST:event_changeAttribActionPerformed
 
     private void onePath_selectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onePath_selectActionPerformed
@@ -2372,7 +2386,7 @@ public class Main extends javax.swing.JFrame {
         centerDialog(twoPathDialog);
         twoPathDialog.setVisible(true);
         newActionDialog.dispose();
-        fileChooser_chooser.setFileFilter(FilerHandler.getAbsoluteFilter());
+        fileChooser_chooser.setFileFilter(FileHandler.getAbsoluteFilter());
     }//GEN-LAST:event_copyFileActionPerformed
 
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
@@ -3019,6 +3033,10 @@ public class Main extends javax.swing.JFrame {
     private void subAction_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subAction_cancelActionPerformed
         subActionEditor.dispose();
     }//GEN-LAST:event_subAction_cancelActionPerformed
+
+    private void aboutMenu_helpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenu_helpActionPerformed
+        new FileHandler().saveFile(handler, selectedEvent);
+    }//GEN-LAST:event_aboutMenu_helpActionPerformed
 
     public void displayDialog(JDialog dialog) {
         dialog.pack();

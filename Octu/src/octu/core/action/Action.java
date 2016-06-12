@@ -74,6 +74,13 @@ public class Action implements Listable{
         isOccuring = false;
         finish = false;
     }
+    
+    /*
+        used to save a file
+    */
+    public String getArguement(){
+        return null;
+    }
 
     @Override
     public String getDescription() {

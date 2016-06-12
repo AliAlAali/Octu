@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import octu.core.Command;
+import octu.core.FileHandler;
 
 /**
  *
@@ -25,6 +26,12 @@ public class LunchAppAction extends Action {
         cmd = new Command();
     }
 
+    @Override
+    public String getArguement() {
+        return FileHandler.ARG + path + FileHandler.ARG;
+    }
+
+    
     @Override
     public void occur() {
         try {
