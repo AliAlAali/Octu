@@ -36,6 +36,17 @@ public class FileAction extends Action {
         cmd = new Command();
     }
 
+    public String getType(){
+        return this.type;
+    }
+    
+    /*
+        should be rarely used
+    */
+    public void setType(String type){
+        this.type = type;
+    }
+    
     public String getNewPath() {
         return this.newPath;
     }

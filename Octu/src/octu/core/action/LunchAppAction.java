@@ -31,7 +31,9 @@ public class LunchAppAction extends Action {
         return FileHandler.ARG + path + FileHandler.ARG;
     }
 
-    
+    public void setPath(String path){
+        this.path = path;
+    }
     @Override
     public void occur() {
         try {

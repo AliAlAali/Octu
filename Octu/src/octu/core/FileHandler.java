@@ -145,12 +145,10 @@ public class FileHandler {
             }
             s += "\r" + EVT + "\n";
         }
-        System.out.println(s);
         return s;
     }
 
     private String getPart(String text, String part) {
-        //System.out.println(text + "  " + part);
         int pos = text.indexOf(part);
         int nxtPos = text.indexOf(part, pos + 1);
         return text.substring(pos + part.length(), nxtPos);
@@ -251,7 +249,7 @@ public class FileHandler {
                 } else if (actName.equals(LunchAppAction.class.getSimpleName())) {
                     act = new LunchAppAction(actPor, args[0]);
                 } else if (actName.equals(MouseAction.class.getSimpleName())) {
-                    act = new MouseAction(actPor, args[0], args[1]);
+                    act = new MouseAction(actPor, args[0], (args[1].equals("null") ? null : args[1]));
                     if (args[2].equals("")) {
                         ((MouseAction) act).setX(0);
                     } else {
@@ -264,9 +262,54 @@ public class FileHandler {
                     }
                 } else if (actName.equals(ScheduledAction.class.getSimpleName())) {
                     Calendar c = Calendar.getInstance();
-                    c.set(Calendar.HOUR_OF_DAY, inte(args[0]));
-                    c.set(Calendar.MINUTE, inte(args[1]));
-                    act = new ScheduledAction(actPor, c, null, null);
+                    c.set(Calendar.HOUR_OF_DAY, inte(args[0].split(":")[0]));
+                    c.set(Calendar.MINUTE, inte(args[0].split(":")[1]));
+                    act = new ScheduledAction(actPor, c, null, null);//graph and list must be set in Main.java when loaded
+
+                    //adding sub-actions
+                    int subNum = count(tempA, SUB_ACT);
+                    for (int k = 0; k < subNum; k++) {
+                        //cutting nessary part
+                        String tempSub = getPart(tempA, SUB_ACT);
+                        tempA = tempA.substring(tempA.indexOf(tempSub) + tempSub.length() + SUB_ACT.length());
+                        //get date for constructing actions
+                        String subName = getPart(tempSub, NAME);
+                        String[] subArgs = getArguements(tempSub);
+                        Action subAct = null;
+
+                        if (subName.equals(DelayAction.class.getSimpleName())) {
+                            subAct = new DelayAction(Event.POR_SCHEDULE, Long.parseLong(subArgs[0]));
+                        } else if (subName.equals(FileAction.class.getSimpleName())) {
+                            subAct = new FileAction(Event.POR_SCHEDULE, subArgs[0], subArgs[1]);
+                            if (subArgs[2].equals("null")) {
+                                ((FileAction) subAct).setNewPath(null);
+                            } else {
+                                ((FileAction) subAct).setNewPath(subArgs[2]);
+                            }
+                        } else if (subName.equals(KeyStrokeAction.class.getSimpleName())) {
+                            subAct = new KeyStrokeAction(Event.POR_SCHEDULE, subArgs[0], subArgs[1]);
+                        } else if (actName.equals(LunchAppAction.class.getSimpleName())) {
+                            subAct = new LunchAppAction(Event.POR_SCHEDULE, subArgs[0]);
+                        } else if (subName.equals(MouseAction.class.getSimpleName())) {
+                            subAct = new MouseAction(Event.POR_SCHEDULE, subArgs[0], (subArgs[1].equals("null") ? null : subArgs[1]));
+                            if (subArgs[2].equals("")) {
+                                ((MouseAction) subAct).setX(0);
+                            } else {
+                                ((MouseAction) subAct).setX(inte(subArgs[2]));
+                            }
+                            if (subArgs[3].isEmpty()) {
+                                ((MouseAction) subAct).setY(0);
+                            } else {
+                                ((MouseAction) subAct).setY(inte(subArgs[3]));
+                            }
+                        } else if (subName.equals(ShutDownAction.class.getSimpleName())) {
+                            subAct = new ShutDownAction(Event.POR_SCHEDULE, subArgs[0]);
+                        } else if (subName.equals(StopApplicationAction.class.getSimpleName())) {
+                            subAct = new StopApplicationAction(Event.POR_SCHEDULE);
+                        }
+                        //adding sub-action to scheduled action
+                        ((ScheduledAction) act).addAction(subAct);
+                    }
                 } else if (actName.equals(ShutDownAction.class.getSimpleName())) {
                     act = new ShutDownAction(actPor, args[0]);
                 } else if (actName.equals(StopApplicationAction.class.getSimpleName())) {
@@ -289,7 +332,7 @@ public class FileHandler {
             int pos = p.indexOf(ARG);
             int nxt = p.indexOf(ARG, pos + 1);
             args[i] = p.substring(pos + ARG.length(), nxt);
-            p = p.substring(args[i].length() + 2 * ARG.length());
+            p = p.substring(p.indexOf(args[i]) + args[i].length() + ARG.length());
         }
 
         return args;

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package octu.core.action;
 
 import java.util.ArrayList;
@@ -19,16 +18,16 @@ import octu.graphics.Graph;
  *
  * @author Ali
  */
-public class ScheduledAction extends Action{
+public class ScheduledAction extends Action {
 
     private Calendar c;
     private ArrayList<Action> actions;
     private Timer timer;
     private Graph graph;
     private JList list;
-    
+
     private int index;
-    
+
     public ScheduledAction(int por, Calendar c, Graph graph, JList list) {
         super(por);
         this.c = c;
@@ -39,24 +38,42 @@ public class ScheduledAction extends Action{
     }
 
     /*
-        should fix this thing later
-        graph and JList
-    */
+     should fix this thing later
+     graph and JList
+     */
     @Override
     public String getArguement() {
         String s = FileHandler.ARG + getTime() + FileHandler.ARG
-                + FileHandler.ARG  + null + FileHandler.ARG
-                +FileHandler.ARG + null + FileHandler.ARG;
-        
+                + FileHandler.ARG + null + FileHandler.ARG
+                + FileHandler.ARG + null + FileHandler.ARG;
+
         return s;
     }
-    
-    
+
+    @Override
+    public void flush() {
+        super.flush();
+        index = 0;
+        timer.cancel();
+        timer = new Timer();
+        for (int i = 0; i < actions.size(); i++) {
+            Action action = actions.get(i);
+            action.flush();
+        }
+    }
 
     @Override
     public void occur() {
         super.occur();
         timer.schedule(new Task(), 200);
+    }
+
+    public int getHour() {
+        return c.get(Calendar.HOUR_OF_DAY);
+    }
+
+    public int getMinute() {
+        return c.get(Calendar.MINUTE);
     }
 
     @Override
@@ -66,21 +83,22 @@ public class ScheduledAction extends Action{
             Action action = actions.get(i);
             s += action.getDescription() + "\n";
         }
-        
+
         return s;
     }
-    
-    public Action getAction(int ind){
-        if(actions.size() > 0)
+
+    public Action getAction(int ind) {
+        if (actions.size() > 0) {
             return actions.get(ind);
+        }
         return null;
     }
-    
-    public void addAction(Action act){
+
+    public void addAction(Action act) {
         actions.add(act);
     }
-    
-    public void addAction(Action act, int ind){
+
+    public void addAction(Action act, int ind) {
         actions.add(ind, act);
     }
 
@@ -88,6 +106,13 @@ public class ScheduledAction extends Action{
         return c;
     }
 
+    public void setHistoryList(JList history){
+        this.list = history;
+    }
+    
+    public void setGraph(Graph graph){
+        this.graph = graph;
+    }
     public void setCalendar(Calendar c) {
         this.c = c;
     }
@@ -99,43 +124,49 @@ public class ScheduledAction extends Action{
     public void setActions(ArrayList<Action> actions) {
         this.actions = actions;
     }
-    
-    public String getTime(){
+
+    public String getTime() {
         return c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE);
     }
-    
-    
-    
-    public class Task extends TimerTask{
+
+    public class Task extends TimerTask {
 
         @Override
         public void run() {
-            
+
             if (index < actions.size()) {
                 Action action = actions.get(index);
                 if (!action.isOccuring()) {
                     action.occur();
                     //add action to the list
-                    DefaultListModel<String> model = (DefaultListModel<String>)list.getModel();
-                    model.addElement("Scheduled Event at " + getTime() + " : " + action.getDescription());
-                   //update graph here
-                    if(action instanceof octu.core.action.DelayAction){
-                        graph.peak(false);
-                    }else{
-                        graph.peak(true);
+                    if (list != null) {
+                        DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
+                        model.addElement("Scheduled Event at " + getTime() + " : " + action.getDescription());
+                    }
+                    //update graph here
+                    if (action instanceof octu.core.action.DelayAction) {
+                        if (graph != null) {
+                            graph.peak(false);
+                        }
+                    } else {
+                        if (graph != null) {
+                            graph.peak(true);
+                        }
                     }
                 } else {
                     //update graph here
-                    graph.peak(false);
+                    if (graph != null) {
+                        graph.peak(false);
+                    }
                 }
                 if (action.isFinished()) {
                     index++;
                 }
                 timer.schedule(new Task(), 200);
-            }else{
+            } else {
                 finish();
             }
         }
-        
+
     }
 }

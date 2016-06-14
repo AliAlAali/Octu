@@ -52,7 +52,17 @@ public class KeyStrokeAction extends Action {
                 + FileHandler.ARG + text + FileHandler.ARG;
     }
 
+    public String getType(){
+        return this.type;
+    }
     
+    public String getText(){
+        return this.text;
+    }
+    
+    public void setText(String text){
+        this.text = text;
+    }
     
     @Override
     public void occur() {

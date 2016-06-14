@@ -46,6 +46,10 @@ public class MouseAction extends Action {
             Logger.getLogger(MouseAction.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public String getType(){
+        return this.type;
+    }
 
     @Override
     public String getArguement() {

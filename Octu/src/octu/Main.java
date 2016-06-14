@@ -882,6 +882,12 @@ public class Main extends javax.swing.JFrame {
 
         oneInText.setText("Enter delay in milliseconds");
 
+        oneInTextFeild.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                oneInTextFeildActionPerformed(evt);
+            }
+        });
+
         oneInOk.setText("Ok");
         oneInOk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1013,6 +1019,9 @@ public class Main extends javax.swing.JFrame {
             FileSelectorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(fileChooser_chooser, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
         );
+
+        twoPathDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        twoPathDialog.setIconImages(icons);
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
@@ -1229,12 +1238,32 @@ public class Main extends javax.swing.JFrame {
         });
 
         subAction_edit.setText("Edit");
+        subAction_edit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subAction_editActionPerformed(evt);
+            }
+        });
 
         subAction_remove.setText("- Action");
+        subAction_remove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subAction_removeActionPerformed(evt);
+            }
+        });
 
         subAction_up.setText("Up");
+        subAction_up.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subAction_upActionPerformed(evt);
+            }
+        });
 
         subAction_down.setText("Down");
+        subAction_down.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subAction_downActionPerformed(evt);
+            }
+        });
 
         subAction_submit.setText("Submit");
 
@@ -1955,9 +1984,12 @@ public class Main extends javax.swing.JFrame {
         saveChooser.showDialog(saveDialog, "Save");
         saveChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         File file = saveChooser.getCurrentDirectory();
+        if (saveChooser.getSelectedFile() == null) {
+            return;
+        }
         new FileHandler().saveFile(handler, file.getAbsolutePath() + "\\" + saveChooser.getSelectedFile().getName() + ".oct");
         JOptionPane.showMessageDialog(this, "File was Saved!");
-        
+
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
@@ -1970,7 +2002,21 @@ public class Main extends javax.swing.JFrame {
         openChooser.showOpenDialog(openDialog);
         File file = openChooser.getSelectedFile();
         new FileHandler().open(file, handler, eventList, actionList);
+
+        //adding history list and graph to ScheduledActions
+        Event sch = handler.getEvent("Schedule");
+        if (sch != null) {
+            for (int i = 0; i < sch.getActions().size(); i++) {
+                ScheduledAction action = (ScheduledAction) sch.getActions().get(i);
+                action.setGraph(graph1);
+                action.setHistoryList(historyList);
+            }
+        }
         
+        //select event
+        eventList.setSelectedIndex(eventList.getLastVisibleIndex());
+        selectedEvent = handler.getEvent(eventList.getLastVisibleIndex()).getName();
+
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void newActionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newActionButtonActionPerformed
@@ -1992,6 +2038,19 @@ public class Main extends javax.swing.JFrame {
             c.set(Calendar.HOUR_OF_DAY, h);
             c.set(Calendar.MINUTE, min);
             ScheduledAction act = new ScheduledAction(event.getPor(), c, graph1, historyList);
+            if (edit) {
+                edit = false;
+                act = (ScheduledAction) event.getAction(actionList.getSelectedIndex());
+                act.setCalendar(c);
+                //displaying action editor
+                updateList(actionList, event);
+                updateList(subAction_list, act.getActions());
+                subActionEditor.pack();
+                centerDialog(subActionEditor);
+                subActionEditor.setVisible(true);
+                actionList.setSelectedIndex(lastSelectedActionl);
+                return;
+            }
             prepareAction(act);
             actionList.setSelectedIndex(actionList.getLastVisibleIndex());
 
@@ -2061,6 +2120,15 @@ public class Main extends javax.swing.JFrame {
         MouseAction action = new MouseAction(handler.getEvent(selectedEvent).getPor(), MouseAction.ACTION_MOVE, null);
         action.setX(Integer.parseInt(cordX.getText()));
         action.setY(Integer.parseInt(cordY.getText()));
+        if (edit) {
+            edit = false;
+            action = (MouseAction) handler.getEvent(selectedEvent).getAction(actionList.getSelectedIndex());
+            action.setX(Integer.parseInt(cordX.getText()));
+            action.setY(Integer.parseInt(cordY.getText()));
+            updateList(actionList, handler.getEvent(selectedEvent));
+            CoordinateInputDialog.dispose();
+            return;
+        }
         DefaultListModel<String> model = (DefaultListModel<String>) actionList.getModel();
         model.addElement(action.getDescription());
         handler.getEvent(selectedEvent).addAction(action);
@@ -2091,7 +2159,10 @@ public class Main extends javax.swing.JFrame {
                 DelayAction action = new DelayAction(event.getPor(), Integer.parseInt(oneInTextFeild.getText())); // 3 seconds
 
                 if (edit) {
-                    updateAction(action, actionList.getSelectedIndex());
+                    edit = false;
+                    DelayAction act = (DelayAction) event.getAction(actionList.getSelectedIndex());
+                    act.setDelay(Integer.parseInt(oneInTextFeild.getText()));
+                    updateList(actionList, event);
                     OneValueInput.dispose();
                     return;
                 }
@@ -2243,84 +2314,84 @@ public class Main extends javax.swing.JFrame {
         Event event = handler.getEvent(selectedEvent);
         System.out.println(event.getName());
         Action act = null;
-        if (!event.getName().equals("Schedule")) {
-            if (title.startsWith("Rename")) {
-                //ask for the new file name
-                String fileName = JOptionPane.showInputDialog(this, "Enter the new file name: ");
-                String ext = "";
-                if (fileName.indexOf(".") == -1) {
-                    ext = path1.substring(path1.lastIndexOf("."));
-                } else {
-                    ext = "\"";
-                }
-                act = new FileAction(event.getPor(), FileAction.TYPE_RENAME_FILE, path1);
-                ((FileAction) act).setNewPath("\"" + fileName + ext + "\"");
-            } else if (title.startsWith("Delete")) {
-                //just delete
-                act = new FileAction(event.getPor(), FileAction.TYPE_DELETE_FILE, path1);
-            } else if (title.startsWith("Make")) {
-                //take the name of the file - make sure its only folders
-                String folderName = JOptionPane.showInputDialog(this, "Type directory name: ");
-                act = new FileAction(event.getPor(), FileAction.TYPE_MAKE_DIRECTORY, path1.substring(0, path1.length() - 1) + "\\" + folderName + "\"");
-            } else if (title.startsWith("Hide")) {
-                //ask whether to hide or unhide
-                char com = JOptionPane.showInputDialog(this, "Enter H: hide file, U: unhide file :").toLowerCase().charAt(0);
-                if (com != 'h' && com != 'u') {
-                    return;
-                }
-                act = new FileAction(event.getPor(), ((com == 'h') ? FileAction.TYPE_HIDE_FILE : FileAction.TYPE_UNHIDE_FILE), path1);
-            } else if (title.startsWith("Lunch")) {
 
-                act = new LunchAppAction(event.getPor(), path1);
-                if (edit) {
-                    //TODO: FIX
-                    updateAction(act, actionList.getSelectedIndex());
-                    edit = false;
-                    onePathDialog.dispose();
-                    return;
-                }
-
+        if (title.startsWith("Rename")) {
+            //ask for the new file name
+            String fileName = JOptionPane.showInputDialog(this, "Enter the new file name: ");
+            String ext = "";
+            if (fileName.indexOf(".") == -1) {
+                ext = path1.substring(path1.lastIndexOf("."));
+            } else {
+                ext = "\"";
             }
+            act = new FileAction(event.getPor(), FileAction.TYPE_RENAME_FILE, path1);
+            ((FileAction) act).setNewPath("\"" + fileName + ext + "\"");
+            if (edit) {
+                edit = false;
+                act = (FileAction) event.getAction(actionList.getSelectedIndex());
+                ((FileAction) act).setOldPath(path1);
+                ((FileAction) act).setNewPath("\"" + fileName + ext + "\"");
+                updateList(actionList, event);
+                onePathDialog.dispose();
+                return;
+            }
+
+        } else if (title.startsWith("Delete")) {
+            //just delete
+            act = new FileAction(event.getPor(), FileAction.TYPE_DELETE_FILE, path1);
+            if (edit) {
+                edit = false;
+                act = (FileAction) event.getAction(actionList.getSelectedIndex());
+                ((FileAction) act).setOldPath(path1);
+                updateList(actionList, event);
+                onePathDialog.dispose();
+                return;
+            }
+        } else if (title.startsWith("Make")) {
+            //take the name of the file - make sure its only folders
+            String folderName = JOptionPane.showInputDialog(this, "Type directory name: ");
+            act = new FileAction(event.getPor(), FileAction.TYPE_MAKE_DIRECTORY, path1.substring(0, path1.length() - 1) + "\\" + folderName + "\"");
+            if (edit) {
+                edit = false;
+                act = (FileAction) event.getAction(actionList.getSelectedIndex());
+                ((FileAction) act).setOldPath(path1.substring(0, path1.length() - 1) + "\\" + folderName + "\"");
+                updateList(actionList, event);
+                onePathDialog.dispose();
+                return;
+            }
+        } else if (title.startsWith("Hide")) {
+            //ask whether to hide or unhide
+            char com = JOptionPane.showInputDialog(this, "Enter H: hide file, U: unhide file :").toLowerCase().charAt(0);
+            if (com != 'h' && com != 'u') {
+                return;
+            }
+            act = new FileAction(event.getPor(), ((com == 'h') ? FileAction.TYPE_HIDE_FILE : FileAction.TYPE_UNHIDE_FILE), path1);
+            if (edit) {
+                edit = false;
+                act = (FileAction) event.getAction(actionList.getSelectedIndex());
+                ((FileAction) act).setOldPath(path1);
+                ((FileAction) act).setType(((com == 'h') ? FileAction.TYPE_HIDE_FILE : FileAction.TYPE_UNHIDE_FILE));
+                updateList(actionList, event);
+                onePathDialog.dispose();
+                return;
+            }
+        } else if (title.startsWith("Lunch")) {
+
+            act = new LunchAppAction(event.getPor(), path1);
+            if (edit) {
+                edit = false;
+                Action update = event.getAction(actionList.getSelectedIndex());
+                ((LunchAppAction) update).setPath(path1);
+                updateList(actionList, event);
+                onePathDialog.dispose();
+                return;
+            }
+
+        }
+
+        if (!event.getName().equals("Schedule")) {
             prepareAction(act);
         } else if (event.getName().equalsIgnoreCase("Schedule")) {
-            if (title.startsWith("Rename")) {
-                //ask for the new file name
-                String fileName = JOptionPane.showInputDialog(this, "Enter the new file name: ");
-                String ext = "";
-                if (fileName.indexOf(".") == -1) {
-                    ext = path1.substring(path1.lastIndexOf("."));
-                } else {
-                    ext = "\"";
-                }
-                act = new FileAction(event.getPor(), FileAction.TYPE_RENAME_FILE, path1);
-                ((FileAction) act).setNewPath("\"" + fileName + ext + "\"");
-            } else if (title.startsWith("Delete")) {
-                //just delete
-                act = new FileAction(event.getPor(), FileAction.TYPE_DELETE_FILE, path1);
-            } else if (title.startsWith("Make")) {
-                //take the name of the file - make sure its only folders
-                String folderName = JOptionPane.showInputDialog(this, "Type directory name: ");
-                act = new FileAction(event.getPor(), FileAction.TYPE_MAKE_DIRECTORY, path1.substring(0, path1.length() - 1) + "\\" + folderName + "\"");
-            } else if (title.startsWith("Hide")) {
-                //ask whether to hide or unhide
-                char com = JOptionPane.showInputDialog(this, "Enter H: hide file, U: unhide file :").toLowerCase().charAt(0);
-                if (com != 'h' && com != 'u') {
-                    return;
-                }
-                act = new FileAction(event.getPor(), ((com == 'h') ? FileAction.TYPE_HIDE_FILE : FileAction.TYPE_UNHIDE_FILE), path1);
-            } else if (title.startsWith("Lunch")) {
-
-                act = new LunchAppAction(event.getPor(), path1);
-                if (edit) {
-                    //TODO: FIX
-                    updateAction(act, actionList.getSelectedIndex());
-                    edit = false;
-                    onePathDialog.dispose();
-                    return;
-                }
-
-            }
-
             prepareSubScheduledAction(act, event);
         }
         onePathDialog.dispose();
@@ -2344,9 +2415,28 @@ public class Main extends javax.swing.JFrame {
         if (title.startsWith("Copy")) {
             act = new FileAction(event.getPor(), FileAction.TYPE_COPY_FILE, oldPath);
             ((FileAction) act).setNewPath(newPath + "\\" + fileName + "\"");
+            if (edit) {
+                edit = false;
+                act = (FileAction) event.getAction(actionList.getSelectedIndex());
+                ((FileAction) act).setOldPath(oldPath);
+                ((FileAction) act).setNewPath(newPath + "\\" + fileName + "\"");
+                updateList(actionList, event);
+                twoPathDialog.dispose();
+                return;
+            }
         } else if (title.startsWith("Move")) {
             act = new FileAction(event.getPor(), FileAction.TYPE_MOVE_FILE, oldPath);
             ((FileAction) act).setNewPath(newPath + "\\" + fileName + "\"");
+
+            if (edit) {
+                edit = false;
+                act = (FileAction) event.getAction(actionList.getSelectedIndex());
+                ((FileAction) act).setOldPath(oldPath);
+                ((FileAction) act).setNewPath(newPath + "\\" + fileName + "\"");
+                updateList(actionList, event);
+                twoPathDialog.dispose();
+                return;
+            }
         }
         if (!event.getName().equalsIgnoreCase("Schedule")) {
             prepareAction(act);
@@ -2405,6 +2495,14 @@ public class Main extends javax.swing.JFrame {
         int scroll = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter the Y change: "));
         MouseAction act = new MouseAction(handler.getEvent(selectedEvent).getPor(), MouseAction.ACTION_SCROLL, null);
         act.setY(scroll);
+        if (edit) {
+            edit = false;
+            Event event = handler.getEvent(selectedEvent);
+            act = (MouseAction) event.getAction(actionList.getSelectedIndex());
+            act.setY(scroll);
+            updateList(actionList, event);
+            return;
+        }
         addElementToList(actionList, act.getDescription());
         handler.getEvent(selectedEvent).addAction(act);
 
@@ -2436,7 +2534,14 @@ public class Main extends javax.swing.JFrame {
         newActionDialog.dispose();
         String text = JOptionPane.showInputDialog(this, "Type text for Keystroke Action:");
         KeyStrokeAction action = new KeyStrokeAction(handler.getEvent(selectedEvent).getPor(), KeyStrokeAction.OPERATION_TYPE, text);
-
+        if (edit) {
+            edit = false;
+            Event event = handler.getEvent(selectedEvent);
+            action = (KeyStrokeAction) event.getAction(actionList.getSelectedIndex());
+            action.setText(text);
+            updateList(actionList, event);
+            return;
+        }
         addElementToList(actionList, action.getDescription());
         handler.getEvent(selectedEvent).addAction(action);
     }//GEN-LAST:event_menu_typeActionPerformed
@@ -2718,16 +2823,79 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton17ActionPerformed
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
-        edit = true;
-        Event event = handler.getEvent(selectedEvent);
+
         int actSel = actionList.getSelectedIndex();
+        if (actSel == -1) {
+            return;
+        }
+        Event event = handler.getEvent(selectedEvent);
+        edit = true;
         Action act = event.getAction(actSel);
         if (act instanceof DelayAction) {
             delayActionButton.doClick();
         } else if (act instanceof LunchAppAction) {
             lunchAppButton.doClick();
         } else if (act instanceof MouseAction) {
+            String type = ((MouseAction) act).getType();
+            switch (type) {
+                case MouseAction.ACTION_CLICK:
+                    clickMouse.doClick();
+                    break;
+                case MouseAction.ACTION_MOVE:
+                    moveMouse.doClick();
+                    break;
+                case MouseAction.ACTION_PRESS:
+                    pressMouse.doClick();
+                    break;
+                case MouseAction.ACTION_RELEASE:
+                    releaseAction.doClick();
+                    break;
+                case MouseAction.ACTION_SCROLL:
+                    scrollMouse.doClick();
+                    break;
+            }
+        } else if (act instanceof FileAction) {
+            String type = ((FileAction) act).getType();
+            switch (type) {
+                case FileAction.TYPE_RENAME_FILE:
+                    renameFile.doClick();
+                    break;
+                case FileAction.TYPE_DELETE_FILE:
+                    deleteFile.doClick();
+                    break;
+                case FileAction.TYPE_COPY_FILE:
+                    copyFile.doClick();
+                    break;
+                case FileAction.TYPE_HIDE_FILE:
+                case FileAction.TYPE_UNHIDE_FILE:
+                    changeAttrib.doClick();
+                    break;
+                case FileAction.TYPE_MAKE_DIRECTORY:
+                    makeDir.doClick();
+                    break;
+                case FileAction.TYPE_MOVE_FILE:
+                    moveFile.doClick();
+                    break;
 
+            }
+        } else if (act instanceof ShutDownAction) {
+            edit = false;
+        } else if (act instanceof KeyStrokeAction) {
+            String type = ((KeyStrokeAction) act).getType();
+            switch (type) {
+                case KeyStrokeAction.OPERATION_TYPE:
+                    menu_type.doClick();
+                    break;
+                case KeyStrokeAction.OPERATION_PRESS:
+                    edit = false;
+                    break;
+                case KeyStrokeAction.OPERATION_RELEASE:
+                    edit = false;
+                    break;
+            }
+        } else if (act instanceof ScheduledAction) {
+            newActionButton.doClick();
+            lastSelectedActionl = actionList.getSelectedIndex();
         }
     }//GEN-LAST:event_jButton12ActionPerformed
 
@@ -2913,6 +3081,15 @@ public class Main extends javax.swing.JFrame {
         }
         list.setModel(model);
     }
+
+    public void updateList(JList list, ArrayList<Action> acts) {
+        DefaultListModel<String> model = new DefaultListModel<String>();
+        for (int i = 0; i < acts.size(); i++) {
+            Action action = acts.get(i);
+            model.addElement((i + 1) + "." + action.getDescription());
+        }
+        list.setModel(model);
+    }
     private void subMouseMenu_moveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subMouseMenu_moveActionPerformed
         displayDialog(CoordinateInputDialog);
         newSubActionDialog.dispose();
@@ -2970,13 +3147,13 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_subKeyMenu_press_escActionPerformed
 
     private void subKeyMenu_press_letterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subKeyMenu_press_letterActionPerformed
-       Event event = handler.getEvent(selectedEvent);
+        Event event = handler.getEvent(selectedEvent);
         String str = JOptionPane.showInputDialog(this, "Enter a single Letter:");
         if (str.length() == 0) {
             return;
         }
         KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_PRESS, str.substring(0, 1));
-        if(event.getName().equalsIgnoreCase("Schedule")){
+        if (event.getName().equalsIgnoreCase("Schedule")) {
             prepareSubScheduledAction(act, event);
         }
     }//GEN-LAST:event_subKeyMenu_press_letterActionPerformed
@@ -2990,7 +3167,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_subKeyMenu_release_shfitActionPerformed
 
     private void subKeyMenu_release_enterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subKeyMenu_release_enterActionPerformed
-       Event event = handler.getEvent(selectedEvent);
+        Event event = handler.getEvent(selectedEvent);
         KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_RELEASE, KeyStrokeAction.KEY_ENTER);
         if (event.getName().equalsIgnoreCase("Schedule")) {
             prepareSubScheduledAction(act, event);
@@ -2998,7 +3175,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_subKeyMenu_release_enterActionPerformed
 
     private void subKeyMenu_release_delActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subKeyMenu_release_delActionPerformed
-       Event event = handler.getEvent(selectedEvent);
+        Event event = handler.getEvent(selectedEvent);
         KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_RELEASE, KeyStrokeAction.KEY_DEL);
         if (event.getName().equalsIgnoreCase("Schedule")) {
             prepareSubScheduledAction(act, event);
@@ -3014,7 +3191,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_subKeyMenu_release_ctrlActionPerformed
 
     private void subKeyMenu_release_escActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subKeyMenu_release_escActionPerformed
-       Event event = handler.getEvent(selectedEvent);
+        Event event = handler.getEvent(selectedEvent);
         KeyStrokeAction act = new KeyStrokeAction(event.getPor(), KeyStrokeAction.OPERATION_RELEASE, KeyStrokeAction.KEY_ESC);
         if (event.getName().equalsIgnoreCase("Schedule")) {
             prepareSubScheduledAction(act, event);
@@ -3022,7 +3199,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_subKeyMenu_release_escActionPerformed
 
     private void subKeyMenu_release_letterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subKeyMenu_release_letterActionPerformed
-       Event event = handler.getEvent(selectedEvent);
+        Event event = handler.getEvent(selectedEvent);
         String str = JOptionPane.showInputDialog(this, "Enter a single Letter:");
         if (str.length() == 0) {
             return;
@@ -3035,8 +3212,77 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_subAction_cancelActionPerformed
 
     private void aboutMenu_helpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenu_helpActionPerformed
-        new FileHandler().saveFile(handler, selectedEvent);
+        JOptionPane.showMessageDialog(this, "Check Project Documentation");
     }//GEN-LAST:event_aboutMenu_helpActionPerformed
+
+    private void oneInTextFeildActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_oneInTextFeildActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_oneInTextFeildActionPerformed
+
+    private void subAction_upActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subAction_upActionPerformed
+        int sel = subAction_list.getSelectedIndex();
+        if (sel == -1) {
+            return;
+        }
+        lastSelectedActionl = actionList.getSelectedIndex();
+        Action father = handler.getEvent(selectedEvent).getAction(actionList.getSelectedIndex());
+        if (father instanceof ScheduledAction) {
+            Action act = ((ScheduledAction)father).getAction(sel);
+            if(sel - 1 >= 0){
+                ArrayList<Action> acts = ((ScheduledAction)father).getActions();
+                acts.add(sel - 1, act);
+                acts.remove(sel + 1);
+                
+                updateList(actionList, handler.getEvent(selectedEvent));
+                updateList(subAction_list, acts);
+                subAction_list.setSelectedIndex(sel - 1);
+                actionList.setSelectedIndex(lastSelectedActionl);
+            }
+        }
+    }//GEN-LAST:event_subAction_upActionPerformed
+
+    private void subAction_downActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subAction_downActionPerformed
+        int sel = subAction_list.getSelectedIndex();
+        if (sel == -1) {
+            return;
+        }
+        lastSelectedActionl = actionList.getSelectedIndex();
+        Action father = handler.getEvent(selectedEvent).getAction(actionList.getSelectedIndex());
+        if (father instanceof ScheduledAction) {
+            Action act = ((ScheduledAction)father).getAction(sel);
+            ArrayList<Action> acts = ((ScheduledAction)father).getActions();
+            if(sel < acts.size() - 1){
+                acts.add(sel + 2, act);
+                acts.remove(sel);
+                
+                updateList(actionList, handler.getEvent(selectedEvent));
+                updateList(subAction_list, acts);
+                subAction_list.setSelectedIndex(sel + 1);
+                actionList.setSelectedIndex(lastSelectedActionl);
+            }
+        }
+    }//GEN-LAST:event_subAction_downActionPerformed
+
+    private void subAction_removeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subAction_removeActionPerformed
+       int sel = subAction_list.getSelectedIndex();
+        if (sel == -1) {
+            return;
+        }
+        lastSelectedActionl = actionList.getSelectedIndex();
+        Action father = handler.getEvent(selectedEvent).getAction(actionList.getSelectedIndex());
+        if (father instanceof ScheduledAction) {
+            Action act = ((ScheduledAction)father).getAction(sel);
+            ArrayList<Action> acts = ((ScheduledAction)father).getActions();
+            acts.remove(sel);
+            updateList(subAction_list, acts);
+            updateList(actionList, handler.getEvent(selectedEvent));
+            actionList.setSelectedIndex(lastSelectedActionl);
+        }
+    }//GEN-LAST:event_subAction_removeActionPerformed
+
+    private void subAction_editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subAction_editActionPerformed
+       JOptionPane.showMessageDialog(this, "Future Update");
+    }//GEN-LAST:event_subAction_editActionPerformed
 
     public void displayDialog(JDialog dialog) {
         dialog.pack();

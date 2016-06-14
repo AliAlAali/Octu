@@ -40,6 +40,10 @@ public class DelayAction extends Action{
     public long getDelay(){
         return this.delay;
     }
+    
+    public void setDelay(long delay){
+        this.delay = delay;
+    }
 
     @Override
     public void flush() {

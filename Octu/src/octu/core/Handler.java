@@ -5,10 +5,12 @@
  */
 package octu.core;
 
-import octu.core.action.Action;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
+import octu.core.action.Action;
+import octu.core.action.ScheduledAction;
 
 /**
  *
@@ -18,6 +20,7 @@ public class Handler {
 
     private ArrayList<Event> events;
     private ArrayList<Action> actions;
+    private ArrayList<ScheduledAction> scheduled;
     private ArrayList<Action> loop;
     private ArrayList<Variable> variables;
     private OnActionOccurListener actionOccur;
@@ -26,15 +29,17 @@ public class Handler {
 
     private boolean hasStarted;
     private int index;
+    private int schInd;
 
     public Handler() {
         events = new ArrayList<Event>();
         actions = new ArrayList<Action>();
+        scheduled = new ArrayList<>();
         timer = new Timer();
     }
 
     /*
-<<<<<<< HEAD
+     <<<<<<< HEAD
      arrange event's actions according to their importance
      this must be called when start() called
      */
@@ -47,15 +52,19 @@ public class Handler {
         // this should be the number of available events
         for (int k = 0; k < 5; k++) {
             for (int i = 0; i < events.size(); i++) {
-               
+
                 Event event = events.get(i);
                 if (event.getPor() == por) {
                     for (int j = 0; j < event.getActions().size(); j++) {
                         Action get = event.getActions().get(j);
-                        actions.add(get);
+                        if (!(get instanceof ScheduledAction)) {
+                            actions.add(get);
+                        } else {
+                            scheduled.add((ScheduledAction) get);
+                        }
                     }
                 }
-                
+
             }
             por++;
         }
@@ -65,7 +74,7 @@ public class Handler {
      used to start the series of actions
      */
     public void start() {
-        
+
         stop();
         arrangeActionsFromEvents(events, actions);
 //        for (int i = 0; i < actions.size(); i++) {
@@ -125,23 +134,23 @@ public class Handler {
     public Action removeAction(int index) {
         return actions.remove(index);
     }
-    
-    public boolean removeEventAndActions(String evtName){
+
+    public boolean removeEventAndActions(String evtName) {
         for (int i = 0; i < actions.size(); i++) {
-            if(actions.get(i).getPriority() == getEvent(evtName).getPor()){
+            if (actions.get(i).getPriority() == getEvent(evtName).getPor()) {
                 actions.remove(i);
                 i--;
             }
-            
+
         }
         for (int i = 0; i < events.size(); i++) {
             Event event = events.get(i);
-            if(event.getName().equals(evtName)){
+            if (event.getName().equals(evtName)) {
                 events.remove(i);
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -159,20 +168,18 @@ public class Handler {
         }
         return -1;
     }
-    
-    public Event getEvent(String name){
+
+    public Event getEvent(String name) {
         for (int i = 0; i < events.size(); i++) {
             Event get = events.get(i);
-            if(get.getName().equals(name)){
+            if (get.getName().equals(name)) {
                 return get;
             }
         }
         return null;
     }
 
-    
-    
-    public ArrayList<Event> getEvents(){
+    public ArrayList<Event> getEvents() {
         return this.events;
     }
 
@@ -182,7 +189,6 @@ public class Handler {
         }
         return null;
     }
-
 
     public boolean addEvent(Event evt) {
         //make sure not to add an event twice
@@ -199,6 +205,23 @@ public class Handler {
         return true;
     }
 
+    private ScheduledAction getAvailableScheduledAction() {
+        if (schInd < scheduled.size()) {
+            Calendar c = Calendar.getInstance();
+            int hr = c.get(Calendar.HOUR_OF_DAY);
+            int min = c.get(Calendar.MINUTE);
+            for (int i = 0; i < scheduled.size(); i++) {
+                ScheduledAction scheduledAction = scheduled.get(i);
+                if (scheduledAction.getHour() <= hr && scheduledAction.getMinute() <= min
+                        && !scheduledAction.isFinished()) {
+                    return scheduledAction;
+                }
+            }
+
+        }
+        return null;
+    }
+
     public class Queqy extends TimerTask {
 
         @Override
@@ -206,20 +229,32 @@ public class Handler {
             //implement the actions here
 
             //basic implementation for testing only
-            if (index < actions.size()) {
-                Action action = actions.get(index);
-                if (!action.isOccuring()) {
+            if (index < actions.size() || schInd < scheduled.size()) {
+                Action action = null;
+
+                action = getAvailableScheduledAction();
+                if (action != null && !action.isOccuring()) {
                     action.occur();
-                    if (actionOccur != null) {
-                        actionOccur.change(action);
-                    }
-                } else {
-                    if (actionOccur != null) {
-                        actionOccur.change(null);
+                }
+                if (action == null && index < actions.size()) {
+                    action = actions.get(index);
+                    if (!action.isOccuring()) {
+                        action.occur();
+                        if (actionOccur != null) {
+                            actionOccur.change(action);
+                        }
+                    } else {
+                        if (actionOccur != null) {
+                            actionOccur.change(null);
+                        }
                     }
                 }
-                if (action.isFinished()) {
-                    index++;
+                if (action != null && action.isFinished()) {
+                    if (action instanceof ScheduledAction) {
+                        schInd++;
+                    } else {
+                        index++;
+                    }
                 }
                 timer.schedule(new Queqy(), 200);
             }
@@ -243,6 +278,7 @@ public class Handler {
 
     public void setOnActoinOccurListener(OnActionOccurListener change) {
         this.actionOccur = change;
+
     }
 
     public interface OnActionOccurListener {
